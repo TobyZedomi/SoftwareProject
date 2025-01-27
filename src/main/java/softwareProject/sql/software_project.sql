@@ -65,13 +65,13 @@ CREATE TABLE review
 
 CREATE TABLE favouriteList
 (
-    favourite_id INT AUTO_INCREMENT,
     username varchar(255) NOT NULL,
     movie_id int(11) NOT NULL,
-    PRIMARY KEY (favourite_id),
-    FOREIGN KEY (username) REFERENCES  users (username) ON UPDATE CASCADE,
+    PRIMARY KEY (username, movie_id),
+    FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE,
     FOREIGN KEY (movie_id) REFERENCES movies (movie_id) ON UPDATE CASCADE
 );
+
 
 
 
