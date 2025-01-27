@@ -1,0 +1,25 @@
+package softwareProject.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class IndexController {
+
+    @GetMapping("/")
+    public String userIndex(){
+        return "user_index";
+    }
+
+    @GetMapping("/index")
+    public String home(){
+        return "index";
+    }
+
+    @GetMapping("/logout_index")
+    public String userIndex2(){
+        return "logout_index";
+    }
+
+
+}
