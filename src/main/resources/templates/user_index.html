@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width,
+                         initial-scale=1.0">
+  <title>Movies</title>
+  <link rel="stylesheet" href="/css/style.css" />
+
+  <style>
+    .error-message {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+  </style>
+</head>
+
+<body>
+<header>
+  <h1 class="heading">Movies</h1>
+  <h3 class="title">Login & Registration</h3>
+</header>
+
+
+<!-- container div -->
+<div class="container" style="height:700px;">
+
+  <!-- upper button section to select
+       the login or signup form -->
+  <div class="slider"></div>
+  <div class="btn">
+    <button class="login">Login</button>
+    <button class="signup">Signup</button>
+  </div>
+
+  <!-- Form section that contains the
+       login and the signup form -->
+  <div class="form-section">
+
+    <!-- login form -->
+    <div class="login-box">
+      <form id="form" method="post" action="/login">
+
+        <label for="username"></label><br><br>
+      <input type="text"
+             id="username"
+             name="username"
+             class="email ele"
+             placeholder="Enter your username"><br><br>
+        <label for="password" ></label>
+      <input type="password"
+             id="password"
+             name="password"
+             class="password ele"
+             placeholder="Enter password"><br><br>
+      <button class="clkbtn" id="login">Login</button>
+      </form>
+    </div>
+
+    <!-- signup form -->
+    <div class="signup-box" >
+      <form name="form" method="post" action="/registerUser"  onSubmit="return checkPassword(this)">
+        <label for="username" ></label><br><br>
+      <input type="text"
+             id="username"
+             name="username"
+             class="name ele"
+             placeholder="Enter your name" required><br><br>
+        <label for="email" ></label>
+      <input type="email"
+             id="email"
+             name="email"
+             class="email ele"
+             placeholder="youremail@email.com" required><br><br>
+        <p>
+        <label for="password" ></label>
+      <input type="password"
+             id="password"
+             name="password"
+             class="password ele"
+             placeholder="Enter password" >
+          <span id="password-error" class="error-message"></span><br><br>
+        </p>
+        <p>
+        <label for="password2" ></label>
+      <input type="password"
+             id="password2"
+             name="password2"
+             class="password ele"
+             placeholder="Confirm password">
+          <span id="password2-error" class="error-message"></span><br><br>
+        </p>
+        <label for="address" ></label>
+      <input type="text"
+             id="address"
+             name="address"
+             class="name ele"
+             placeholder="Enter your Address" required><br><br>
+        <button class="clkbtn" type="submit" value="Submit">Sign Up</button>
+      </form>
+    </div>
+
+
+  </div>
+</div>
+
+<script>
+  let signup = document.querySelector(".signup");
+  let login = document.querySelector(".login");
+  let slider = document.querySelector(".slider");
+  let formSection = document.querySelector(".form-section");
+
+  signup.addEventListener("click", () => {
+    slider.classList.add("moveslider");
+    formSection.classList.add("form-section-move");
+  });
+
+  login.addEventListener("click", () => {
+    slider.classList.remove("moveslider");
+    formSection.classList.remove("form-section-move");
+  });
+
+
+  function checkPassword(form) {
+    password = form.password.value;
+    password2 = form.password2.value;
+
+
+    // If password not entered
+    if (password == '' || password.length <= 7)
+
+      alert("Password must be 8 digits or longer");
+
+    // If confirm password not entered
+    else if (password2 == '' || password2.length <= 7)
+      alert("Password must be 8 digits or longer");
+
+    // If Not same return False.
+    else if (password != password2) {
+      alert("\nPassword did not match: Please try again...")
+      return false;
+    }
+
+    // If same return True.
+    else {
+      alert("Registration Successful")
+      return true;
+    }
+
+
+  }
+
+</script>
+
+<script>
+
+/*
+function validateForm() {
+
+  //const name = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  const password2 = document.getElementById('password2').value;
+
+  //const nameErr = document.getElementById("name-error");
+  const passwordErr = document.getElementById("password-error");
+  const passwordErr2 = document.getElementById("password2-error");
+
+ // nameErr.textContent = "";
+  passwordErr.textContent = "";
+  passwordErr2.textContent = "";
+
+  let isValid = true;
+
+  /*
+  if (name === "" || /\d/.test(name)) {
+    nameErr.textContent = "Please enter your name properly.";
+    isValid = false;
+  }
+
+   */
+
+/*
+
+  if (password.length <= 7){
+    passwordErr.textContent = "Password must be longer than 7 characters.";
+    isValid = false;
+  }
+
+  if (password.length >= 30){
+    passwordErr.textContent = "Password must be less than 30 characters.";
+    isValid = false;
+  }
+
+  if (password != password2){
+
+    passwordErr2.textContent = "Password did not match: Please try again..."
+    isValid = false;
+  }
+
+  if (isValid){
+    alert("Register Successful")
+  }else{
+    return false;
+  }
+
+
+
+  ///
+
+
+  const orm = require('orm'); const db = orm.connect('mysql://localhost/software_project');  db.query('SELECT * FROM users where username = ?', (err, rows) => {   if (err) throw err;   console.log(rows); }).end();
+}
+
+
+
+function resetErrors(){
+
+  document.getElementById("name-error").textContent = "";
+}
+
+///
+
+
+
+ */
+</script>
+
+
+<script src="/templates/js/index.js"></script>
+</body>
+</html>
