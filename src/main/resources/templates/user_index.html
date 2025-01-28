@@ -15,6 +15,10 @@
       margin-top: 5px;
     }
 
+    .message{
+      color: red;
+    }
+
   </style>
 </head>
 
@@ -24,6 +28,10 @@
   <h3 class="title">Login & Registration</h3>
 </header>
 
+
+<script>
+
+</script>
 
 <!-- container div -->
 <div class="container" style="height:700px;">
@@ -42,27 +50,35 @@
 
     <!-- login form -->
     <div class="login-box">
-      <form id="form" method="post" action="/login">
+      <form id="form2" name="form2" method="post" action="/login" onsubmit="return validateLogin()">
 
-        <label for="username"></label><br><br>
+        <div id="message" class="message" th:text="${message}"></div>
+
+        <p>
+        <label for="username1"></label><br><br>
       <input type="text"
-             id="username"
-             name="username"
+             id="username1"
+             name="username1"
              class="email ele"
-             placeholder="Enter your username"><br><br>
-        <label for="password" ></label>
+             placeholder="Enter your username">
+          <span id="username1-error" class="error-message"></span><br><br>
+        </p>
+        <p>
+        <label for="password1" ></label>
       <input type="password"
-             id="password"
-             name="password"
+             id="password1"
+             name="password1"
              class="password ele"
-             placeholder="Enter password"><br><br>
+             placeholder="Enter password">
+          <span id="password1-error" class="error-message"></span><br><br>
+        </p>
       <button class="clkbtn" id="login">Login</button>
       </form>
     </div>
 
     <!-- signup form -->
     <div class="signup-box" >
-      <form name="form" method="post" action="/registerUser"  onSubmit="return checkPassword(this)">
+      <form id="form" method="post" action="/registerUser"  onsubmit="return validateForm()">
         <label for="username" ></label><br><br>
       <input type="text"
              id="username"
@@ -123,46 +139,44 @@
     formSection.classList.remove("form-section-move");
   });
 
+  function validateLogin(){
 
-  function checkPassword(form) {
-    password = form.password.value;
-    password2 = form.password2.value;
+    const username1 = document.getElementById("username1").value;
+    const password1 = document.getElementById("password1").value;
 
+    const username1Err = document.getElementById("username1-error");
+    const passwordErr1 = document.getElementById("password1-error");
 
-    // If password not entered
-    if (password == '' || password.length <= 7)
+    username1Err.textContent = "";
+    passwordErr1.textContent = "";
 
-      alert("Password must be 8 digits or longer");
+    let isValid = true;
+    if(username1 === ""){
+      username1Err.textContent = "Please enter a valid username";
+      isValid = false
+    }
+    if (password1 === ""){
+      passwordErr1.textContent = "Password must be between 7 and 30 characters";
+    }
 
-    // If confirm password not entered
-    else if (password2 == '' || password2.length <= 7)
-      alert("Password must be 8 digits or longer");
-
-    // If Not same return False.
-    else if (password != password2) {
-      alert("\nPassword did not match: Please try again...")
+    if (isValid){
+      return true;
+    }else{
       return false;
     }
-
-    // If same return True.
-    else {
-      alert("Registration Successful")
-      return true;
-    }
-
-
   }
 
 </script>
 
 <script>
 
-/*
+
 function validateForm() {
 
   //const name = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-  const password2 = document.getElementById('password2').value;
+  const password = document.getElementById("password").value;
+  const password2 = document.getElementById("password2").value;
+
 
   //const nameErr = document.getElementById("name-error");
   const passwordErr = document.getElementById("password-error");
@@ -172,46 +186,34 @@ function validateForm() {
   passwordErr.textContent = "";
   passwordErr2.textContent = "";
 
-  let isValid = true;
+ // let isValid = true;
 
-  /*
-  if (name === "" || /\d/.test(name)) {
-    nameErr.textContent = "Please enter your name properly.";
-    isValid = false;
-  }
-
-   */
-
-/*
-
-  if (password.length <= 7){
-    passwordErr.textContent = "Password must be longer than 7 characters.";
-    isValid = false;
-  }
-
-  if (password.length >= 30){
-    passwordErr.textContent = "Password must be less than 30 characters.";
-    isValid = false;
-  }
-
-  if (password != password2){
-
-    passwordErr2.textContent = "Password did not match: Please try again..."
-    isValid = false;
-  }
-
-  if (isValid){
-    alert("Register Successful")
-  }else{
+  if (password.length < 7){
+    passwordErr.textContent = "Please enter a password with at least 7 characters";
     return false;
+   // isValid = false;
+  }
+
+  else if (password.length >= 30){
+    passwordErr.textContent = "Password must be less than 30 characters.";
+    return false
+   // isValid = false;
+  }
+
+ else if (password != password2){
+
+    passwordErr2.textContent = "Password did not match: Please try again...";
+    return false;
+   // isValid = false;
+  }
+
+  else{
+    alert("Register Successful")
+    return true;
   }
 
 
-
-  ///
-
-
-  const orm = require('orm'); const db = orm.connect('mysql://localhost/software_project');  db.query('SELECT * FROM users where username = ?', (err, rows) => {   if (err) throw err;   console.log(rows); }).end();
+ // const orm = require('orm'); const db = orm.connect('mysql://localhost/software_project');  db.query('SELECT * FROM users where username = ?', (err, rows) => {   if (err) throw err;   console.log(rows); }).end();
 }
 
 
@@ -225,7 +227,7 @@ function resetErrors(){
 
 
 
- */
+
 </script>
 
 

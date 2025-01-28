@@ -40,11 +40,17 @@ public class UserController {
         // VALIDATION
 
 
-
-        if (password != password2 || password.length() <= 7 || password2.length() <= 7){
+        if(password.length() < 7){
             log.info("Registration failed with username {}", username);
-
-            System.out.println("no match");
+            System.out.println("Password must be latest 7 characters");
+        }
+        else if(password.length() >= 30){
+            log.info("Registration failed with username {}", username);
+            System.out.println("Password cant be 30 characters or more");
+        }
+        else if (password != password2){
+            log.info("Registration failed with username {}", username);
+            System.out.println("Password doesnt match");
         }
 
         String view = "";
@@ -68,8 +74,8 @@ public class UserController {
 
     /**
      * This method is used to log in the user to the system and if the user doesn't have a subscription or subscription has expired they wont be able to login
-     * @param username is the username being searched
-     * @param password is the password being searched
+     * @param username1 is the username being searched
+     * @param password1 is the password being searched
      * @param model stores data of the message to display no such username/password
      * @param session holds the users information if the login is a success
      * @return loginFailed page if the login isn't successful, addSubscription page if the user doesn't have a subscription with us, renewSubscription page if user subscription is ended and needs a renewal or loginSuccessful page to the system if users credentials match
@@ -78,24 +84,26 @@ public class UserController {
      */
     @PostMapping("/login")
     public String loginUser(
-            @RequestParam(name="username")String username,
-            @RequestParam(name="password") String password,
+            @RequestParam(name="username1")String username1,
+            @RequestParam(name="password1") String password1,
             Model model, HttpSession session) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
-        if(username.isBlank() || password.isBlank()){
-            String message = "You must enter a username and password to login";
-            model.addAttribute("message", message);
+        if(username1.isBlank() || password1.isBlank()){
+           // String message = "You must enter a valid username and password to login";
+            //model.addAttribute("message", message);
+
+            log.info("Didnt enter any username or password");
             return "user_index";
         }
 
         UserDao userDao = new UserDaoImpl("database.properties");
-        User user = userDao.login(username, hashPassword(password));
+        User user = userDao.login(username1, hashPassword(password1));
 
 
         if(user == null){
             String message = "No such username/password combination, try again....";
             model.addAttribute("message", message);
-            log.info("Login failed with username {}", username);
+            log.info("Login failed with username {}", username1);
             return "user_index";
         }
 
