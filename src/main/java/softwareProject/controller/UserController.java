@@ -58,7 +58,8 @@ public class UserController {
         User u = new User(username,email, hashPassword(password), address, false);
         int added = userDao.registerUser(u);
         if(added == 1){
-            view = "registerSuccess";
+           // view = "registerSuccess";
+            view = "index";
             model.addAttribute("registeredUser", u);
             session.setAttribute("loggedInUser", u);
             log.info("User {} registered", u.getUsername());
