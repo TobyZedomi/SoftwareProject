@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width,
-                         initial-scale=1.0">
-  <title>Movies</title>
-  <link rel="stylesheet" href="/css/style.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/style2.css" />
+  <title>Title</title>
+
 
   <style>
     .error-message {
@@ -21,107 +20,98 @@
 
   </style>
 </head>
-
 <body>
 <header>
   <h1 class="heading">Movies</h1>
-  <h3 class="title">Login & Registration</h3>
 </header>
 
-
-<script>
-
-</script>
-
-<!-- container div -->
 <div class="container" style="height:700px;">
 
-  <!-- upper button section to select
-       the login or signup form -->
   <div class="slider"></div>
   <div class="btn">
-    <button class="login">Login</button>
-    <button class="signup">Signup</button>
+    <button class="login"  >Login</button>
+    <button class="signup" >Signup</button>
   </div>
 
-  <!-- Form section that contains the
-       login and the signup form -->
   <div class="form-section">
 
-    <!-- login form -->
     <div class="login-box">
+
       <form id="form2" name="form2" method="post" action="/login" onsubmit="return validateLogin()">
 
         <div id="message" class="message" th:text="${message}"></div>
 
         <p>
-        <label for="username1"></label><br><br>
-      <input type="text"
-             id="username1"
-             name="username1"
-             class="email ele"
-             placeholder="Enter your username">
-          <span id="username1-error" class="error-message"></span><br><br>
-        </p>
+          <label for="username1">Username:</label>
+          <input type="text" id="username1" name="username1"
+                 placeholder="Enter username">
+          <span id="username1-error" class="error-message"></span>
         <p>
-        <label for="password1" ></label>
-      <input type="password"
-             id="password1"
-             name="password1"
-             class="password ele"
-             placeholder="Enter password">
-          <span id="password1-error" class="error-message"></span><br><br>
+          <label for="password1" >Password:</label>
+          <input type="password" id="password1" name="password1"
+                 placeholder="Enter password">
+          <span id="password1-error" class="error-message"></span>
         </p>
-      <button class="clkbtn" id="login">Login</button>
+        <div class="wrap">
+          <button id="login">
+            Login
+          </button>
+        </div>
       </form>
+
+      <p>Dont remember your password?
+        <a href="#" style="text-decoration: none;">
+          Forgot password
+        </a>
+      </p>
     </div>
 
-    <!-- signup form -->
-    <div class="signup-box" >
+    <div class="signup-box" ><br><br>
       <form id="form" method="post" action="/registerUser"  onsubmit="return validateForm()">
-        <label for="username" ></label><br><br>
-      <input type="text"
-             id="username"
-             name="username"
-             class="name ele"
-             placeholder="Enter your name" required><br><br>
-        <label for="email" ></label>
-      <input type="email"
-             id="email"
-             name="email"
-             class="email ele"
-             placeholder="youremail@email.com" required><br><br>
         <p>
-        <label for="password" ></label>
-      <input type="password"
-             id="password"
-             name="password"
-             class="password ele"
-             placeholder="Enter password" >
-          <span id="password-error" class="error-message"></span><br><br>
+        <label for="username" >Username:</label>
+        <input type="text" id="username" name="username"
+               placeholder="Enter username">
+          <span id="username-error" class="error-message"></span>
         </p>
         <p>
-        <label for="password2" ></label>
-      <input type="password"
-             id="password2"
-             name="password2"
-             class="password ele"
-             placeholder="Confirm password">
-          <span id="password2-error" class="error-message"></span><br><br>
+        <label for="email" >Email:</label>
+        <input type="email" id="email" name="email"
+               placeholder="Enter email">
+          <span id="email-error" class="error-message"></span>
         </p>
-        <label for="address" ></label>
-      <input type="text"
-             id="address"
-             name="address"
-             class="name ele"
-             placeholder="Enter your Address" required><br><br>
-        <button class="clkbtn" type="submit" value="Submit">Sign Up</button>
+        <p>
+          <label for="password" >Password:</label>
+          <input type="password" id="password" name="password"
+                 placeholder="Enter password" >
+          <span id="password-error" class="error-message"></span>
+        </p>
+        <p>
+          <label for="password2" >Confirm Password:</label>
+          <input type="password" id="password2" name="password2"
+                 placeholder="Confirm password">
+          <span id="password2-error" class="error-message"></span>
+        </p>
+        <p>
+        <label for="address" >Address:</label>
+        <input type="text" id="address" name="address"
+               placeholder="Enter your Address">
+          <span id="address-error" class="error-message"></span>
+        </p>
+        <div class="wrap">
+          <button type="submit" value="Submit">
+            Sign up
+          </button>
+        </div>
       </form>
     </div>
-
 
   </div>
+
 </div>
+
+
+
 
 <script>
   let signup = document.querySelector(".signup");
@@ -150,87 +140,106 @@
     username1Err.textContent = "";
     passwordErr1.textContent = "";
 
-    let isValid = true;
+    let valid = true;
     if(username1 === ""){
       username1Err.textContent = "Please enter a valid username";
-      isValid = false
+      valid = false
     }
     if (password1 === ""){
       passwordErr1.textContent = "Password must be between 7 and 30 characters";
+      valid = false;
     }
 
-    if (isValid){
-      return true;
+    if (valid){
+      alert("Login Successful")
     }else{
       return false;
     }
   }
-
 </script>
+
 
 <script>
 
 
-function validateForm() {
+  function validateForm() {
 
-  //const name = document.getElementById('username').value;
-  const password = document.getElementById("password").value;
-  const password2 = document.getElementById("password2").value;
+    const username = document.getElementById('username').value;
+    const password = document.getElementById("password").value;
+    const password2 = document.getElementById("password2").value;
+    const email = document.getElementById("email").value;
+    const address = document.getElementById("address").value;
 
 
-  //const nameErr = document.getElementById("name-error");
-  const passwordErr = document.getElementById("password-error");
-  const passwordErr2 = document.getElementById("password2-error");
+    const usernameErr = document.getElementById("username-error");
+    const passwordErr = document.getElementById("password-error");
+    const passwordErr2 = document.getElementById("password2-error");
+    const emailErr = document.getElementById("email-error");
+    const addressErr = document.getElementById("address-error");
 
- // nameErr.textContent = "";
-  passwordErr.textContent = "";
-  passwordErr2.textContent = "";
+    usernameErr.textContent = "";
+    passwordErr.textContent = "";
+    passwordErr2.textContent = "";
+    emailErr.textContent = "";
+    addressErr.textContent = "";
 
- // let isValid = true;
 
-  if (password.length < 7){
-    passwordErr.textContent = "Please enter a password with at least 7 characters";
-    return false;
-   // isValid = false;
+    const usernameRegex = /^[a-zA-Z]{3,25}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{7,70}$/;
+
+    if (username === ""){
+      usernameErr.textContent = "Username was left empty";
+      return false;
+    }
+    else if (!usernameRegex.test(username)){
+      usernameErr.textContent = "Username has to be between 3 - 30 characters";
+      return false;
+    }
+    else if (email === ""){
+      emailErr.textContent = "Email was left empty";
+      return false;
+    }
+    else if(password === ""){
+      passwordErr.textContent = "Password was left empty";
+      return false;
+    }
+    else if (!passwordRegex.test(password)){
+      passwordErr.textContent = "Please enter a password with at least 7 characters and maximum 70 characters, one uppercase letter, one lowercase letter and one number";
+      return false;
+    }
+    else if (password2 === ""){
+      passwordErr2.textContent = "Confirm Password was left empty";
+      return false;
+    }
+    else if (password != password2){
+
+      passwordErr2.textContent = "Password did not match: Please try again...";
+      return false;
+
+    }
+    else if (address === ""){
+      addressErr.textContent = "Address was left empty";
+      return false;
+    }
+    else{
+      alert("Register Successful")
+      return true;
+    }
+
+
+    // const orm = require('orm'); const db = orm.connect('mysql://localhost/software_project');  db.query('SELECT * FROM users where username = ?', (err, rows) => {   if (err) throw err;   console.log(rows); }).end();
   }
 
-  else if (password.length >= 30){
-    passwordErr.textContent = "Password must be less than 30 characters.";
-    return false
-   // isValid = false;
+
+/*
+  function resetErrors(){
+
+    document.getElementById("username-error").textContent = "";
   }
 
- else if (password != password2){
-
-    passwordErr2.textContent = "Password did not match: Please try again...";
-    return false;
-   // isValid = false;
-  }
-
-  else{
-    alert("Register Successful")
-    return true;
-  }
-
-
- // const orm = require('orm'); const db = orm.connect('mysql://localhost/software_project');  db.query('SELECT * FROM users where username = ?', (err, rows) => {   if (err) throw err;   console.log(rows); }).end();
-}
-
-
-
-function resetErrors(){
-
-  document.getElementById("name-error").textContent = "";
-}
-
-///
-
-
-
-
+ */
 </script>
 
 
-<script src="/templates/js/index.js"></script>
 </body>
 </html>
