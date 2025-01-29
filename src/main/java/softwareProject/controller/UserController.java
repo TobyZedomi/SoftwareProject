@@ -19,6 +19,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Slf4j
@@ -39,19 +41,35 @@ public class UserController {
 
         // VALIDATION
 
+        Pattern usernameRegex = Pattern.compile("^[a-zA-Z]{3,25}$");
+        Matcher match = usernameRegex.matcher(username);
+        boolean matchfoundUsername = match.find();
+
+        if (!matchfoundUsername){
+            log.info("Username {} was not within the character limit", username);
+            System.out.println("Username must be between 3-25 characters");
+
+            return "user_index";
+        }
+
+
+
+
 
         if(password.length() < 7){
             log.info("Registration failed with username {}", username);
             System.out.println("Password must be latest 7 characters");
         }
-        else if(password.length() >= 30){
+        else if(password.length() >= 70){
             log.info("Registration failed with username {}", username);
-            System.out.println("Password cant be 30 characters or more");
+            System.out.println("Password cant be 70 characters or more");
         }
         else if (password != password2){
             log.info("Registration failed with username {}", username);
             System.out.println("Password doesnt match");
         }
+
+
 
         String view = "";
         UserDao userDao = new UserDaoImpl("database.properties");

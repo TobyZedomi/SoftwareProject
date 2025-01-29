@@ -146,7 +146,7 @@
       valid = false
     }
     if (password1 === ""){
-      passwordErr1.textContent = "Password must be between 7 and 30 characters";
+      passwordErr1.textContent = "Password must be between 7 and 70 characters";
       valid = false;
     }
 
@@ -164,7 +164,7 @@
 
   function validateForm() {
 
-    const username = document.getElementById('username').value;
+    const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
     const password2 = document.getElementById("password2").value;
     const email = document.getElementById("email").value;
@@ -192,7 +192,7 @@
       return false;
     }
     else if (!usernameRegex.test(username)){
-      usernameErr.textContent = "Username has to be between 3 - 30 characters";
+      usernameErr.textContent = "Username has to be between 3 - 25 characters";
       return false;
     }
     else if (email === ""){
@@ -222,10 +222,9 @@
       return false;
     }
     else{
-      alert("Register Successful")
+      alert("Registration form complete")
       return true;
     }
-
 
     // const orm = require('orm'); const db = orm.connect('mysql://localhost/software_project');  db.query('SELECT * FROM users where username = ?', (err, rows) => {   if (err) throw err;   console.log(rows); }).end();
   }
