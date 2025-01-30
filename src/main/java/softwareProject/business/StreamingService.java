@@ -17,4 +17,5 @@ public class StreamingService {
     private String movieServiceLink;
     private double cost;
 
+
 }
