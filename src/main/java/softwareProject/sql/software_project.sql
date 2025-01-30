@@ -8,24 +8,36 @@ software_project;
 
 CREATE TABLE users
 (
-    username varchar(50)         NOT NULL,
+    username varchar(50)  UNIQUE NOT NULL,
+    displayName varchar(50) UNIQUE NOT NULL,
     email    varchar(255) UNIQUE NOT NULL,
     password varchar(255)        NOT NULL,
     address  varchar(255) 	 NOT NULL,
+    dateOfBirth datetime	 NOT NULL,
     isAdmin boolean NOT NULL DEFAULT false,
+    createdAt datetime NOT NULL,
     PRIMARY KEY (username)
+);
+
+
+CREATE TABLE subscriptionPlan
+(
+    subscription_plan_id INT AUTO_INCREMENT,
+    subscription_plan_name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (subscription_plan_id)
 );
 
 CREATE TABLE subscription
 (
     subscription_id        INT AUTO_INCREMENT,
     username     varchar(255) NOT NULL,
-    subscription_plan 	varchar(255) NOT NULL,
+    subscription_plan_id 	INT(11) NOT NULL,
     subscription_startDate datetime NOT NULL,
     subscription_endDate  datetime NOT NULL,
     price double NOT NULL,
     PRIMARY KEY (subscription_id),
-    FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE
+    FOREIGN KEY (username) REFERENCES users (username),
+    FOREIGN KEY (subscription_plan_id) REFERENCES subscriptionPlan (subscription_plan_id)
 );
 
 
@@ -36,19 +48,40 @@ CREATE TABLE genre
     PRIMARY KEY (genre_id)
 );
 
+CREATE TABLE ageRequirement
+(
+    age_id INT AUTO_INCREMENT,
+    age INT(50),
+    PRIMARY KEY(age_id)
+);
+
 
 CREATE TABLE movies
 (
     movie_id INT AUTO_INCREMENT,
     movie_name varchar(255) NOT NULL,
     genre_id int(11) NOT NULL,
+    age_id INT(50) NOT NULL,
     date_of_release datetime NOT NULL,
     movie_length time NOT NULL,
     movie_info varchar(255) NOT NULL,
     where_to_watch varchar(255) NOT NULL,
     movie_image varchar(255) NOT NULL,
     PRIMARY KEY (movie_id),
-    FOREIGN KEY (genre_id) REFERENCES genre (genre_id) ON UPDATE CASCADE
+    FOREIGN KEY (genre_id) REFERENCES genre (genre_id),
+    FOREIGN KEY (age_id) REFERENCES ageRequirement (age_id) ON UPDATE CASCADE
+
+);
+
+CREATE TABLE streamingService
+(
+    streaming_service_id INT AUTO_INCREMENT,
+    movie_id int(11),
+    streaming_service_name varchar(255) NOT NULL,
+    streaming_service_link varchar(255) NOT NULL,
+    cost double NOT NULL,
+    PRIMARY KEY (streaming_service_id),
+    FOREIGN KEY (movie_id) REFERENCES movies (movie_id)
 );
 
 CREATE TABLE review
@@ -58,8 +91,8 @@ CREATE TABLE review
     rating double NOT NULL,
     comment text,
     PRIMARY KEY (username, movie_id),
-    FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE,
-    FOREIGN KEY (movie_id) REFERENCES movies (movie_id) ON UPDATE CASCADE
+    FOREIGN KEY (username) REFERENCES users (username),
+    FOREIGN KEY (movie_id) REFERENCES movies (movie_id)
 );
 
 
@@ -68,8 +101,8 @@ CREATE TABLE favouriteList
     username varchar(255) NOT NULL,
     movie_id int(11) NOT NULL,
     PRIMARY KEY (username, movie_id),
-    FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE,
-    FOREIGN KEY (movie_id) REFERENCES movies (movie_id) ON UPDATE CASCADE
+    FOREIGN KEY (username) REFERENCES users (username),
+    FOREIGN KEY (movie_id) REFERENCES movies (movie_id)
 );
 
 
@@ -107,7 +140,7 @@ CREATE TABLE movieItem
     list_price double NOT NULL,
     stock int NOT NULL,
     PRIMARY KEY (movieItem_id),
-    FOREIGN KEY (movie_id) REFERENCES movies (movie_id) ON UPDATE CASCADE
+    FOREIGN KEY (movie_id) REFERENCES movies (movie_id)
 );
 
 
@@ -116,8 +149,9 @@ CREATE TABLE orderItems
     order_id INT AUTO_INCREMENT,
     movieItem_id int(11),
     quantity int (11),
+    price double NOT NULL,
     PRIMARY KEY (order_id),
-    FOREIGN KEY (movieItem_id) REFERENCES movieItem (movieItem_id) ON UPDATE CASCADE
+    FOREIGN KEY (movieItem_id) REFERENCES movieItem (movieItem_id)
 );
 
 
@@ -126,16 +160,12 @@ CREATE TABLE orders
 (
     order_id int(11) NOT NULL,
     username varchar(255) NOT NULL,
-    quantity_ordered int(10) NOT NULL,
     total_price double NOT NULL,
     order_date datetime NOT NULL,
-    shipping_date datetime NOT NULL,
-    date_of_arrival datetime NOT NULL,
     status varchar(15) NOT NULL,
     comments text,
     PRIMARY KEY (order_id, username),
-    FOREIGN KEY (order_id) REFERENCES orderItems (order_id) ON UPDATE CASCADE,
-    FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE
+    FOREIGN KEY (order_id) REFERENCES orderItems (order_id),
+    FOREIGN KEY (username) REFERENCES users (username)
 );
-
 

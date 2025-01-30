@@ -4,9 +4,7 @@ package softwareProject.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import softwareProject.business.User;
 import softwareProject.persistence.UserDao;
 import softwareProject.persistence.UserDaoImpl;
@@ -19,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
