@@ -87,7 +87,9 @@ VALUES ('Toby', 12, 5, 'One of the greatest movies ive watched in my life'),
        ('Toby', 1, 5, 'Will always be an all time classic'),
        ('Toby', 4, 1, 'Hated every second of it'),
        ('Andrew', 12, 3, 'Great movie'),
-       ('Andrew', 15, 4.5, 'The story of naruto is honestly amazing, glad ive made in this far ');
+       ('Andrew', 15, 4.5, 'The story of naruto is honestly amazing, glad ive made in this far '),
+       ('James', 7, 3.5, 'Amazing movie'),
+       ('James', 15, 3, 'Good movie, i like it a lot');
 
 
 
