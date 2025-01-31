@@ -103,12 +103,12 @@ public class UserController {
             return "user_indexSignUp";
         }
 
-        Pattern passwordRegex = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{7,70}$");
+        Pattern passwordRegex = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{7,70}$");
         Matcher match1 = passwordRegex.matcher(password);
         boolean matchfoundPassword = match1.find();
 
         if (!matchfoundPassword){
-            String message4 = "Password didnt have at least 7-70 characters, one uppercase letter, one lowercase letter and one number";
+            String message4 = "Password didnt have at least 7-70 characters, one uppercase letter, one lowercase letter, one number and one special character";
             model.addAttribute("message4", message4);
             System.out.println("Password must have at least 7 characters and maximum 70 characters, one uppercase letter, one lowercase letter and one number");
            return "user_indexSignUp";

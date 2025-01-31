@@ -30,7 +30,7 @@
   <h2 class="heading" style="margin-right: 1400px;">Movies</h2>
 </header>
 
-<h1 class="title">Register</h1>
+<h1 class="header">Register</h1>
 
 <div class="container" style="height:1000px;">
 
@@ -121,7 +121,7 @@
 
 
     const usernameRegex = /^[a-zA-Z]{3,25}$/;
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{7,70}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,70}$/;
     const displayNameRegex = /^[a-zA-Z]{3,25}$/;
 
     if (username === ""){
@@ -143,7 +143,7 @@
       alert("Password was left empty, try register again")
     }
     else if (!passwordRegex.test(password)){
-      alert("Please enter a password with at least 7 characters and maximum 70 characters, one uppercase letter, one lowercase letter and one number, try register again")
+      alert("Please enter a password with at least 7 characters and maximum 70 characters, one uppercase letter, one lowercase letter, one number and one special character, try register again")
     }
     else if (password2 === ""){
       alert("Confirm Password was left empty, try register again")
