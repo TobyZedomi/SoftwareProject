@@ -24,6 +24,7 @@ CREATE TABLE subscriptionPlan
 (
     subscription_plan_id INT AUTO_INCREMENT,
     subscription_plan_name VARCHAR(255) NOT NULL,
+    cost double NOT NULL,
     PRIMARY KEY (subscription_plan_id)
 );
 
@@ -34,7 +35,6 @@ CREATE TABLE subscription
     subscription_plan_id 	INT(11) NOT NULL,
     subscription_startDate datetime NOT NULL,
     subscription_endDate  datetime NOT NULL,
-    price double NOT NULL,
     PRIMARY KEY (subscription_id),
     FOREIGN KEY (username) REFERENCES users (username),
     FOREIGN KEY (subscription_plan_id) REFERENCES subscriptionPlan (subscription_plan_id)
@@ -65,7 +65,6 @@ CREATE TABLE movies
     date_of_release datetime NOT NULL,
     movie_length time NOT NULL,
     movie_info varchar(255) NOT NULL,
-    where_to_watch varchar(255) NOT NULL,
     movie_image varchar(255) NOT NULL,
     PRIMARY KEY (movie_id),
     FOREIGN KEY (genre_id) REFERENCES genre (genre_id),
