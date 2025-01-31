@@ -47,7 +47,7 @@ public class MovieDaoImpl extends MySQLDao implements MovieDao {
             try (ResultSet rs = ps.executeQuery()) {
                 // Extract the information from the result set
                 // Use extraction method to avoid code repetition!
-                if(rs.next()){
+                while(rs.next()){
 
                     Movie m = mapRow(rs);
                     movies.add(m);
