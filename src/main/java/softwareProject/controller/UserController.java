@@ -32,51 +32,128 @@ public class UserController {
     @PostMapping("registerUser")
     public String registerUser(
             @RequestParam(name="username") String username,
+            @RequestParam(name="displayName") String displayName,
             @RequestParam(name="email") String email,
             @RequestParam(name="password") String password,
             @RequestParam(name="password2") String password2,
             @RequestParam(name="address") String address,
+            @RequestParam(name="dateOfBirth") String dateOfBirth,
             Model model, HttpSession session) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
         // VALIDATION
+
+
+        // username validation
+
+        if (username.isBlank()){
+            String message = "Username was left blank";
+            model.addAttribute("message", message);
+            System.out.println("Username was left blank");
+            return "user_indexSignUp";
+        }
 
         Pattern usernameRegex = Pattern.compile("^[a-zA-Z]{3,25}$");
         Matcher match = usernameRegex.matcher(username);
         boolean matchfoundUsername = match.find();
 
         if (!matchfoundUsername){
-            log.info("Username {} was not within the character limit", username);
+            String message = "Username must be between 3-25 characters";
+            model.addAttribute("message", message);
             System.out.println("Username must be between 3-25 characters");
-
-            return "user_index";
+          return "user_indexSignUp";
         }
 
+        // displayName validation
 
+        if (displayName.isBlank()){
+            String message2 = "Display Name was left blank";
+            model.addAttribute("message2", message2);
 
-
-
-        if(password.length() < 7){
-            log.info("Registration failed with username {}", username);
-            System.out.println("Password must be latest 7 characters");
-        }
-        else if(password.length() >= 70){
-            log.info("Registration failed with username {}", username);
-            System.out.println("Password cant be 70 characters or more");
-        }
-        else if (password != password2){
-            log.info("Registration failed with username {}", username);
-            System.out.println("Password doesnt match");
+            System.out.println("Display Name was left blank");
+            return "user_indexSignUp";
         }
 
+        Pattern displayNameRegex = Pattern.compile("^[a-zA-Z]{3,25}$");
+        Matcher match2 = displayNameRegex.matcher(displayName);
+        boolean matchfoundDisplayName= match2.find();
 
+        if (!matchfoundDisplayName){
+            String message2 = "Display Name must be between 3-25 characters";
+            model.addAttribute("message2", message2);
+            System.out.println("Display Name must be between 3-25 characters");
+           return "user_indexSignUp";
+        }
+
+        // email validation
+
+        if(email.isBlank()){
+            String message3 = "Email was left blank";
+            model.addAttribute("message3", message3);
+            System.out.println("Email was left blank");
+            return "user_indexSignUp";
+        }
+
+        // password validation
+
+        if (password.isBlank()){
+            String message4 = "Password was left blank";
+            model.addAttribute("message4", message4);
+            System.out.println("Password was left blank");
+
+            return "user_indexSignUp";
+        }
+
+        Pattern passwordRegex = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{7,70}$");
+        Matcher match1 = passwordRegex.matcher(password);
+        boolean matchfoundPassword = match1.find();
+
+        if (!matchfoundPassword){
+            String message4 = "Password didnt have at least 7-70 characters, one uppercase letter, one lowercase letter and one number";
+            model.addAttribute("message4", message4);
+            System.out.println("Password must have at least 7 characters and maximum 70 characters, one uppercase letter, one lowercase letter and one number");
+           return "user_indexSignUp";
+        }
+
+        if (password2.isBlank()){
+            String message5 = "Confirm Password was left blank";
+            model.addAttribute("message5", message5);
+            System.out.println("Confirm password was left blank");
+            return "user_indexSignUp";
+        }
+
+        if (!password.equals(password2)){
+            String message5 = "Password and Confirm Password didnt match";
+            model.addAttribute("message5", message5);
+            System.out.println("Passwords dont match");
+            return "user_indexSignUp";
+        }
+
+        // address validation
+
+        if (address.isBlank()){
+            String message6 = "Address was left blank";
+            model.addAttribute("message6", message6);
+            System.out.println("Address was left blank");
+            return "user_indexSignUp";
+        }
+
+        // dateOfBirth validation
+
+        if (dateOfBirth.isBlank()){
+            String message7 = "Date Of Birth was left blank";
+            model.addAttribute("message7", message7);
+            System.out.println("Date of birth was left blank");
+            return "user_indexSignUp";
+        }
+
+        LocalDateTime dob = LocalDateTime.parse(dateOfBirth);
 
         String view = "";
         UserDao userDao = new UserDaoImpl("database.properties");
-        User u = new User(username,email, hashPassword(password), address, false);
+        User u = new User(username, displayName, email, hashPassword(password), address, dob, false, LocalDateTime.now());
         int added = userDao.registerUser(u);
         if(added == 1){
-           // view = "registerSuccess";
-            view = "index";
+           view = "registerSuccess";
             model.addAttribute("registeredUser", u);
             session.setAttribute("loggedInUser", u);
             log.info("User {} registered", u.getUsername());
@@ -107,10 +184,8 @@ public class UserController {
             Model model, HttpSession session) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
         if(username1.isBlank() || password1.isBlank()){
-           // String message = "You must enter a valid username and password to login";
-            //model.addAttribute("message", message);
 
-            log.info("Didnt enter any username or password");
+            System.out.println("Username or password was left blank");
             return "user_index";
         }
 
@@ -122,7 +197,7 @@ public class UserController {
             String message = "No such username/password combination, try again....";
             model.addAttribute("message", message);
             log.info("Login failed with username {}", username1);
-            return "user_index";
+            return "loginFailed";
         }
 
         session.setAttribute("loggedInUser", user);

@@ -11,6 +11,11 @@ public class IndexController {
         return "user_index";
     }
 
+    @GetMapping("/user_indexSignUp")
+    public String userIndexSignUp(){
+        return "user_indexSignUp";
+    }
+
     @GetMapping("/index")
     public String home(){
         return "index";
