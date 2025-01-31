@@ -73,7 +73,7 @@ public class UserController {
             return "user_indexSignUp";
         }
 
-        Pattern displayNameRegex = Pattern.compile("^[a-zA-Z]{3,25}$");
+        Pattern displayNameRegex = Pattern.compile("^[a-zA-Z0-9]{3,25}$");
         Matcher match2 = displayNameRegex.matcher(displayName);
         boolean matchfoundDisplayName= match2.find();
 
@@ -147,6 +147,14 @@ public class UserController {
         }
 
         LocalDateTime dob = LocalDateTime.parse(dateOfBirth);
+        LocalDateTime today = LocalDateTime.now();
+
+        if (!dob.isBefore(today.minusYears(12))){
+            String message7 = "Date Of Birth has to be 12 years old or over";
+            model.addAttribute("message7", message7);
+            System.out.println("Date Of Birth has to be 12 years old or over");
+            return "user_indexSignUp";
+        }
 
         String view = "";
         UserDao userDao = new UserDaoImpl("database.properties");
@@ -217,12 +225,19 @@ public class UserController {
 
     @GetMapping("/logOut")
     public String logOut(HttpSession session){
+        if (session.getAttribute("loggedInUser") != null) {
+            User u = (User) session.getAttribute("loggedInUser");
 
-        if (session != null) {
-            session.invalidate();
+
+            if (session != null) {
+                session.invalidate();
+                log.info("User {} logged out of system", u.getUsername());
+            }
+
+            return "user_index";
         }
 
-        return "user_index";
+        return "error";
     }
 
 

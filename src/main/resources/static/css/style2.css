@@ -24,10 +24,11 @@ body {
 }
 
 h1 {
-    font-size: 80px;
+    font-size: 40px;
     color: darkred;
     font-weight: bold;
     -webkit-text-stroke: 3px black;
+    text-align: center;
 }
 
 label {
@@ -88,8 +89,10 @@ button {
     height: 60px;
     width: 300px;
     margin: 20px auto;
-    box-shadow: 10px 10px 30px rgb(210, 210, 210);
+    /*box-shadow: 10px 10px 30px rgb(0, 0, 0);
     border-radius: 50px;
+
+     */
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -101,7 +104,7 @@ button {
     font-size: 22px;
     border: none;
     outline: none;
-    background-color: transparent;
+    background-color: black;
     position: relative;
     cursor: pointer;
     color: red;
