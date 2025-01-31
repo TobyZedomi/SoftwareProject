@@ -21,21 +21,21 @@
     Select Genre of movie
   </button>
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="@{/viewByGenre(genre=${1})}">Action</a></li>
-    <li><a class="dropdown-item" href="@{/viewByGenre(genre=${1})}">Comedy</a></li>
-    <li><a class="dropdown-item" href="#"></a>Science-Fiction</li>
-    <li><a class="dropdown-item" href="#">Thriller</a></li>
-    <li><a class="dropdown-item" href="#">Animation</a></li>
+    <li><a th:href="@{/viewByGenre(genre=${1})}">Action</a></li>
+    <li><a th:href="@{/viewByGenre(genre=${2})}">Comedy</a></li>
+    <li><a th:href="@{/viewByGenre(genre=${3})}">Science-Fiction</a></li>
+    <li><a th:href="@{/viewByGenre(genre=${4})}">Thriller</a></li>
+    <li><a th:href="@{/viewByGenre(genre=${5})}">Animation</a></li>
   </ul>
 </div>
 
 <div th:each="movie : ${movies}">
   <div class="movie-card">
-    <h3 th:text="${movie.movieName}">Movie Title</h3>
-    <img th:src="@{${movie.movieImage}}" alt="Movie Poster" />
-    <p th:text="${movie.movieInfo}">Movie Description</p>
-    <p><strong>Release Date:</strong> <span th:text="${movie.dateOfRelease}">Release Date</span></p>
-    <p><strong>Length:</strong> <span th:text="${movie.movieLength}">Movie Length</span> mins</p>
+    <h3 th:text="${movie.movie_name}">Movie Title</h3>
+
+    <p th:text="${movie.movie_info}">Movie Description</p>
+    <p><strong>Release Date:</strong> <span th:text="${movie.date_of_release}">Release Date</span></p>
+    <p><strong>Length:</strong> <span th:text="${movie.movie_length}">Movie Length</span> mins</p>
   </div>
 </div>
 
