@@ -10,7 +10,7 @@
 <body>
 <div th:replace="~{fragments/menu :: menu-bar}"></div>
 <div th:if="${#ctx.session.loggedInUser != null}">
-  <p th:text="|Welcome ${#ctx.session.loggedInUser.getUsername()}|">
+  <p th:text="|Welcome ${#ctx.session.loggedInUser.getUsername()} you are logged in|">
   </p>
 </div>
 <br>
