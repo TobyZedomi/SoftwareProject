@@ -7,6 +7,7 @@ import softwareProject.business.Movie;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -33,9 +34,9 @@ class MovieDaoImplTest {
         Time t2 = Time.valueOf("02:32:00");
         Time t3 = Time.valueOf("02:27:00");
         ArrayList<Movie> expected = new ArrayList<>();
-        expected.add(new Movie(1, "Spider-Man-2", 1, 3, LocalDateTime.of(2004,07,16,0,0,0),t1, "Peter Parker is very unhappy with life as he loses his job, Mary Jane and powers but must manage to save New York from the evil Doctor Octopus", "spiderman2.jpg" ));
-        expected.add(new Movie(2, "The Dark Knight",1,3,LocalDateTime.of(2008,07,28,0,0,0), t2, "Batman must face Joker as he wants to destroy and control Gotham City. Batman struggles to face joker before its to late", "batman.jpg"));
-        expected.add(new Movie(3, "Inception", 1, 2, LocalDateTime.of(2010,07,16,0,0,0), t3, "Cobb enters the dreams of people to steal information and wants to achieve an impossible task", "inception.jpg"));
+        expected.add(new Movie(1, "Spider-Man-2", 1, 3, LocalDate.of(2004,07,16),t1, "Peter Parker is very unhappy with life as he loses his job, Mary Jane and powers but must manage to save New York from the evil Doctor Octopus", "spiderman2.jpg" ));
+        expected.add(new Movie(2, "The Dark Knight",1,3,LocalDate.of(2008,07,28), t2, "Batman must face Joker as he wants to destroy and control Gotham City. Batman struggles to face joker before its to late", "batman.jpg"));
+        expected.add(new Movie(3, "Inception", 1, 2, LocalDate.of(2010,07,16), t3, "Cobb enters the dreams of people to steal information and wants to achieve an impossible task", "inception.jpg"));
 
         ArrayList<Movie> result = movieDao.findMovieByGenre(1);
 

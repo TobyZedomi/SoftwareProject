@@ -62,7 +62,7 @@ CREATE TABLE movies
     movie_name varchar(255) NOT NULL,
     genre_id int(11) NOT NULL,
     age_id INT(50) NOT NULL,
-    date_of_release datetime NOT NULL,
+    date_of_release DATE NOT NULL,
     movie_length time NOT NULL,
     movie_info varchar(255) NOT NULL,
     movie_image varchar(255) NOT NULL,

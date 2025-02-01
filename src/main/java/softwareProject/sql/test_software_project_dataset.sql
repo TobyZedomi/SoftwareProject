@@ -31,21 +31,21 @@ VALUES (1, 12),
        (4, 18);
 
 INSERT INTO `movies` (`movie_id`, `movie_name`, `genre_id`, `age_id`, `date_of_release`, `movie_length`, `movie_info`, `movie_image`)
-VALUES (1, 'Spider-Man-2', 1, 3, '2004-07-16 00:00:00', '02:07:00', 'Peter Parker is very unhappy with life as he loses his job, Mary Jane and powers but must manage to save New York from the evil Doctor Octopus', 'spiderman2.jpg'),
-       (2, 'The Dark Knight', 1, 3, '2008-07-28 00:00:00', '02:32:00', 'Batman must face Joker as he wants to destroy and control Gotham City. Batman struggles to face joker before its to late', 'batman.jpg' ),
-       (3, 'Inception', 1, 2, '2010-07-16 00:00:00', '02:27:00', 'Cobb enters the dreams of people to steal information and wants to achieve an impossible task', 'inception.jpg'),
-       (4, 'Dont Look Up', 2, 1, '2021-12-10 00:00:00', '02:46:00', 'Two astorometers try there best to tell the entire world that a comet is going to destroy earth', 'dontlookup.jpg'),
-       (5, 'Friday', 2, 2, '1995-04-26 00:00:00', '01:37:00', 'Two unemployed slackers are in debt to a gangster', 'friday.jpg'),
-       (6, 'Yes Man', 2, 2, '2008-12-17 00:00:00', '01:44:00', 'Carl is a lonely man who meets a friend that convinces him to say yes to everything for a whole entire year', 'yesman.jpg'),
-       (7, 'Interstellar', 3, 2, '2014-11-07 00:00:00', '02:55:00', 'Earth is going to become unlivable in the future so an exNasa pilot and his team is tasked to research other planets for humans', 'interstellar.jpg'),
-       (8, 'The Matrix', 3, 3, '1999-06-11 00:00:00', '02:16:00', 'Neo a computer hacker has always questioned reality and his questioning was answered as the truth was revealed', 'thematrix.jpg'),
-       (9, 'Limitless', 3, 4, '2011-03-25 00:00:00', '01:45:00', 'Eddie Morra doesnt have a bright future as he loses his job but he discovers an untested drug that improves his decisions', 'limitless.jpg'),
-       (10, 'Se7en', 4, 4, '1995-09-22 00:00:00', '02:10:00', 'Detectives Somerset and Millis pair up together to solve murders', 'seven.webp'),
-       (11, 'Old', 4, 3, '2021-07-23 00:00:00', '02:49:00', 'A vacation that turns into a nightmare, as a couple is stuck on a beach with others that make them age rapidly', 'old.jpg'),
-       (12, 'The Prestige', 4, 2, '2006-11-10 00:00:00', '02:10:00', 'Two friends became bitter rivals, as they are in constant competition with each other to achieve fame', 'theprestige.jpg'),
-       (13, 'Spider-Man Into The Spider-Verse', 5, 1, '2018-10-14 00:00:00', '02:41:00', 'Miles Morales becomes Spider-man but he soon meets alternate versions of himself and gets in a battle to save the multiverse', 'intospiderman.jpg'),
-       (14, 'Kurokos Basketball Last Game', 5, 1, '2017-03-18 00:00:00', '01:31:00', 'Japan team faces the USA basketball team', 'kuroko.jpg'),
-       (15, 'The Last', 5, 1, '2014-03-18 00:00:00', '01:52:00', 'A couple years after the ninja war, Naruto must stop Toneri Otsutuski', 'thelast.jpg');
+VALUES (1, 'Spider-Man-2', 1, 3, '2004-07-16 ', '02:07:00', 'Peter Parker is very unhappy with life as he loses his job, Mary Jane and powers but must manage to save New York from the evil Doctor Octopus', 'spiderman2.jpg'),
+       (2, 'The Dark Knight', 1, 3, '2008-07-28 ', '02:32:00', 'Batman must face Joker as he wants to destroy and control Gotham City. Batman struggles to face joker before its to late', 'batman.jpg' ),
+       (3, 'Inception', 1, 2, '2010-07-16 ', '02:27:00', 'Cobb enters the dreams of people to steal information and wants to achieve an impossible task', 'inception.jpg'),
+       (4, 'Dont Look Up', 2, 1, '2021-12-10 ', '02:46:00', 'Two astorometers try there best to tell the entire world that a comet is going to destroy earth', 'dontlookup.jpg'),
+       (5, 'Friday', 2, 2, '1995-04-26 ', '01:37:00', 'Two unemployed slackers are in debt to a gangster', 'friday.jpg'),
+       (6, 'Yes Man', 2, 2, '2008-12-17', '01:44:00', 'Carl is a lonely man who meets a friend that convinces him to say yes to everything for a whole entire year', 'yesman.jpg'),
+       (7, 'Interstellar', 3, 2, '2014-11-07', '02:55:00', 'Earth is going to become unlivable in the future so an exNasa pilot and his team is tasked to research other planets for humans', 'interstellar.jpg'),
+       (8, 'The Matrix', 3, 3, '1999-06-11', '02:16:00', 'Neo a computer hacker has always questioned reality and his questioning was answered as the truth was revealed', 'thematrix.jpg'),
+       (9, 'Limitless', 3, 4, '2011-03-25 ', '01:45:00', 'Eddie Morra doesnt have a bright future as he loses his job but he discovers an untested drug that improves his decisions', 'limitless.jpg'),
+       (10, 'Se7en', 4, 4, '1995-09-22', '02:10:00', 'Detectives Somerset and Millis pair up together to solve murders', 'seven.webp'),
+       (11, 'Old', 4, 3, '2021-07-23', '02:49:00', 'A vacation that turns into a nightmare, as a couple is stuck on a beach with others that make them age rapidly', 'old.jpg'),
+       (12, 'The Prestige', 4, 2, '2006-11-10', '02:10:00', 'Two friends became bitter rivals, as they are in constant competition with each other to achieve fame', 'theprestige.jpg'),
+       (13, 'Spider-Man Into The Spider-Verse', 5, 1, '2018-10-14', '02:41:00', 'Miles Morales becomes Spider-man but he soon meets alternate versions of himself and gets in a battle to save the multiverse', 'intospiderman.jpg'),
+       (14, 'Kurokos Basketball Last Game', 5, 1, '2017-03-18', '01:31:00', 'Japan team faces the USA basketball team', 'kuroko.jpg'),
+       (15, 'The Last', 5, 1, '2014-03-18', '01:52:00', 'A couple years after the ninja war, Naruto must stop Toneri Otsutuski', 'thelast.jpg');
 
 
 
