@@ -21,6 +21,16 @@ public class IndexController {
         return "index";
     }
 
+    @GetMapping("/movie_index")
+    public String movieIndex(){
+        return "movie_index";
+    }
+
+    @GetMapping("/streamingservice_index")
+    public String streamIndex(){
+        return "streamingservice_index";
+    }
+
     @GetMapping("/logout_index")
     public String userIndex2(){
         return "logout_index";
