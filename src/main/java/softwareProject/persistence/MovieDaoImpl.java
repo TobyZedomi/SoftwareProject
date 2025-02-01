@@ -28,6 +28,11 @@ public class MovieDaoImpl extends MySQLDao implements MovieDao {
         super();
     }
 
+    /**
+     * Get all the movies by genre
+     * @param genre is the genre being searched
+     * @return an arrayList of movies based on the genre
+     */
     @Override
     public ArrayList<Movie> findMovieByGenre(int genre){
 
