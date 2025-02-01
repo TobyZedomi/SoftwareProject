@@ -83,6 +83,7 @@ public class MovieDaoImpl extends MySQLDao implements MovieDao {
                 rs.getInt("movie_id"),
                 rs.getString("movie_name"),
                 rs.getInt("genre_id"),
+                rs.getInt("age_id"),
                 rs.getTimestamp("date_of_release").toLocalDateTime(),
                 rs.getTime("movie_length"),
                 rs.getString("movie_info"),
