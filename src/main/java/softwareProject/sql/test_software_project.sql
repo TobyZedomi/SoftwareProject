@@ -13,7 +13,7 @@ CREATE TABLE users
     email    varchar(255) UNIQUE NOT NULL,
     password varchar(255)        NOT NULL,
     address  varchar(255) 	 NOT NULL,
-    dateOfBirth datetime	 NOT NULL,
+    dateOfBirth DATE	 NOT NULL,
     isAdmin boolean NOT NULL DEFAULT false,
     createdAt datetime NOT NULL,
     PRIMARY KEY (username)

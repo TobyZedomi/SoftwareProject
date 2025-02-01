@@ -15,6 +15,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
@@ -146,8 +147,8 @@ public class UserController {
             return "user_indexSignUp";
         }
 
-        LocalDateTime dob = LocalDateTime.parse(dateOfBirth);
-        LocalDateTime today = LocalDateTime.now();
+        LocalDate dob = LocalDate.parse(dateOfBirth);
+        LocalDate today = LocalDate.now();
 
         if (!dob.isBefore(today.minusYears(12))){
             String message7 = "Date Of Birth has to be 12 years old or over";

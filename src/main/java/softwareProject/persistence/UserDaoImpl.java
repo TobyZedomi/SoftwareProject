@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import softwareProject.business.User;
 
 import java.sql.*;
+import java.time.LocalDate;
 
 @Slf4j
 public class UserDaoImpl extends MySQLDao implements UserDao {
@@ -52,7 +53,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             ps.setString(3, newUser.getEmail());
             ps.setString(4, newUser.getPassword());
             ps.setString(5, newUser.getAddress());
-            ps.setTimestamp(6, Timestamp.valueOf(newUser.getDateOfBirth()));
+            ps.setDate(6, Date.valueOf(newUser.getDateOfBirth()));
             ps.setBoolean(7, newUser.isAdmin());
             ps.setTimestamp(8, Timestamp.valueOf(newUser.getCreatedAt()));
 
@@ -215,7 +216,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
                 rs.getString("email"),
                 rs.getString("password"),
                 rs.getString("address"),
-                rs.getTimestamp("dateOfBirth").toLocalDateTime(),
+                rs.getDate("dateOfBirth").toLocalDate(),
                 rs.getBoolean("isAdmin"),
                 rs.getTimestamp("createdAt").toLocalDateTime()
         );

@@ -2,6 +2,7 @@ package softwareProject.business;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -21,7 +22,7 @@ public class User {
     private String email;
     private String password;
     private String address;
-    private LocalDateTime dateOfBirth;
+    private LocalDate dateOfBirth;
     private boolean isAdmin;
     private LocalDateTime createdAt;
 
