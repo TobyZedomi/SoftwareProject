@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 public class MovieDaoImpl extends MySQLDao implements MovieDao {
@@ -68,6 +69,24 @@ public class MovieDaoImpl extends MySQLDao implements MovieDao {
         return movies;
     }
 
+    @Override
+    public List<Movie> getAllMovies() {
+        List<Movie> movies = new ArrayList<>();
+        Connection conn = super.getConnection();
+        try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM movies")) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Movie movie = mapRow(rs);
+                    movies.add(movie);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            super.freeConnection(conn);
+        }
+        return movies;
+    }
 
     /**
      * Search through each row in the movie
