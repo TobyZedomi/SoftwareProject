@@ -18,6 +18,8 @@
 </head>
 
 <body>
+
+<div th:if="${#ctx.session.loggedInUser != null}">
 <!-- Include the menu bar fragment -->
 <div th:replace="~{fragments/menu :: menu-bar}"></div>
 
@@ -58,7 +60,33 @@
   </div>
 </div>
 
+</div>
 
+<div  th:unless="${#ctx.session.loggedInUser != null}">
+  <style>
+    body{
+      background-image: url("https://wallpapers.com/images/featured/movie-9pvmdtvz4cb0xl37.jpg");
+    h2{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 50px;
+      color: darkred;
+      font-weight: bold;
+      -webkit-text-stroke: 3px black;
+    }
+
+    a{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    }
+  </style>
+
+  <h2>You have to login to get access to this page</h2>
+  <a href ="/" ><button type="button" class="btn btn-primary">Go to Login page</button></a>
+</div>
 
 </body>
 </html>
