@@ -28,16 +28,14 @@
     <li><a th:href="@{/viewByGenre(genre=${5})}">Animation</a></li>
   </ul>
 </div>
-
 <div th:each="movie : ${movies}">
   <div class="movie-card">
     <h3 th:text="${movie.movie_name}">Movie Title</h3>
-
+    <img th:src="@{'/css/images/'+${movie.movie_image}}" alt="Movie image"/>
     <p th:text="${movie.movie_info}">Movie Description</p>
     <p><strong>Release Date:</strong> <span th:text="${movie.date_of_release}">Release Date</span></p>
     <p><strong>Length:</strong> <span th:text="${movie.movie_length}">Movie Length</span> mins</p>
   </div>
 </div>
-
 </body>
 </html>

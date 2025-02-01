@@ -22,7 +22,7 @@ public class Movie {
     private LocalDateTime date_of_release;
     private Time movie_length;
     private String movie_info;
-    private String movie_mage;
+    private String movie_image;
 
 
 }
