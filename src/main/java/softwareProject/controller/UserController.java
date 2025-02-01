@@ -58,9 +58,9 @@ public class UserController {
         boolean matchfoundUsername = match.find();
 
         if (!matchfoundUsername){
-            String message = "Username must be between 3-25 characters";
+            String message = "Username must be between 3-25 characters, letters only";
             model.addAttribute("message", message);
-            System.out.println("Username must be between 3-25 characters");
+            System.out.println("Username must be between 3-25 characters, letters only");
           return "user_indexSignUp";
         }
 
@@ -79,9 +79,9 @@ public class UserController {
         boolean matchfoundDisplayName= match2.find();
 
         if (!matchfoundDisplayName){
-            String message2 = "Display Name must be between 3-25 characters";
+            String message2 = "Display Name must be between 3-25 characters and only letters and numbers";
             model.addAttribute("message2", message2);
-            System.out.println("Display Name must be between 3-25 characters");
+            System.out.println("Display Name must be between 3-25 characters and only letters and numbers");
            return "user_indexSignUp";
         }
 

@@ -51,6 +51,11 @@ class MovieDaoImplTest {
         }
     }
 
+    /**
+     * Check if two movies are the same
+     * @param expected is the movie being searched
+     * @param result is the movie being searched
+     */
 
     void assertMovieEquals(Movie expected, Movie result){
         assertEquals(expected.getMovie_id(), result.getMovie_id());

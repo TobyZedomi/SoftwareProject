@@ -1,8 +1,9 @@
 package softwareProject.persistence;
 
 import softwareProject.business.StreamingService;
-import java.util.List;
+
+import java.util.ArrayList;
 
 public interface StreamingServiceDao {
-    List<StreamingService> getAllStreamingServices();
+    public ArrayList<StreamingService> getAllStreamingServicesByMovie(int movieID);
 }

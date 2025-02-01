@@ -51,6 +51,7 @@
       <div class="card-body">
         <h5 th:text="${movie.movie_name}" class="card-title">Card title</h5>
         <p  th:text="${movie.movie_info}" class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+        <a th:href="@{/getAllStreamingServicesForMovie(movieID=${movie.movie_id})}"><button type="button" class="btn btn-primary">Where to watch movie</button></a>
       </div>
       <div class="card-footer">
         <small th:text="  |Date Of Release:  ${movie.date_of_release} |"  class="text-muted">Last updated 3 mins ago</small>
@@ -64,8 +65,9 @@
 
 <div  th:unless="${#ctx.session.loggedInUser != null}">
   <style>
-    body{
+    body {
       background-image: url("https://wallpapers.com/images/featured/movie-9pvmdtvz4cb0xl37.jpg");
+    }
     h2{
       display: flex;
       justify-content: center;
@@ -81,7 +83,7 @@
       justify-content: center;
       align-items: center;
     }
-    }
+
   </style>
 
   <h2>You have to login to get access to this page</h2>

@@ -27,7 +27,7 @@
 </head>
 <body>
 <header>
-  <h2 class="heading" style="margin-right: 1400px;">Movies</h2>
+  <h2 class="heading" style="margin-right: 1400px;">ScreenSafari</h2>
 </header>
 
 
@@ -130,13 +130,13 @@
       alert("Username is left empty, try register again");
     }
     else if (!usernameRegex.test(username)){
-      alert("Username must be between 3-25 characters, try register again");
+      alert("Username must be between 3-25 characters (letters only), try register again");
     }
     else if(displayName === ""){
       alert("Display Name was left empty, try register again");
     }
     else if(!displayNameRegex.test(displayName)){
-      alert("Display Name has to be between 3-25 characters, try register again");
+      alert("Display Name has to be between 3-25 characters (letters and numbers only), try register again");
     }
     else if (email === ""){
       alert("Email was left empty, try register again")
@@ -160,7 +160,7 @@
       alert("Date Of Birth was left empty, try register again")
     }
     else{
-      alert("Registration form complete, lets see if you are successfully registered")
+    //  alert("Registration form complete, lets see if you are successfully registered")
       return true;
     }
 

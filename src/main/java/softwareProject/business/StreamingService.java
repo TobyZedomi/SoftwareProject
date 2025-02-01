@@ -11,10 +11,10 @@ import lombok.*;
 public class StreamingService {
 
     @EqualsAndHashCode.Include
-    private int streamingServiceId;
-    private String movieId;
-    private String movieServiceName;
-    private String movieServiceLink;
+    private int streaming_service_id;
+    private int movie_id;
+    private String streaming_service_name;
+    private String streaming_service_link;
     private double cost;
 
 

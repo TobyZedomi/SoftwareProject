@@ -361,6 +361,12 @@ class UserDaoImplTest {
         assertNotEquals(expected,result);
     }
 
+    /**
+     * Check if two users are the same
+     * @param u1 is the user being searched
+     * @param u2 is the user being searched
+     */
+
     private void assertUserEquals(User u1, User u2){
         assertEquals(u1.getUsername(), u2.getUsername());
         assertEquals(u1.getDisplayName(), u2.getDisplayName());
