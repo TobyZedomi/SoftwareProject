@@ -34,6 +34,25 @@ public class SubscriptionPlanController {
     }
 
 
+    @GetMapping("SubPlanStandardPart2")
+    public String addSubscriptionForUserPart2(HttpSession session,
+                                         @RequestParam(name = "subscriptionPlanId") String subscriptionPlanId,
+                                         Model model) {
+
+
+        int subPlanId = Integer.parseInt(subscriptionPlanId);
+
+        SubscriptionPlanDao subscriptionPlanDao = new SubscriptionPlanDaoImpl("database.properties");
+        SubscriptionPlan subscriptionPlan = subscriptionPlanDao.getSubscriptionPlanById(subPlanId);
+
+        model.addAttribute("subscriptionPlan",subscriptionPlan);
+        session.setAttribute("subscriptionPicked", subscriptionPlan);
+        return "purchaseSubscriptionPart2";
+
+
+    }
+
+
 
 
     }

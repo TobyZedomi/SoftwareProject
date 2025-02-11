@@ -116,5 +116,97 @@ public class SubscriptionController {
 
 
 
+    /**
+     * Adds a yearly subscription for the user when new user is registered
+     * @param session is the users details being held when registration is complete
+     * @param model stores data
+     * @return index page to go to the home page of the system if purchased subscription was a success or goes to the subscriptionFailed page if not a success
+     */
+    @PostMapping("addSubscriptionForUserPart2")
+    public String addSubscriptionForUserPart2(HttpSession session,
+                                         @RequestParam(name = "cardNumber") String cardNumber,
+                                         @RequestParam(name = "Month") String Month,
+                                         @RequestParam(name = "Year") String Year,
+                                         @RequestParam(name = "cvv") String cvv,
+                                         Model model) {
+
+        String view = "";
+
+        SubscriptionDao subscriptionDao = new SubscriptionDaoImpl("database.properties");
+        ArrayList<Subscription> allSubscriptions = subscriptionDao.getAllSubscriptions();
+
+
+        Pattern cardNumberRegex = Pattern.compile("^(?:4[0-9]{12}(?:[0-9]{3})?)$");
+        Matcher match = cardNumberRegex.matcher(cardNumber);
+        boolean matchfoundCardNumber = match.find();
+
+        if (!matchfoundCardNumber){
+            String message = "Card Number must be a valid Visa credit card number";
+            model.addAttribute("message", message);
+            System.out.println("Card Number must be a valid Visa credit card number");
+            return  "purchaseSubscriptionPart2";
+        }
+
+
+        if (Month.isBlank()){
+            String message = "You must choose a month";
+            model.addAttribute("message", message);
+            System.out.println("You must choose a month");
+            return  "purchaseSubscriptionPart2";
+        }
+
+        if (Year.isBlank()){
+            String message = "You must choose a Year";
+            model.addAttribute("message", message);
+            System.out.println("You must choose a year");
+            return  "purchaseSubscriptionPart2";
+        }
+
+
+        Pattern cvvNumberRegex = Pattern.compile("^[0-9]{3,4}$");
+        Matcher match1 = cvvNumberRegex.matcher(cvv);
+        boolean matchfoundCvvNumber = match1.find();
+
+        if (!matchfoundCvvNumber){
+            String message = "Cvv number must be 3 or 4 numbers long";
+            model.addAttribute("message", message);
+            System.out.println("Cvv number must be 3 or 4 numbers long");
+            return  "purchaseSubscriptionPart2";
+        }
+
+
+        // session for user
+        User user = (User) session.getAttribute("loggedInUser");
+
+        // session for subscription to get the subscription id
+        SubscriptionPlan subscriptionPlan = (SubscriptionPlan) session.getAttribute("subscriptionPicked");
+
+        /*
+        for (int i = 0; i < allSubscriptions.size(); i++) {
+
+            if (allSubscriptions.get(i).getUsername().equals(user.getUsername())) {
+                view = "subscriptionFailed";
+            }
+        }
+
+         */
+
+        LocalDateTime date = LocalDateTime.now();
+        LocalDateTime endDate = date.plusYears(1);
+        Subscription subscription = new Subscription(user.getUsername(),subscriptionPlan.getSubscription_plan_id(), LocalDateTime.now(), endDate);
+        int added = subscriptionDao.addSubscription(subscription);
+
+        if (added == -1) {
+
+            view =  "subscriptionFailed";
+        } else {
+            log.info("User {} purchased subscription", user.getUsername());
+            view =  "purchaseSubDetails";
+        }
+
+        return view;
+    }
+
+
 
 }

@@ -38,4 +38,10 @@ public class IndexController {
     }
 
 
+    @GetMapping("/subscription_index")
+    public String subscriptionIndex(){
+        return "subscription_index";
+    }
+
+
 }
