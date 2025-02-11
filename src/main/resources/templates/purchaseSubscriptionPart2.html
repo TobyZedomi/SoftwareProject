@@ -19,6 +19,8 @@
 
 <div th:replace="~{fragments/menu :: menu-bar}"></div>
 
+<h2 style="text-align: center;">Credit Card Payment</h2>
+
 <div th:if="${#ctx.session.loggedInUser != null}">
 
   <form class="credit-card"  method="post" action="/addSubscriptionForUserPart2">
