@@ -4,8 +4,6 @@ import lombok.*;
 
 import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -27,4 +25,6 @@ public class Movie {
     private String movie_image;
 
 
+    public Movie(String movieName, int genreId, int ageId, LocalDate releaseDate, Time length, String movieInfo, String movieImage) {
+    }
 }
