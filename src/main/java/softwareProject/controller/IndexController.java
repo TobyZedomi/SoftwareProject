@@ -32,4 +32,10 @@ public class IndexController {
     }
 
 
+    @GetMapping("/registerSuccessUser")
+    public String regIndex(){
+        return "registerSuccessUser";
+    }
+
+
 }
