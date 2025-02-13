@@ -1,10 +1,20 @@
 package softwareProject.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import softwareProject.business.MovieTest;
+import softwareProject.service.MovieService;
+
+import java.util.List;
 
 @Controller
 public class IndexController {
+
+    @Autowired
+    private MovieService movieService;
+
 
     @GetMapping("/")
     public String userIndex(){
@@ -16,8 +26,14 @@ public class IndexController {
         return "user_indexSignUp";
     }
 
+    // add these .add model from list of movies from movie db into index controller
     @GetMapping("/index")
-    public String home(){
+    public String home(Model model){
+
+        List<MovieTest> movies = movieService.getMovies();
+        model.addAttribute("movies", movies);
+
+
         return "index";
     }
 

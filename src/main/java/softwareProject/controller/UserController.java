@@ -3,12 +3,15 @@ package softwareProject.controller;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import softwareProject.business.MovieTest;
 import softwareProject.business.User;
 import softwareProject.persistence.UserDao;
 import softwareProject.persistence.UserDaoImpl;
 import org.springframework.ui.Model;
+import softwareProject.service.MovieService;
 
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -26,6 +29,10 @@ import java.util.regex.Pattern;
 @Slf4j
 @Controller
 public class UserController {
+
+    @Autowired
+    private MovieService movieService;
+
 
 
     // register
@@ -210,6 +217,10 @@ public class UserController {
         }
 
         session.setAttribute("loggedInUser", user);
+        // between this line get list of movies from movie db
+        // model .add attribute here for list of movies form movie db
+        List<MovieTest> movies = movieService.getMovies();
+        model.addAttribute("movies", movies);
         log.info("User {} log into system", user.getUsername());
         return "loginSuccessful";
     }
