@@ -9,11 +9,76 @@
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
 
   <style>
-    img{
+
+    .card-img-top{
       width:  500px;
       height: 500px;
       background-size: cover;
     }
+
+
+
+
+    /* Testing */
+    h1 {
+      color:white;
+      text-align: center;
+      font-size: 50px;
+      padding-top: 70px;
+      font-weight: normal;
+      margin-bottom: 0;
+    }
+
+    h2 {
+      color:white;
+      text-align: center;
+      font-size: 30px;
+      padding-bottom: 70px;
+      font-weight: normal;
+      margin-bottom: 0;
+    }
+
+    .scroll-tray {
+      white-space: nowrap;
+    }
+    .scroll-tray div {
+      display: inline-block;
+    }
+
+    .scroll-tray img {
+      border-radius: 0.3rem;
+      margin: 7px 5px;
+      padding: 0;
+      width: 340px;
+    }
+
+    .scroll-holder {
+      overflow-x: hidden;
+    }
+
+    .scroll-holder .scroll-tray:first-child {
+      animation: scroll-tray-hero 180s linear infinite;
+    }
+
+    .scroll-holder .scroll-tray:last-child {
+      animation: scroll-tray-hero 120s linear infinite;
+    }
+
+    @keyframes scroll-tray-hero {
+      0% {
+        transform: translateX(0);
+      }
+
+      99.99% {
+        transform: translateX(-7098px);
+      }
+
+      100% {
+        transform: translateX(0);
+      }
+    }
+
+
   </style>
 </head>
 
@@ -26,6 +91,8 @@
 <div>
   <p>Welcome To Our Movie Service</p>
 </div>
+
+
 
 <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -44,7 +111,7 @@
 
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
-  <div th:each="movie : ${movies}">
+  <div th:each="movie : ${moviesGenre}">
   <div class="col">
     <div class="card h-100">
       <img th:src="@{'/css/images/'+${movie.movie_image}}" class="card-img-top" alt="...">
@@ -60,6 +127,38 @@
   </div>
   </div>
 </div>
+
+
+
+  <!-- Testing -->
+
+
+
+  <!--
+  <div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Select Genre of movie
+    </button>
+    <ul class="dropdown-menu">
+      <li><a href="/apiMovie">Get Most Popular Movies</a></li>
+    </ul>
+  </div>
+
+-->
+
+  <section>
+    <div class="scroll-holder">
+      <div class="scroll-tray">
+        <div th:each="movie : ${movies}">
+          <div>
+            <img th:src="@{'https://image.tmdb.org/t/p/w500/'+${movie.getBackdrop_path()}}"  alt="...">
+          </div>
+        </div>
+      </div>
+      <div class="scroll-tray">
+      </div>
+    </div>
+  </section>
 
 </div>
 

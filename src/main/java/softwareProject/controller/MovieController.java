@@ -19,20 +19,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
+
 @Controller
 @Slf4j
 public class MovieController {
 
     @GetMapping("/viewByGenre")
     public String viewByGenre(@RequestParam(name = "genre") String genre, Model model){
-        try {
-            int genreID = Integer.parseInt(genre);
-            MovieDao movieDao = new MovieDaoImpl("database.properties");
-            ArrayList<Movie> movies = movieDao.findMovieByGenre(genreID);
-            model.addAttribute("movies", movies);
-        }catch(NumberFormatException e){
-            log.info(String.valueOf(e));
-        }
+        int genreID = Integer.parseInt(genre);
+        MovieDao movieDao = new MovieDaoImpl("database.properties");
+        ArrayList<Movie> moviesGenre = movieDao.findMovieByGenre(genreID);
+        model.addAttribute("moviesGenre",moviesGenre);
         return "index";
 
             }

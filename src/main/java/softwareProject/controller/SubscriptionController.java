@@ -114,7 +114,7 @@ public class SubscriptionController {
     }
 
 
-
+/// subscription for if user registered but doesn't have a subscription
 
     /**
      * Adds a yearly subscription for the user when new user is registered
@@ -182,12 +182,18 @@ public class SubscriptionController {
         SubscriptionPlan subscriptionPlan = (SubscriptionPlan) session.getAttribute("subscriptionPicked");
 
         /*
+
         for (int i = 0; i < allSubscriptions.size(); i++) {
 
             if (allSubscriptions.get(i).getUsername().equals(user.getUsername())) {
-                view = "subscriptionFailed";
+
+                Subscription subbedUser = subscriptionDao.getSubscriptionFromUsername(user.getUsername());
+                session.setAttribute("subbedUser", subbedUser);
+                return "subscriptionFailed";
             }
         }
+
+
 
          */
 
