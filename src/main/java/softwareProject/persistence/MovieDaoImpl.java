@@ -3,10 +3,7 @@ package softwareProject.persistence;
 import lombok.extern.slf4j.Slf4j;
 import softwareProject.business.Movie;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +70,93 @@ public class MovieDaoImpl extends MySQLDao implements MovieDao {
         }
         return movies;
     }
+
+    /**
+     * Removes a movie from movies
+     * @param movie movie that is going to be deleted
+     * @return 1 if it has been removed, -1 if it has not been removed
+     */
+    @Override
+    public int deletingAMovie(int movieId){
+        int rowsAffected = 0;
+
+        Connection conn = super.getConnection();
+
+        try(PreparedStatement ps = conn.prepareStatement("DELETE from movies where movie_id = ?")){
+            ps.setInt(1,movieId);
+            rowsAffected = ps.executeUpdate();
+        }// Add an extra exception handling block for where there is already an entry
+        // with the primary key specified
+        catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println("Constraint Exception occurred: " + e.getMessage());
+            // Set the rowsAffected to -1, this can be used as a flag for the display section
+            rowsAffected = -1;
+        }catch(SQLException e){
+            System.out.println("SQL Exception occurred when attempting to prepare/execute SQL");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return rowsAffected;
+
+    }
+
+    @Override
+    public int insertNewMovie(Movie newMovie){
+        int rowsAffected = 0;
+
+        Connection conn = super.getConnection();
+
+        try (PreparedStatement ps = conn.prepareStatement(
+                "INSERT INTO movies (movie_name, genre_id, age_id, date_of_release, movie_length, movie_info, movie_image) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)")) {
+
+            // Set the values for the PreparedStatement
+            ps.setString(1, newMovie.getMovie_name());
+            ps.setInt(2, newMovie.getGenre_id());
+            ps.setInt(3, newMovie.getAge_id());
+            ps.setDate(4, Date.valueOf(newMovie.getDate_of_release()));
+            ps.setTime(5, newMovie.getMovie_length());
+            ps.setString(6, newMovie.getMovie_info());
+            ps.setString(7, newMovie.getMovie_image());
+
+            rowsAffected = ps.executeUpdate();
+        }// Add an extra exception handling block for where there is already an entry
+        // with the primary key specified
+        catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println("Constraint Exception occurred: " + e.getMessage());
+            // Set the rowsAffected to -1, this can be used as a flag for the display section
+            rowsAffected = -1;
+        }catch(SQLException e){
+            System.out.println("SQL Exception occurred when attempting to prepare/execute SQL");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return rowsAffected;
+
+    }
+
+    @Override
+    public Movie searchForMovieByName(String name) {
+        Movie movie = new Movie();
+        Connection conn = super.getConnection();
+        try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM movies where movie_name = ?")) {
+            ps.setString(1,name);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    movie = mapRow(rs);
+
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            super.freeConnection(conn);
+        }
+        return movie;
+    }
+
 
     @Override
     public List<Movie> getAllMovies() {
