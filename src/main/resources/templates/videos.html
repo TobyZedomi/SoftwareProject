@@ -68,6 +68,16 @@
     }
 
 
+    h1{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 50px;
+      color: darkred;
+      font-weight: bold;
+      -webkit-text-stroke: 3px black;
+    }
+
   </style>
 </head>
 <body>
@@ -76,26 +86,26 @@
   <div th:replace="~{fragments/menu :: menu-bar}"></div>
 
   <div>
-    <p>Welcome To Our Movie Service</p>
+  <h1>Movie Videos</h1>
   </div>
 
 
 
+  <div class="list-group">
+    <div th:each="trailer : ${trailers}">
 
-
-  <section>
-    <div class="scroll-holder">
-      <div class="scroll-tray">
-        <div th:each="movie : ${movies}">
-        <div>
-          <img th:src="@{'https://image.tmdb.org/t/p/w500/'+${movie.getBackdrop_path()}}" class="card-img-top" alt="...">
+      <a th:href=" | https://www.youtube.com/watch?v=${trailer.getKey()} |" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1"  th:text="${trailer.getName()}"></h5>
+          <small th:text=" | Click anywhere to view video|"></small>
         </div>
-        </div>
-      </div>
-      <div class="scroll-tray">
-      </div>
+        <p class="mb-1" ></p>
+        <small th:text="  |Type: ${trailer.getType()} |"></small>
+      </a>
+<br>
     </div>
-  </section>
+  </div>
+
 
 
 </div>
