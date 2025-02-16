@@ -2,15 +2,13 @@ package softwareProject.controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import softwareProject.business.GenreTest;
 import softwareProject.business.MovieTest;
+import softwareProject.business.MovieTrailer;
 import softwareProject.service.MovieService;
 
 import java.util.List;
@@ -47,7 +45,31 @@ public class MovieTestController {
 
      */
 
+@GetMapping("/movieTrailer")
+    public String getMovieTrailer(Model model, @RequestParam(name = "id") String id, HttpSession session){
 
+    int movieId = Integer.parseInt(id);
+
+    List<MovieTrailer> trailers = movieService.getTrailer(movieId);
+    model.addAttribute("trailers", trailers);
+
+    return "videos";
+}
+
+
+    @GetMapping("/viewMovieByGenre")
+    public String viewMovieGenre(Model model, @RequestParam(name = "id") int id){
+
+        String genre_id = Integer.toString(id);
+
+        List<GenreTest> genres = movieService.getGenres();
+        model.addAttribute("genres", genres);
+
+        List<MovieTest> movieByGenres = movieService.getMoviesByGenre(genre_id);
+        model.addAttribute("movieByGenres", movieByGenres);
+
+        return "movie_index";
+    }
 
 
 }
