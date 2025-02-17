@@ -196,6 +196,50 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         return user;
     }
 
+    /**
+     * Get a particular user based on the username
+     * @param username is the user being searched
+     * @return the user from that particular username
+     */
+    @Override
+    public User findUserByUsername2(String username){
+
+        User user = null;
+
+        // Get a connection using the superclass
+        Connection conn = super.getConnection();
+        // TRY to get a statement from the connection
+        // When you are parameterizing the query, remember that you need
+        // to use the ? notation (so you can fill in the blanks later)
+        try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM users where username = ?")) {
+
+            // Fill in the blanks, i.e. parameterize the query
+            ps.setString(1, username+"%");
+
+            // TRY to execute the query
+            try (ResultSet rs = ps.executeQuery()) {
+                // Extract the information from the result set
+                // Use extraction method to avoid code repetition!
+                if(rs.next()){
+
+                    user = mapRow(rs);
+                }
+            } catch (SQLException e) {
+                System.out.println("SQL Exception occurred when executing SQL or processing results.");
+                System.out.println("Error: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Exception occurred when attempting to prepare SQL for execution");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }finally {
+            // Close the connection using the superclass method
+            super.freeConnection(conn);
+        }
+        return user;
+    }
+
 
 
 
