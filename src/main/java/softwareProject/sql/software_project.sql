@@ -111,6 +111,7 @@ create table friends
 (
     friend1 varchar(10) not null,
     friend2 varchar(10) not null,
+    request boolean NOT NULL DEFAULT false,
     PRIMARY KEY (friend1, friend2),
     FOREIGN KEY (friend1) REFERENCES users(username) on delete cascade,
     FOREIGN KEY (friend2) REFERENCES users(username) on delete cascade
