@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import softwareProject.business.MovieTest;
 import softwareProject.business.User;
+import softwareProject.persistence.FriendDao;
+import softwareProject.persistence.FriendDaoImpl;
 import softwareProject.persistence.UserDao;
 import softwareProject.persistence.UserDaoImpl;
 import org.springframework.ui.Model;
@@ -18,8 +20,10 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -280,4 +284,25 @@ public class UserController {
         return keyAsString;
 
     }
+
+    @GetMapping("/searchForFriends")
+    public String user(HttpSession session,@RequestParam(name="username") String username, Model model) {
+
+        User u = (User) session.getAttribute("loggedInUser");
+        UserDao userDao = new UserDaoImpl("database.properties");
+
+        User found = userDao.findUserByUsername2(username);
+        if (found != null) {
+            model.addAttribute("username", found.getUsername());
+            log.info("User found" + username);
+            return "friends";
+        } else {
+            log.info("User not found: " + username);
+            model.addAttribute("error", "User not found");
+            return "friends";
+        }
+
+    }
+
+
 }
