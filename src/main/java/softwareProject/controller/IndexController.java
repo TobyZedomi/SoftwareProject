@@ -84,4 +84,11 @@ public class IndexController {
     }
 
 
+
+    @GetMapping("/forgot_password")
+    public String forgotPasswordIndex(){
+        return "forgot_password";
+    }
+
+
 }
