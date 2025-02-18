@@ -2,10 +2,12 @@ package softwareProject.persistence;
 
 import lombok.extern.slf4j.Slf4j;
 import softwareProject.business.User;
-
+import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.time.LocalDate;
 
+
+@Repository
 @Slf4j
 public class UserDaoImpl extends MySQLDao implements UserDao {
 
@@ -241,6 +243,23 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
     }
 
 
+    @Override
+    public boolean updatePassword(String email, String newPassword) {
+        String sql = "UPDATE users SET password = ? WHERE email = ?";
+        try (Connection conn = super.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, newPassword);
+            ps.setString(2, email);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 
 

@@ -13,4 +13,8 @@ public interface UserDao {
     public User findUserByThereEmail(String email);
 
     public User findUserByUsername2(String username);
+
+    boolean updatePassword(String email, String newPassword);
+
+
 }
