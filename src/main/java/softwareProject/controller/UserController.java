@@ -227,6 +227,10 @@ public class UserController {
         List<MovieTest> movies = movieService.getMovies();
         model.addAttribute("movies", movies);
         log.info("User {} log into system", user.getUsername());
+
+        // totalAmountOItems in basket
+        getTotalAmountOfItemsInCart(session,model);
+
         return "loginSuccessful";
     }
 
@@ -303,6 +307,26 @@ public class UserController {
             return "friends";
         }
 
+    }
+
+
+
+    // totalAmount in Cart
+
+    public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
+
+        /// get total number of items in cart for user
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+        CartDao cartDao = new CartDaoImpl("database.properties");
+
+        Cart cart = cartDao.getCartByUsername(u.getUsername());
+
+        CartItemDao cartItemDao = new CartItemDaoImpl("database.properties");
+
+        int totalCartItems = cartItemDao.totalNumberOfCartItems(cart.getCart_id());
+        model.addAttribute("totalCartItems", totalCartItems);
     }
 
 
