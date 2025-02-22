@@ -6,11 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import softwareProject.business.Cart;
 import softwareProject.business.Subscription;
 import softwareProject.business.SubscriptionPlan;
 import softwareProject.business.User;
-import softwareProject.persistence.SubscriptionDao;
-import softwareProject.persistence.SubscriptionDaoImpl;
+import softwareProject.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -132,6 +132,10 @@ public class SubscriptionController {
 
         String view = "";
 
+        // totalAmountOItems in basket
+        getTotalAmountOfItemsInCart(session,model);
+
+
         SubscriptionDao subscriptionDao = new SubscriptionDaoImpl("database.properties");
         ArrayList<Subscription> allSubscriptions = subscriptionDao.getAllSubscriptions();
 
@@ -214,5 +218,22 @@ public class SubscriptionController {
     }
 
 
+
+    // total amount of items in cart
+    public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
+
+        /// get total number of items in cart for user
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+        CartDao cartDao = new CartDaoImpl("database.properties");
+
+        Cart cart = cartDao.getCartByUsername(u.getUsername());
+
+        CartItemDao cartItemDao = new CartItemDaoImpl("database.properties");
+
+        int totalCartItems = cartItemDao.totalNumberOfCartItems(cart.getCart_id());
+        model.addAttribute("totalCartItems", totalCartItems);
+    }
 
 }

@@ -53,8 +53,14 @@ public class IndexController {
     }
 
     @GetMapping("/movie_index")
-    public String movieIndex(Model model){
+    public String movieIndex(HttpSession session, Model model){
 
+
+        /// get total number of items in cart for user
+
+        getTotalAmountOfItemsInCart(session,model);
+
+        //
 
         List<GenreTest> genres = movieService.getGenres();
         model.addAttribute("genres", genres);
