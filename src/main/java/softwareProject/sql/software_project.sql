@@ -12,7 +12,6 @@ CREATE TABLE users
     displayName varchar(50) UNIQUE NOT NULL,
     email    varchar(255) UNIQUE NOT NULL,
     password varchar(255)        NOT NULL,
-    address  varchar(255) 	 NOT NULL,
     dateOfBirth DATE	 NOT NULL,
     isAdmin boolean NOT NULL DEFAULT false,
     createdAt datetime NOT NULL,
@@ -113,17 +112,32 @@ CREATE TABLE cart_items
     FOREIGN KEY (movie_id) REFERENCES movieProduct (movie_id)
 );
 
+CREATE TABLE billing_address
+(
+    billing_address_id INT AUTO_INCREMENT,
+    username varchar(255) NOT NULL,
+    fullName varchar(255) NOT NULL,
+    email varchar(255) UNIQUE NOT NULL,
+    address  varchar(255) 	 NOT NULL,
+    city varchar(255),
+    county varchar(255),
+    postcode varchar(255),
+    PRIMARY KEY (billing_address_id),
+    FOREIGN KEY (username) REFERENCES users (username)
+);
 
 
 CREATE TABLE shop_order
 (
-    order_id int(11) NOT NULL,
+    order_id INT AUTO_INCREMENT,
     username varchar(255) NOT NULL,
+    billing_address_id int(11),
     order_date datetime NOT NULL,
     total_price double NOT NULL,
     order_status varchar(15) NOT NULL,
     PRIMARY KEY (order_id),
-    FOREIGN KEY (username) REFERENCES users (username)
+    FOREIGN KEY (username) REFERENCES users (username),
+    FOREIGN KEY (billing_address_id) REFERENCES billing_address(billing_address_id)
 );
 
 CREATE TABLE orderItem

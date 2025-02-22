@@ -1,8 +1,8 @@
-INSERT INTO `users` (`username`, `displayName`, `email`, `password`, `address`, `dateOfBirth`, `isAdmin`, `createdAt`)
-VALUES ('admin', 'adminUser123', 'admin@gmail.com', 'AgcGk+yZvOCWx6I30PDQlfW/62dOVXmuX7TdXxeNlK0=', '78 Wheaton Hall Dublin Road, Co.Louth', '2003-02-16', true, '2025-01-30 00:00:00'),
-       ('Andrew', 'andrewGamer123', 'andrew@gmail.com', 'passwordDone123@', '88 Wheaton Hall Dublin Road, Co.Louth', '2000-12-10', false, '2025-01-30 00:00:00'),
-       ('Toby', 'toby123', 'toby@gmail.com', 'password123@', '56 Mell Town Dublin Road, Co.Louth', '2001-18-08', false, '2025-01-30 00:00:00'),
-       ('James', 'james123', 'james@gmail.com', 'Football123', '32 TullyAllen Dublin Road, Co.Louth', '1999-11-18', false, '2025-01-30 00:00:00');
+INSERT INTO `users` (`username`, `displayName`, `email`, `password`, `dateOfBirth`, `isAdmin`, `createdAt`)
+VALUES ('admin', 'adminUser123', 'admin@gmail.com', 'AgcGk+yZvOCWx6I30PDQlfW/62dOVXmuX7TdXxeNlK0=', '2003-02-16', true, '2025-01-30 00:00:00'),
+       ('Andrew', 'andrewGamer123', 'andrew@gmail.com', 'passwordDone123@', '2000-12-10', false, '2025-01-30 00:00:00'),
+       ('Toby', 'toby123', 'toby@gmail.com', 'password123@',  '2001-18-08', false, '2025-01-30 00:00:00'),
+       ('James', 'james123', 'james@gmail.com', 'Football123', '1999-11-18', false, '2025-01-30 00:00:00');
 
 
 INSERT INTO `subscriptionPlan` (`subscription_plan_id`, `subscription_plan_name`, `cost`)

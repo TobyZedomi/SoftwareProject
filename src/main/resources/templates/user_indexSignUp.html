@@ -82,13 +82,6 @@
         <span id="password2-error" class="error-message"></span>
         </p>
         <p>
-          <label for="address" >Address:</label>
-          <input type="text" id="address" name="address"
-                 placeholder="Enter your Address">
-        <p class="message" th:text="${message6}"></p>
-        <span id="address-error" class="error-message"></span>
-        </p>
-        <p>
           <label for="dateOfBirth" >Date Of Birth:</label>
           <input type="date" id="dateOfBirth" name="dateOfBirth"
                  placeholder="Enter your date of birth">
@@ -117,7 +110,6 @@
     password = form.password.value;
     password2 = form.password2.value;
     email = form.email.value;
-    address = form.address.value;
     displayName = form.displayName.value;
     dateOfBirth = form.dateOfBirth.value;
 
@@ -152,9 +144,6 @@
     }
     else if (password != password2){
       alert("Password did not match, try register again")
-    }
-    else if (address === ""){
-      alert("Address was left empty, try register again")
     }
     else if (dateOfBirth === ""){
       alert("Date Of Birth was left empty, try register again")

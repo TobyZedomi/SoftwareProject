@@ -21,7 +21,6 @@ public class User {
     @ToString.Exclude
     private String email;
     private String password;
-    private String address;
     private LocalDate dateOfBirth;
     private boolean isAdmin;
     private LocalDateTime createdAt;

@@ -47,17 +47,16 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         // TRY to prepare a statement from the connection
         // When you are parameterizing the update, remember that you need
         // to use the ? notation (so you can fill in the blanks later)
-        try(PreparedStatement ps = conn.prepareStatement("insert into users values(?, ?, ?, ?, ?, ?, ?, " +
+        try(PreparedStatement ps = conn.prepareStatement("insert into users values(?, ?, ?, ?, ?, ?, " +
                 "?)")) {
             // Fill in the blanks, i.e. parameterize the update
             ps.setString(1, newUser.getUsername());
             ps.setString(2, newUser.getDisplayName());
             ps.setString(3, newUser.getEmail());
             ps.setString(4, newUser.getPassword());
-            ps.setString(5, newUser.getAddress());
-            ps.setDate(6, Date.valueOf(newUser.getDateOfBirth()));
-            ps.setBoolean(7, newUser.isAdmin());
-            ps.setTimestamp(8, Timestamp.valueOf(newUser.getCreatedAt()));
+            ps.setDate(5, Date.valueOf(newUser.getDateOfBirth()));
+            ps.setBoolean(6, newUser.isAdmin());
+            ps.setTimestamp(7, Timestamp.valueOf(newUser.getCreatedAt()));
 
             // Execute the update and store how many rows were affected/changed
             // when inserting, this number indicates if the row was
@@ -278,7 +277,6 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
                 rs.getString("displayName"),
                 rs.getString("email"),
                 rs.getString("password"),
-                rs.getString("address"),
                 rs.getDate("dateOfBirth").toLocalDate(),
                 rs.getBoolean("isAdmin"),
                 rs.getTimestamp("createdAt").toLocalDateTime()

@@ -46,7 +46,6 @@ public class UserController {
             @RequestParam(name="email") String email,
             @RequestParam(name="password") String password,
             @RequestParam(name="password2") String password2,
-            @RequestParam(name="address") String address,
             @RequestParam(name="dateOfBirth") String dateOfBirth,
             Model model, HttpSession session) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
@@ -138,15 +137,6 @@ public class UserController {
             return "user_indexSignUp";
         }
 
-        // address validation
-
-        if (address.isBlank()){
-            String message6 = "Address was left blank";
-            model.addAttribute("message6", message6);
-            System.out.println("Address was left blank");
-            return "user_indexSignUp";
-        }
-
         // dateOfBirth validation
 
         if (dateOfBirth.isBlank()){
@@ -168,7 +158,7 @@ public class UserController {
 
         String view = "";
         UserDao userDao = new UserDaoImpl("database.properties");
-        User u = new User(username, displayName, email, hashPassword(password), address, dob, false, LocalDateTime.now());
+        User u = new User(username, displayName, email, hashPassword(password), dob, false, LocalDateTime.now());
         int added = userDao.registerUser(u);
         if(added == 1){
 
