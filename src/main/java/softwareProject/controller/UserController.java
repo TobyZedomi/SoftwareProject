@@ -6,12 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import softwareProject.business.Cart;
 import softwareProject.business.MovieTest;
 import softwareProject.business.User;
-import softwareProject.persistence.FriendDao;
-import softwareProject.persistence.FriendDaoImpl;
-import softwareProject.persistence.UserDao;
-import softwareProject.persistence.UserDaoImpl;
+import softwareProject.persistence.*;
 import org.springframework.ui.Model;
 import softwareProject.service.MovieService;
 
@@ -173,6 +171,9 @@ public class UserController {
         User u = new User(username, displayName, email, hashPassword(password), address, dob, false, LocalDateTime.now());
         int added = userDao.registerUser(u);
         if(added == 1){
+
+            CartDao cartDao = new CartDaoImpl("database.properties");
+            cartDao.addCart(new Cart(0,username));
            view = "registerSuccess";
             model.addAttribute("registeredUser", u);
             session.setAttribute("loggedInUser", u);
