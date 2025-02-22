@@ -41,70 +41,24 @@ CREATE TABLE subscription
 );
 
 
-CREATE TABLE genre
-(
-    genre_id INT AUTO_INCREMENT,
-    genre_name varchar(255),
-    PRIMARY KEY (genre_id)
-);
-
-CREATE TABLE ageRequirement
-(
-    age_id INT AUTO_INCREMENT,
-    age INT(50),
-    PRIMARY KEY(age_id)
-);
-
-
-CREATE TABLE movies
-(
-    movie_id INT AUTO_INCREMENT,
-    movie_name varchar(255) NOT NULL,
-    genre_id int(11) NOT NULL,
-    age_id INT(50) NOT NULL,
-    date_of_release DATE NOT NULL,
-    movie_length time NOT NULL,
-    movie_info varchar(255) NOT NULL,
-    movie_image varchar(255) NOT NULL,
-    PRIMARY KEY (movie_id),
-    FOREIGN KEY (genre_id) REFERENCES genre (genre_id),
-    FOREIGN KEY (age_id) REFERENCES ageRequirement (age_id) ON UPDATE CASCADE
-
-);
-
-CREATE TABLE streamingService
-(
-    streaming_service_id INT AUTO_INCREMENT,
-    movie_id int(11),
-    streaming_service_name varchar(255) NOT NULL,
-    streaming_service_link varchar(255) NOT NULL,
-    cost double NOT NULL,
-    PRIMARY KEY (streaming_service_id),
-    FOREIGN KEY (movie_id) REFERENCES movies (movie_id)
-);
-
 CREATE TABLE review
 (
     username varchar(255) NOT NULL,
-    movie_id int(11) NOT NULL,
+    movieDb_id int(11) NOT NULL,
     rating double NOT NULL,
     comment text,
-    PRIMARY KEY (username, movie_id),
-    FOREIGN KEY (username) REFERENCES users (username),
-    FOREIGN KEY (movie_id) REFERENCES movies (movie_id)
+    PRIMARY KEY (username, movieDb_id),
+    FOREIGN KEY (username) REFERENCES users (username)
 );
 
 
 CREATE TABLE favouriteList
 (
     username varchar(255) NOT NULL,
-    movie_id int(11) NOT NULL,
-    PRIMARY KEY (username, movie_id),
-    FOREIGN KEY (username) REFERENCES users (username),
-    FOREIGN KEY (movie_id) REFERENCES movies (movie_id)
+    movieDb_id int(11) NOT NULL,
+    PRIMARY KEY (username, movieDb_id),
+    FOREIGN KEY (username) REFERENCES users (username)
 );
-
-
 
 
 create table friends
@@ -130,49 +84,64 @@ END;
 DELIMITER ;
 
 
-
-
-CREATE TABLE movieItem
+CREATE TABLE movieProduct
 (
-    movieItem_id INT AUTO_INCREMENT,
-    movieItem_name varchar(255) NOT NULL,
-    movie_id int(11) NOT NULL,
-    list_price double NOT NULL,
-    stock int NOT NULL,
-    PRIMARY KEY (movieItem_id),
-    FOREIGN KEY (movie_id) REFERENCES movies (movie_id)
+    movie_id INT AUTO_INCREMENT,
+    movie_name varchar(255) NOT NULL,
+    date_of_release DATE NOT NULL,
+    movie_length time NOT NULL,
+    movie_info varchar(255) NOT NULL,
+    movie_image varchar(255) NOT NULL,
+    listPrice double NOT NULL,
+    PRIMARY KEY (movie_id)
 );
 
-
-CREATE TABLE orderItems
+CREATE TABLE carts
 (
-    order_id INT AUTO_INCREMENT,
-    movieItem_id int(11),
-    quantity int (11),
-    price double NOT NULL,
-    PRIMARY KEY (order_id),
-    FOREIGN KEY (movieItem_id) REFERENCES movieItem (movieItem_id)
-);
-
-
-
-CREATE TABLE orders
-(
-    order_id int(11) NOT NULL,
+    cart_id INT AUTO_INCREMENT,
     username varchar(255) NOT NULL,
-    total_price double NOT NULL,
-    order_date datetime NOT NULL,
-    status varchar(15) NOT NULL,
-    comments text,
-    PRIMARY KEY (order_id, username),
-    FOREIGN KEY (order_id) REFERENCES orderItems (order_id),
+    PRIMARY KEY(cart_id),
     FOREIGN KEY (username) REFERENCES users (username)
 );
 
+CREATE TABLE cart_items
+(
+    cart_id INT(11) NOT NULL,
+    movie_id INT(11) NOT NULL,
+    PRIMARY KEY (cart_id, movie_id),
+    FOREIGN KEY (cart_id) REFERENCES carts (cart_id),
+    FOREIGN KEY (movie_id) REFERENCES movieProduct (movie_id)
+);
+
+
+
+CREATE TABLE shop_order
+(
+    order_id int(11) NOT NULL,
+    username varchar(255) NOT NULL,
+    order_date datetime NOT NULL,
+    total_price double NOT NULL,
+    order_status varchar(15) NOT NULL,
+    PRIMARY KEY (order_id),
+    FOREIGN KEY (username) REFERENCES users (username)
+);
+
+CREATE TABLE orderItem
+(
+    order_items_id INT AUTO_INCREMENT,
+    price double NOT NULL,
+    order_id int(11),
+    movie_id int(11),
+    PRIMARY KEY (order_items_id),
+    FOREIGN KEY (movie_id) REFERENCES movieProduct (movie_id),
+    FOREIGN KEY (order_id) REFERENCES shop_order (order_id)
+);
+
+
 CREATE TABLE password_reset_tokens (
-       id INT AUTO_INCREMENT PRIMARY KEY,
-       email VARCHAR(255) NOT NULL,
-     token VARCHAR(255) NOT NULL,
-      expiry TIMESTAMP NOT NULL,
-  FOREIGN KEY (email) REFERENCES users(email) ON DELETE CASCADE
+                                       id INT AUTO_INCREMENT PRIMARY KEY,
+                                       email VARCHAR(255) NOT NULL,
+                                       token VARCHAR(255) NOT NULL,
+                                       expiry TIMESTAMP NOT NULL,
+                                       FOREIGN KEY (email) REFERENCES users(email) ON DELETE CASCADE
 );
