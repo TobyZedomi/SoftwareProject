@@ -1,15 +1,15 @@
 package softwareProject.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import softwareProject.business.GenreTest;
-import softwareProject.business.MovieTest;
-import softwareProject.business.MovieTrailer;
+import softwareProject.business.*;
+import softwareProject.persistence.*;
 import softwareProject.service.MovieService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -31,7 +31,22 @@ public class IndexController {
 
     // add these .add model from list of movies from movie db into index controller
     @GetMapping("/index")
-    public String home(Model model){
+    public String home(HttpSession session,Model model){
+
+        /// get total number of items in cart for user
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+        CartDao cartDao = new CartDaoImpl("database.properties");
+
+        Cart cart = cartDao.getCartByUsername(u.getUsername());
+
+        CartItemDao cartItemDao = new CartItemDaoImpl("database.properties");
+
+        int totalCartItems = cartItemDao.totalNumberOfCartItems(cart.getCart_id());
+        model.addAttribute("totalCartItems", totalCartItems);
+
+        ///
 
         List<MovieTest> movies = movieService.getMovies();
         model.addAttribute("movies", movies);
@@ -88,6 +103,80 @@ public class IndexController {
     @GetMapping("/forgot_password")
     public String forgotPasswordIndex(){
         return "forgot_password";
+    }
+
+
+
+    @GetMapping("/store_index")
+    public String storeIndex(HttpSession session, Model model){
+
+        /// get total number of items in cart for user
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+        CartDao cartDao = new CartDaoImpl("database.properties");
+
+        Cart cart = cartDao.getCartByUsername(u.getUsername());
+
+        CartItemDao cartItemDao = new CartItemDaoImpl("database.properties");
+
+        int totalCartItems = cartItemDao.totalNumberOfCartItems(cart.getCart_id());
+        model.addAttribute("totalCartItems", totalCartItems);
+
+        ////
+
+        MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+        List<MovieProduct> movieProducts = movieProductDao.getAllMovieProducts();
+        model.addAttribute("movieProducts", movieProducts);
+
+
+
+        return "store_index";
+    }
+
+
+    @GetMapping("/cart_index")
+    public String cartIndex(HttpSession session, Model model){
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+        CartDao cartDao = new CartDaoImpl("database.properties");
+
+        Cart cart = cartDao.getCartByUsername(u.getUsername());
+
+        CartItemDao cartItemDao = new CartItemDaoImpl("database.properties");
+
+
+        ArrayList<CartItem> cartItems = cartItemDao.getAllCartItemsByCartId(cart.getCart_id());
+
+        ArrayList<MovieProduct> movies = new ArrayList<>();
+
+            for (int i = 0; i < cartItems.size();i++) {
+
+                MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+                movies.add(movieProductDao.getMovieById(cartItems.get(i).getMovie_id()));
+                model.addAttribute("movies", movies);
+            }
+
+            // get total Price
+
+        double total = 0;
+
+        for (int i = 0; i < movies.size();i++){
+
+            total = total + movies.get(i).getListPrice();
+        }
+
+        model.addAttribute("total", total);
+
+
+        int totalCartItems = cartItemDao.totalNumberOfCartItems(cart.getCart_id());
+        model.addAttribute("totalCartItems", totalCartItems);
+
+
+        return "cart_index";
     }
 
 
