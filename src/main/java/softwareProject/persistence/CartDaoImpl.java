@@ -104,7 +104,7 @@ public class CartDaoImpl extends MySQLDao implements CartDao{
 
 
     @Override
-    public Cart getCartIdByUsername(String username){
+    public Cart getCartByUsername(String username){
 
         Cart cart = null;
 
