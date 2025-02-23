@@ -42,6 +42,47 @@ public class BillingAddressController {
             String message = "Full Name must be between 3-25 characters, letters only";
             model.addAttribute("message", message);
             System.out.println("Full Name must be between 3-25 characters, letters only");
+
+            // method to get Cart information with movies and pricing
+
+            cartInformation(session,model);
+
+            return "checkout_index";
+        }
+
+        if (address.isBlank()){
+            String message = "You must choose an address";
+            model.addAttribute("message", message);
+            System.out.println("You must choose an address");
+            // method to get Cart information with movies and pricing
+            cartInformation(session,model);
+            return "checkout_index";
+        }
+
+        if (city.isBlank()){
+            String message = "You must choose a city";
+            model.addAttribute("message", message);
+            System.out.println("You must choose a city");
+            // method to get Cart information with movies and pricing
+            cartInformation(session,model);
+            return "checkout_index";
+        }
+
+        if (county.isBlank()){
+            String message = "You must choose a county";
+            model.addAttribute("message", message);
+            System.out.println("You must choose a county");
+            // method to get Cart information with movies and pricing
+            cartInformation(session,model);
+            return "checkout_index";
+        }
+
+        if (postcode.isBlank()){
+            String message = "You must choose a postcode";
+            model.addAttribute("message", message);
+            System.out.println("You must choose a postcode");
+            // method to get Cart information with movies and pricing
+            cartInformation(session,model);
             return "checkout_index";
         }
 
@@ -55,6 +96,10 @@ public class BillingAddressController {
             String message = "Card Name must be between 3-25 characters, letters only";
             model.addAttribute("message", message);
             System.out.println("Card Name must be between 3-25 characters, letters only");
+
+            // method to get Cart information with movies and pricing
+            cartInformation(session,model);
+
             return "checkout_index";
         }
 
@@ -67,6 +112,8 @@ public class BillingAddressController {
             String message = "Card Number must be a valid Visa credit card number";
             model.addAttribute("message", message);
             System.out.println("Card Number must be a valid Visa credit card number");
+            // method to get Cart information with movies and pricing
+            cartInformation(session,model);
             return "checkout_index";
         }
 
@@ -75,6 +122,8 @@ public class BillingAddressController {
             String message = "You must choose a month";
             model.addAttribute("message", message);
             System.out.println("You must choose a month");
+            // method to get Cart information with movies and pricing
+            cartInformation(session,model);
             return "checkout_index";
         }
 
@@ -82,6 +131,8 @@ public class BillingAddressController {
             String message = "You must choose a Year";
             model.addAttribute("message", message);
             System.out.println("You must choose a year");
+            // method to get Cart information with movies and pricing
+            cartInformation(session,model);
             return "checkout_index";
         }
 
@@ -94,6 +145,8 @@ public class BillingAddressController {
             String message = "Cvv number must be 3 or 4 numbers long";
             model.addAttribute("message", message);
             System.out.println("Cvv number must be 3 or 4 numbers long");
+            // method to get Cart information with movies and pricing
+            cartInformation(session,model);
             return "checkout_index";
         }
 
@@ -149,6 +202,8 @@ public class BillingAddressController {
             String message = "Card Name must be between 3-25 characters, letters only";
             model.addAttribute("message", message);
             System.out.println("Card Name must be between 3-25 characters, letters only");
+            // method to get Cart information with movies and pricing
+            cartInformation(session,model);
             return "checkout_index";
         }
 
@@ -161,6 +216,8 @@ public class BillingAddressController {
             String message = "Card Number must be a valid Visa credit card number";
             model.addAttribute("message", message);
             System.out.println("Card Number must be a valid Visa credit card number");
+            // method to get Cart information with movies and pricing
+            cartInformation(session,model);
             return "checkout_index";
         }
 
@@ -169,6 +226,8 @@ public class BillingAddressController {
             String message = "You must choose a month";
             model.addAttribute("message", message);
             System.out.println("You must choose a month");
+            // method to get Cart information with movies and pricing
+            cartInformation(session,model);
             return "checkout_index";
         }
 
@@ -176,6 +235,8 @@ public class BillingAddressController {
             String message = "You must choose a Year";
             model.addAttribute("message", message);
             System.out.println("You must choose a year");
+            // method to get Cart information with movies and pricing
+            cartInformation(session,model);
             return "checkout_index";
         }
 
@@ -188,6 +249,8 @@ public class BillingAddressController {
             String message = "Cvv number must be 3 or 4 numbers long";
             model.addAttribute("message", message);
             System.out.println("Cvv number must be 3 or 4 numbers long");
+            // method to get Cart information with movies and pricing
+            cartInformation(session,model);
             return "checkout_index";
         }
 
@@ -393,5 +456,43 @@ public class BillingAddressController {
         model.addAttribute("totalCartItems", totalCartItems);
     }
 
+
+
+    // method to get Cart information with movies and pricing
+
+    public void cartInformation(HttpSession session,Model model){
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+        CartDao cartDao = new CartDaoImpl("database.properties");
+
+        Cart cart = cartDao.getCartByUsername(u.getUsername());
+
+        CartItemDao cartItemDao = new CartItemDaoImpl("database.properties");
+
+
+        ArrayList<CartItem> cartItems = cartItemDao.getAllCartItemsByCartId(cart.getCart_id());
+
+        ArrayList<MovieProduct> movies = new ArrayList<>();
+
+        for (int i = 0; i < cartItems.size();i++) {
+
+            MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+            movies.add(movieProductDao.getMovieById(cartItems.get(i).getMovie_id()));
+            model.addAttribute("movies", movies);
+        }
+
+        // get total Price in cart
+
+        double total = 0;
+
+        for (int i = 0; i < movies.size();i++){
+
+            total = total + movies.get(i).getListPrice();
+        }
+
+        model.addAttribute("total", total);
+    }
 
 }
