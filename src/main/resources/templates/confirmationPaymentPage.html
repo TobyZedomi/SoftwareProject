@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <title>Title</title>
+
+  <style>
+    h1{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 50px;
+      color: darkred;
+      font-weight: bold;
+      -webkit-text-stroke: 3px black;
+    }
+
+    .order{
+      background:#f4f8fc;
+      padding:2rem 4rem;;
+      border-radius:12px;
+      max-width:600px;
+      margin:0 auto;
+      margin-top: 50px;
+    }
+
+    .transaction{
+      margin:5rem 2rem 0;
+    }
+
+    .transaction h3{
+      margin-bottom:1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .transactiongrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      max-width:800px;
+      grid-row-gap:1.5rem;
+      margin:0 auto;
+    }
+
+
+    .transactiongrid li{
+      display:flex;
+      flex-direction:column;
+    }
+
+
+
+
+
+  </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/menu :: menu-bar}"></div>
+
+<div class="order">
+  <h1>You have Purchased a Digital Movie!</h1>
+  <p>Thank you for your purchase</p>
+
+  <p>You have been sent an email confirmation of your purchase</p>
+</div>
+<section class="transaction">
+  <h3>Transaction details</h3>
+  <ul class="transactiongrid">
+    <li>
+      <h5>Date</h5>
+      <p th:text="${orderDate}">May 20th, 2019</p>
+    </li>
+    <li>
+      <h5>Total</h5>
+      <p th:text=" |£${totalPriceShopOrder} |"></p>
+    </li>
+    <li>
+      <h5>Payment method</h5>
+      <p>Credit Card</p>
+    </li>
+  </ul>
+
+</section>
+
+<!-- Order Confirmation - Codepen - https://codepen.io/mortenhjort/pen/MdjvQg -->
+
+
+</body>
+</html>
