@@ -9,6 +9,7 @@ import softwareProject.business.*;
 import softwareProject.persistence.*;
 import softwareProject.service.MovieService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -169,6 +170,70 @@ public class IndexController {
 
         return "cart_index";
     }
+
+    @GetMapping("/checkout_index")
+    public String checkout_index(HttpSession session, Model model){
+
+        /// get total number of items in cart for user
+
+        getTotalAmountOfItemsInCart(session,model);
+
+        // session for billng user
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+        BillingAddressDao billingAddressDao = new BillingAddressDaoImpl("database.properties");
+
+        BillingAddress billingAddressUser = billingAddressDao.getBillingAddressByUsername(u.getUsername());
+        session.setAttribute("billingAddressUser", billingAddressUser);
+
+        // getting movies purchased in cart
+
+
+        CartDao cartDao = new CartDaoImpl("database.properties");
+
+        Cart cart = cartDao.getCartByUsername(u.getUsername());
+
+        CartItemDao cartItemDao = new CartItemDaoImpl("database.properties");
+
+
+        ArrayList<CartItem> cartItems = cartItemDao.getAllCartItemsByCartId(cart.getCart_id());
+
+        ArrayList<MovieProduct> movies = new ArrayList<>();
+
+        for (int i = 0; i < cartItems.size();i++) {
+
+            MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+            movies.add(movieProductDao.getMovieById(cartItems.get(i).getMovie_id()));
+            model.addAttribute("movies", movies);
+        }
+
+        // get total Price in cart
+
+        double total = 0;
+
+        for (int i = 0; i < movies.size();i++){
+
+            total = total + movies.get(i).getListPrice();
+        }
+
+        model.addAttribute("total", total);
+
+
+        /// get total number of items in cart for user
+
+        getTotalAmountOfItemsInCart(session,model);
+
+        return "checkout_index";
+    }
+
+
+    @GetMapping("/confirmationPaymentPage")
+    public String confirmationPaymentPage(){
+        return "confirmationPaymentPage";
+    }
+
 
 
     public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
