@@ -76,9 +76,9 @@ public class ShopOrderDaoImpl extends MySQLDao implements ShopOrderDao{
     }
 
 
-// get top order id in the database from username
+// get top order with the highest order Id by Username
     @Override
-    public ShopOrder getHighestOrderFromUsername(String username){
+    public ShopOrder getOrderWithTheHighestOrderIdByUsername(String username){
 
         ShopOrder shopOrder = null;
 

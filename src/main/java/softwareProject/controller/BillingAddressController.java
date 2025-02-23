@@ -8,11 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import softwareProject.business.*;
 import softwareProject.persistence.*;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -122,6 +118,10 @@ public class BillingAddressController {
         //deleteCartItemByCartId
         deleteCartItemByCartId(session);
 
+        // totalAmountInCartInNavBar
+
+        getTotalAmountOfItemsInCart(session,model);
+
         return "confirmationPaymentPage";
 
     }
@@ -219,6 +219,10 @@ public class BillingAddressController {
 
                // delete cartItem byCartId
                 deleteCartItemByCartId(session);
+
+                // totalAmountInCartInNavBar
+
+                getTotalAmountOfItemsInCart(session,model);
 
 
                 return "confirmationPaymentPage";
@@ -359,7 +363,7 @@ public class BillingAddressController {
 
             ShopOrderDao shopOrderDao = new ShopOrderDaoImpl("database.properties");
 
-            ShopOrder shopOrder = shopOrderDao.getHighestOrderFromUsername(u.getUsername());
+            ShopOrder shopOrder = shopOrderDao.getOrderWithTheHighestOrderIdByUsername(u.getUsername());
 
             OrderItem orderItem = new OrderItem(0, movies.get(i).getListPrice(), shopOrder.getOrder_id(), cartItems.get(i).getMovie_id());
 
@@ -368,6 +372,25 @@ public class BillingAddressController {
 
         }
 
+    }
+
+
+    // totalAmountInCartInNavBar
+
+    public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
+
+        /// get total number of items in cart for user
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+        CartDao cartDao = new CartDaoImpl("database.properties");
+
+        Cart cart = cartDao.getCartByUsername(u.getUsername());
+
+        CartItemDao cartItemDao = new CartItemDaoImpl("database.properties");
+
+        int totalCartItems = cartItemDao.totalNumberOfCartItems(cart.getCart_id());
+        model.addAttribute("totalCartItems", totalCartItems);
     }
 
 
