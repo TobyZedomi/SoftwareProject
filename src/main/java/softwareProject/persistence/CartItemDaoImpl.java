@@ -177,6 +177,35 @@ public class CartItemDaoImpl extends MySQLDao implements CartItemDao{
     }
 
 
+    // delete cartItem by cartId
+
+    @Override
+    public int deleteCartItem(int cartId){
+        int rowsAffected = 0;
+
+        Connection conn = super.getConnection();
+
+        try(PreparedStatement ps = conn.prepareStatement("DELETE from cart_items where cart_id = ?")){
+            ps.setInt(1,cartId);
+            rowsAffected = ps.executeUpdate();
+        }// Add an extra exception handling block for where there is already an entry
+        // with the primary key specified
+        catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println("Constraint Exception occurred: " + e.getMessage());
+            // Set the rowsAffected to -1, this can be used as a flag for the display section
+            rowsAffected = -1;
+        }catch(SQLException e){
+            System.out.println("SQL Exception occurred when attempting to prepare/execute SQL");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return rowsAffected;
+
+    }
+
+
+
     /**
      * Search through each row in the cartItem
      * @param rs is the rating query being searched

@@ -14,4 +14,6 @@ public interface CartItemDao {
     public int deleteCartItem(int cartId, int movieId);
 
     public int totalNumberOfCartItems(int cartId);
+
+    public int deleteCartItem(int cartId);
 }

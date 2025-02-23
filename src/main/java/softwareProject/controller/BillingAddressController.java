@@ -115,6 +115,9 @@ public class BillingAddressController {
         /// add to shop order for user using addShopOrder method
         addShopOrder(model, session);
 
+        //deleteCartItemByCartId
+        deleteCartItemByCartId(session);
+
         return "confirmationPaymentPage";
 
     }
@@ -206,6 +209,9 @@ public class BillingAddressController {
                 /// add to shop order for user using addShopOrder method
                addShopOrder(model, session);
 
+               // delete cartItem byCartId
+                deleteCartItemByCartId(session);
+
 
                 return "confirmationPaymentPage";
 
@@ -291,10 +297,20 @@ public class BillingAddressController {
         // get the date of the most recent order
         LocalDateTime orderDate = addShopOrder.getOrder_date().toLocalDate().atStartOfDay();
         model.addAttribute("orderDate", orderDate);
+    }
 
-        // delete all cart items by cart id
 
+    public void deleteCartItemByCartId(HttpSession session){
 
+        User u = (User) session.getAttribute("loggedInUser");
+
+        CartDao cartDao = new CartDaoImpl("database.properties");
+
+        Cart cart = cartDao.getCartByUsername(u.getUsername());
+
+        CartItemDao cartItemDao = new CartItemDaoImpl("database.properties");
+
+        cartItemDao.deleteCartItem(cart.getCart_id());
     }
 
 
