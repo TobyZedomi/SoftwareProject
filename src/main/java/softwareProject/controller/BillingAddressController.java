@@ -115,6 +115,10 @@ public class BillingAddressController {
         /// add to shop order for user using addShopOrder method
         addShopOrder(model, session);
 
+        /// add orderItems
+
+        addOrderItems(session);
+
         //deleteCartItemByCartId
         deleteCartItemByCartId(session);
 
@@ -209,6 +213,10 @@ public class BillingAddressController {
                 /// add to shop order for user using addShopOrder method
                addShopOrder(model, session);
 
+               /// add orderItems
+
+                addOrderItems(session);
+
                // delete cartItem byCartId
                 deleteCartItemByCartId(session);
 
@@ -300,6 +308,8 @@ public class BillingAddressController {
     }
 
 
+    // deleteCartByCartItem
+
     public void deleteCartItemByCartId(HttpSession session){
 
         User u = (User) session.getAttribute("loggedInUser");
@@ -313,6 +323,52 @@ public class BillingAddressController {
         cartItemDao.deleteCartItem(cart.getCart_id());
     }
 
+
+    /// add Order Items
+
+    public void addOrderItems(HttpSession session){
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+        CartDao cartDao = new CartDaoImpl("database.properties");
+
+        // gettingCartId from username
+        Cart cart = cartDao.getCartByUsername(u.getUsername());
+
+        CartItemDao cartItemDao = new CartItemDaoImpl("database.properties");
+
+
+        // getting all cart Items from cartId
+        ArrayList<CartItem> cartItems = cartItemDao.getAllCartItemsByCartId(cart.getCart_id());
+
+        ArrayList<MovieProduct> movies = new ArrayList<>();
+
+
+        for (int i = 0; i < cartItems.size();i++) {
+
+
+            // getting movies by movies in cartItem Id
+            MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+            movies.add(movieProductDao.getMovieById(cartItems.get(i).getMovie_id()));
+
+            // getting orderId
+
+            // adding to orderItems
+            OrderItemDao orderItemDao = new OrderItemDaoImpl("database.properties");
+
+            ShopOrderDao shopOrderDao = new ShopOrderDaoImpl("database.properties");
+
+            ShopOrder shopOrder = shopOrderDao.getHighestOrderFromUsername(u.getUsername());
+
+            OrderItem orderItem = new OrderItem(0, movies.get(i).getListPrice(), shopOrder.getOrder_id(), cartItems.get(i).getMovie_id());
+
+            orderItemDao.addOrderItem(orderItem);
+
+
+        }
+
+    }
 
 
 }

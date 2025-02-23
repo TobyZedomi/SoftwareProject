@@ -1,6 +1,7 @@
 package softwareProject.persistence;
 
 import softwareProject.business.BillingAddress;
+import softwareProject.business.Cart;
 import softwareProject.business.CartItem;
 import softwareProject.business.ShopOrder;
 
@@ -75,6 +76,46 @@ public class ShopOrderDaoImpl extends MySQLDao implements ShopOrderDao{
     }
 
 
+// get top order id in the database from username
+    @Override
+    public ShopOrder getHighestOrderFromUsername(String username){
+
+        ShopOrder shopOrder = null;
+
+        // Get a connection using the superclass
+        Connection conn = super.getConnection();
+        // TRY to get a statement from the connection
+        // When you are parameterizing the query, remember that you need
+        // to use the ? notation (so you can fill in the blanks later)
+        try (PreparedStatement ps = conn.prepareStatement("SELECT * from shop_order where username = ? GROUP BY order_id ORDER BY order_id DESC LIMIT 1")) {
+
+            // Fill in the blanks, i.e. parameterize the query
+            ps.setString(1, username);
+
+            // TRY to execute the query
+            try (ResultSet rs = ps.executeQuery()) {
+                // Extract the information from the result set
+                // Use extraction method to avoid code repetition!
+                if(rs.next()){
+
+                    shopOrder = mapRow(rs);
+                }
+
+            } catch (SQLException e) {
+                System.out.println("SQL Exception occurred when executing SQL or processing results.");
+                System.out.println("Error: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Exception occurred when attempting to prepare SQL for execution");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }finally {
+            // Close the connection using the superclass method
+            super.freeConnection(conn);
+        }
+        return shopOrder;
+    }
 
 
     /**

@@ -7,4 +7,6 @@ import java.util.ArrayList;
 public interface ShopOrderDao {
 
     public int addShopOrder(ShopOrder shopOrder);
+
+    public ShopOrder getHighestOrderFromUsername(String username);
 }
