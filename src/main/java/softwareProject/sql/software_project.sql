@@ -71,18 +71,6 @@ create table friends
 );
 
 
-DELIMITER |
-CREATE TRIGGER enforce_friendship_order BEFORE INSERT ON friends
-    FOR EACH ROW BEGIN
-    SET @lowerName := IF(NEW.friend1 < NEW.friend2, NEW.friend1, NEW.friend2);
-    SET @higherName := IF(NEW.friend1 > NEW.friend2, NEW.friend1, NEW.friend2);
-    SET NEW.friend1 = @lowerName;
-    SET NEW.friend2 = @higherName;
-END;
-|
-DELIMITER ;
-
-
 CREATE TABLE movieProduct
 (
     movie_id INT AUTO_INCREMENT,
