@@ -286,9 +286,9 @@ public class UserController {
         User u = (User) session.getAttribute("loggedInUser");
         UserDao userDao = new UserDaoImpl("database.properties");
 
-        User found = userDao.findUserByUsername2(username);
+        List<User> found = userDao.findUserByUsername2(username);
         if (found != null) {
-            model.addAttribute("username", found.getUsername());
+            model.addAttribute("username", found);
             log.info("User found" + username);
             return "friends";
         } else {

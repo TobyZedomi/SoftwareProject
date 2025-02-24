@@ -5,10 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import softwareProject.business.*;
+import softwareProject.persistence.FriendDao;
+import softwareProject.persistence.FriendDaoImpl;
 import softwareProject.business.*;
 import softwareProject.persistence.*;
 import softwareProject.service.MovieService;
 
+import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +102,50 @@ public class IndexController {
         getTotalAmountOfItemsInCart(session,model);
 
         return "subscription_index";
+    }
+
+    @GetMapping("/friends")
+    public String friends(HttpSession session, Model model){
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        FriendDao friendDao = new FriendDaoImpl("database.properties");
+        UserDao userDao = new UserDaoImpl("database.properties");
+
+        ArrayList<Friends> friends = friendDao.getAllFriends(loggedInUser.getUsername());
+        ArrayList<User> details = new ArrayList<>();
+
+        for(int i = 0; i< friends.size();i++){
+            String name;
+            if (friends.get(i).getFriend1().equals(loggedInUser.getUsername())) {
+                name = friends.get(i).getFriend2();
+            } else {
+                name = friends.get(i).getFriend1();
+            }
+            User friendUser = userDao.findUserByUsername(name);
+            if(name != null){
+                details.add(friendUser);
+            }
+        }
+
+        model.addAttribute("Friends", details);
+
+        return "friends";
+    }
+
+    @GetMapping("/notifications")
+    public String notifications(HttpSession session, Model model){
+
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+
+        FriendDao friendDao = new FriendDaoImpl("database.properties");
+        ArrayList<Friends> result = friendDao.getAllRequests(loggedInUser.getUsername());
+
+        if (result.isEmpty()) {
+            result = new ArrayList<>();
+        }
+
+        model.addAttribute("pendingRequests", result);
+        return "notifications";
+
     }
 
 
