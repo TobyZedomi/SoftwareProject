@@ -1,10 +1,13 @@
 package softwareProject.persistence;
 
 import lombok.extern.slf4j.Slf4j;
+import softwareProject.business.Friends;
 import softwareProject.business.User;
 import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Repository
@@ -198,32 +201,34 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
     }
 
     /**
-     * Get a particular user based on the username
+     * Get a list of user based on the username
      * @param username is the user being searched
      * @return the user from that particular username
      */
     @Override
-    public User findUserByUsername2(String username){
+    public ArrayList<User> findUserByUsername2(String username){
 
-        User user = null;
+        ArrayList<User> requests = new ArrayList<>();
 
         // Get a connection using the superclass
         Connection conn = super.getConnection();
         // TRY to get a statement from the connection
         // When you are parameterizing the query, remember that you need
         // to use the ? notation (so you can fill in the blanks later)
-        try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM users where username = ?")) {
+        try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM users where username like ?")) {
 
             // Fill in the blanks, i.e. parameterize the query
             ps.setString(1, username+"%");
+
 
             // TRY to execute the query
             try (ResultSet rs = ps.executeQuery()) {
                 // Extract the information from the result set
                 // Use extraction method to avoid code repetition!
-                if(rs.next()){
+                while(rs.next()){
 
-                    user = mapRow(rs);
+                    User u = mapRow(rs);
+                    requests.add(u);
                 }
             } catch (SQLException e) {
                 System.out.println("SQL Exception occurred when executing SQL or processing results.");
@@ -238,7 +243,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             // Close the connection using the superclass method
             super.freeConnection(conn);
         }
-        return user;
+        return requests;
     }
 
 
