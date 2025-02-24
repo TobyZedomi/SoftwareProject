@@ -148,13 +148,11 @@ public class IndexController {
 
     }
 
-
-
     @GetMapping("/forgot_password")
-    public String forgotPasswordIndex(){
-        return "forgot_password";
-    }
+    public String forgotPasswordIndex(){ return "forgot_password"; }
 
+    @GetMapping("/review_form")
+    public String reviewIndex(){ return "review_form"; }
 
 
     @GetMapping("/store_index")
