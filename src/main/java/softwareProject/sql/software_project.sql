@@ -1,39 +1,39 @@
 DROP
-DATABASE IF EXISTS software_project;
+    DATABASE IF EXISTS software_project;
 CREATE
-DATABASE IF NOT EXISTS software_project;
+    DATABASE IF NOT EXISTS software_project;
 
 USE
-software_project;
+    software_project;
 
 CREATE TABLE users
 (
-    username varchar(50)  UNIQUE NOT NULL,
-    displayName varchar(50) UNIQUE NOT NULL,
-    email    varchar(255) UNIQUE NOT NULL,
-    password varchar(255)        NOT NULL,
-    dateOfBirth DATE	 NOT NULL,
-    isAdmin boolean NOT NULL DEFAULT false,
-    createdAt datetime NOT NULL,
+    username    varchar(50) UNIQUE  NOT NULL,
+    displayName varchar(50) UNIQUE  NOT NULL,
+    email       varchar(255) UNIQUE NOT NULL,
+    password    varchar(255)        NOT NULL,
+    dateOfBirth DATE                NOT NULL,
+    isAdmin     boolean             NOT NULL DEFAULT false,
+    createdAt   datetime            NOT NULL,
     PRIMARY KEY (username)
 );
 
 
 CREATE TABLE subscriptionPlan
 (
-    subscription_plan_id INT AUTO_INCREMENT,
+    subscription_plan_id   INT AUTO_INCREMENT,
     subscription_plan_name VARCHAR(255) NOT NULL,
-    cost double NOT NULL,
+    cost                   double       NOT NULL,
     PRIMARY KEY (subscription_plan_id)
 );
 
 CREATE TABLE subscription
 (
     subscription_id        INT AUTO_INCREMENT,
-    username     varchar(255) NOT NULL,
-    subscription_plan_id 	INT(11) NOT NULL,
-    subscription_startDate datetime NOT NULL,
-    subscription_endDate  datetime NOT NULL,
+    username               varchar(255) NOT NULL,
+    subscription_plan_id   INT(11)      NOT NULL,
+    subscription_startDate datetime     NOT NULL,
+    subscription_endDate   datetime     NOT NULL,
     PRIMARY KEY (subscription_id),
     FOREIGN KEY (username) REFERENCES users (username),
     FOREIGN KEY (subscription_plan_id) REFERENCES subscriptionPlan (subscription_plan_id)
@@ -42,10 +42,10 @@ CREATE TABLE subscription
 
 CREATE TABLE review
 (
-    username varchar(255) NOT NULL,
-    movieDb_id int(11) NOT NULL,
-    rating double NOT NULL,
-    comment text,
+    username   varchar(255) NOT NULL,
+    movieDb_id int(11)      NOT NULL,
+    rating     double       NOT NULL,
+    comment    text,
     PRIMARY KEY (username, movieDb_id),
     FOREIGN KEY (username) REFERENCES users (username)
 );
@@ -53,8 +53,8 @@ CREATE TABLE review
 
 CREATE TABLE favouriteList
 (
-    username varchar(255) NOT NULL,
-    movieDb_id int(11) NOT NULL,
+    username   varchar(255) NOT NULL,
+    movieDb_id int(11)      NOT NULL,
     PRIMARY KEY (username, movieDb_id),
     FOREIGN KEY (username) REFERENCES users (username)
 );
@@ -64,36 +64,36 @@ create table friends
 (
     friend1 varchar(10) not null,
     friend2 varchar(10) not null,
-    request boolean NOT NULL DEFAULT false,
+    request boolean     NOT NULL DEFAULT false,
     PRIMARY KEY (friend1, friend2),
-    FOREIGN KEY (friend1) REFERENCES users(username) on delete cascade,
-    FOREIGN KEY (friend2) REFERENCES users(username) on delete cascade
+    FOREIGN KEY (friend1) REFERENCES users (username) on delete cascade,
+    FOREIGN KEY (friend2) REFERENCES users (username) on delete cascade
 );
 
 
 CREATE TABLE movieProduct
 (
-    movie_id INT AUTO_INCREMENT,
-    movie_name varchar(255) NOT NULL,
-    date_of_release DATE NOT NULL,
-    movie_length time NOT NULL,
-    movie_info varchar(255) NOT NULL,
-    movie_image varchar(255) NOT NULL,
-    listPrice double NOT NULL,
+    movie_id        INT AUTO_INCREMENT,
+    movie_name      varchar(255) NOT NULL,
+    date_of_release DATE         NOT NULL,
+    movie_length    time         NOT NULL,
+    movie_info      varchar(255) NOT NULL,
+    movie_image     varchar(255) NOT NULL,
+    listPrice       double       NOT NULL,
     PRIMARY KEY (movie_id)
 );
 
 CREATE TABLE carts
 (
-    cart_id INT AUTO_INCREMENT,
+    cart_id  INT AUTO_INCREMENT,
     username varchar(255) NOT NULL,
-    PRIMARY KEY(cart_id),
+    PRIMARY KEY (cart_id),
     FOREIGN KEY (username) REFERENCES users (username)
 );
 
 CREATE TABLE cart_items
 (
-    cart_id INT(11) NOT NULL,
+    cart_id  INT(11) NOT NULL,
     movie_id INT(11) NOT NULL,
     PRIMARY KEY (cart_id, movie_id),
     FOREIGN KEY (cart_id) REFERENCES carts (cart_id),
@@ -103,13 +103,13 @@ CREATE TABLE cart_items
 CREATE TABLE billing_address
 (
     billing_address_id INT AUTO_INCREMENT,
-    username varchar(255) NOT NULL,
-    fullName varchar(255) NOT NULL,
-    email varchar(255) UNIQUE NOT NULL,
-    address  varchar(255) 	 NOT NULL,
-    city varchar(255),
-    county varchar(255),
-    postcode varchar(255),
+    username           varchar(255)        NOT NULL,
+    fullName           varchar(255)        NOT NULL,
+    email              varchar(255) UNIQUE NOT NULL,
+    address            varchar(255)        NOT NULL,
+    city               varchar(255),
+    county             varchar(255),
+    postcode           varchar(255),
     PRIMARY KEY (billing_address_id),
     FOREIGN KEY (username) REFERENCES users (username)
 );
@@ -117,33 +117,47 @@ CREATE TABLE billing_address
 
 CREATE TABLE shop_order
 (
-    order_id INT AUTO_INCREMENT,
-    username varchar(255) NOT NULL,
+    order_id           INT AUTO_INCREMENT,
+    username           varchar(255) NOT NULL,
     billing_address_id int(11),
-    order_date datetime NOT NULL,
-    total_price double NOT NULL,
-    order_status varchar(15) NOT NULL,
+    order_date         datetime     NOT NULL,
+    total_price        double       NOT NULL,
+    order_status       varchar(15)  NOT NULL,
     PRIMARY KEY (order_id),
     FOREIGN KEY (username) REFERENCES users (username),
-    FOREIGN KEY (billing_address_id) REFERENCES billing_address(billing_address_id)
+    FOREIGN KEY (billing_address_id) REFERENCES billing_address (billing_address_id)
 );
 
 CREATE TABLE orderItem
 (
     order_items_id INT AUTO_INCREMENT,
-    price double NOT NULL,
-    order_id int(11),
-    movie_id int(11),
+    price          double NOT NULL,
+    order_id       int(11),
+    movie_id       int(11),
     PRIMARY KEY (order_items_id),
     FOREIGN KEY (movie_id) REFERENCES movieProduct (movie_id),
     FOREIGN KEY (order_id) REFERENCES shop_order (order_id)
 );
 
 
-CREATE TABLE password_reset_tokens (
-                                       id INT AUTO_INCREMENT PRIMARY KEY,
-                                       email VARCHAR(255) NOT NULL,
-                                       token VARCHAR(255) NOT NULL,
-                                       expiry TIMESTAMP NOT NULL,
-                                       FOREIGN KEY (email) REFERENCES users(email) ON DELETE CASCADE
+CREATE TABLE password_reset_tokens
+(
+    id     INT AUTO_INCREMENT PRIMARY KEY,
+    email  VARCHAR(255) NOT NULL,
+    token  VARCHAR(255) NOT NULL,
+    expiry TIMESTAMP    NOT NULL,
+    FOREIGN KEY (email) REFERENCES users (email) ON DELETE CASCADE
 );
+
+
+CREATE TABLE reviews
+(
+    id        INT AUTO_INCREMENT PRIMARY KEY,
+    name      VARCHAR(255) NOT NULL,
+    email     VARCHAR(255) NOT NULL,
+    content   TEXT         NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+

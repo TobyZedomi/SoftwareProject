@@ -51,6 +51,11 @@ INSERT INTO `carts` (`cart_id`, `username`)
 VALUES (1, 'admin');
 
 
+INSERT INTO `reviews` (`name`, `email`, `content`, `createdAt`)
+VALUES
+    ('Sarah', 'sarah@mail.com', 'Amazing product, highly recommended!', '2025-02-24 22:15:30'),
+    ('Michael', 'michael@gmail.com', 'Pretty Good Site', '2025-02-24 22:20:10'),
+    ('Emma', 'emma@gmail.com', 'Best experience ever!', '2025-02-24 22:45:55');
 
 
 
