@@ -5,10 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import softwareProject.business.Cart;
-import softwareProject.business.CartItem;
-import softwareProject.business.MovieProduct;
-import softwareProject.business.User;
+import softwareProject.business.*;
 import softwareProject.persistence.*;
 
 import java.util.ArrayList;
@@ -29,6 +26,47 @@ public class CartItemController {
 
         User u = (User) session.getAttribute("loggedInUser");
 
+        // checking if user already purchased item
+        ShopOrderDao shopOrderDao = new ShopOrderDaoImpl("database.properties");
+
+        // get all shop Orders by username
+        ArrayList<ShopOrder> shopOrdersByUser = shopOrderDao.getAllShopOrdersByUsername(u.getUsername());
+
+        // loop through shop orders
+        for (int i = 0; i < shopOrdersByUser.size(); i++) {
+
+            OrderItemDao orderItemDao = new OrderItemDaoImpl("database.properties");
+
+            // get all orders in the system
+            ArrayList<OrderItem> orderItems = orderItemDao.getAllOrderItems();
+
+            for (int j = 0; j < orderItems.size(); j++) {
+
+                if (shopOrdersByUser.get(i).getOrder_id() == orderItems.get(j).getOrder_id()) {
+
+                    MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+                    MovieProduct movieProduct = movieProductDao.getMovieById(orderItems.get(j).getMovie_id());
+
+                    if (movieProduct.getMovie_id() == movieID2) {
+                        String message = "Movie has already been purchased by you";
+                        model.addAttribute("message", message);
+
+                        List<MovieProduct> movieProducts = movieProductDao.getAllMovieProducts();
+                        model.addAttribute("movieProducts", movieProducts);
+
+                        // totalAmountOItems in basket
+                        getTotalAmountOfItemsInCart(session, model);
+                        return "store_index";
+                    }
+                }
+
+            }
+
+        }
+
+        // adding movie if not purchased
+
         CartDao cartDao = new CartDaoImpl("database.properties");
 
         Cart cart = cartDao.getCartByUsername(u.getUsername());
@@ -37,9 +75,9 @@ public class CartItemController {
 
         int answer = cartItemDao.addCartItem(new CartItem(cart.getCart_id(), movieID2));
 
-        System.out.println("Cart Id"+cart.getCart_id());
+        System.out.println("Cart Id" + cart.getCart_id());
 
-        if (answer == -1){
+        if (answer == -1) {
             System.out.println(answer);
             String message = "Movie Product was not added to cart because you already have it in your cart";
             model.addAttribute("message", message);
@@ -50,10 +88,10 @@ public class CartItemController {
             model.addAttribute("movieProducts", movieProducts);
 
             // totalAmountOItems in basket
-            getTotalAmountOfItemsInCart(session,model);
+            getTotalAmountOfItemsInCart(session, model);
 
             return "store_index";
-        }else {
+        } else {
 
             System.out.println(answer);
             String message = "Movie Product was added to cart";
@@ -65,7 +103,7 @@ public class CartItemController {
             model.addAttribute("movieProducts", movieProducts);
 
             // totalAmountOItems in basket
-            getTotalAmountOfItemsInCart(session,model);
+            getTotalAmountOfItemsInCart(session, model);
 
             return "store_index";
 
@@ -75,11 +113,11 @@ public class CartItemController {
     }
 
 
-   // delete Cart Item
+    // delete Cart Item
 
     @GetMapping("/deleteCartItem")
     public String deleteCartItem(HttpSession session,
-                                 @RequestParam(name = "movieId") String movieId, Model model){
+                                 @RequestParam(name = "movieId") String movieId, Model model) {
 
 
         int movieID2 = Integer.parseInt(movieId);
@@ -97,7 +135,7 @@ public class CartItemController {
 
         ArrayList<MovieProduct> movies = new ArrayList<>();
 
-        for (int i = 0; i < cartItems.size();i++) {
+        for (int i = 0; i < cartItems.size(); i++) {
 
             MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
 
@@ -109,7 +147,7 @@ public class CartItemController {
 
         double total = 0;
 
-        for (int i = 0; i < movies.size();i++){
+        for (int i = 0; i < movies.size(); i++) {
 
             total = total + movies.get(i).getListPrice();
         }
@@ -117,7 +155,7 @@ public class CartItemController {
         model.addAttribute("total", total);
 
         // totalAmountOItems in basket
-        getTotalAmountOfItemsInCart(session,model);
+        getTotalAmountOfItemsInCart(session, model);
 
 
         // deleting cartItem
@@ -133,7 +171,7 @@ public class CartItemController {
 
     @GetMapping("/totalNumberOfCartItems")
     public String deleteCartItem(HttpSession session,
-                                  Model model){
+                                 Model model) {
 
 
         User u = (User) session.getAttribute("loggedInUser");
@@ -151,9 +189,8 @@ public class CartItemController {
     }
 
 
-
     // total amount of items in cart
-    public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
+    public void getTotalAmountOfItemsInCart(HttpSession session, Model model) {
 
         /// get total number of items in cart for user
 
