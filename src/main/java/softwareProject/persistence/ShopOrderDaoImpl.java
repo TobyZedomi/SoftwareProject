@@ -1,11 +1,9 @@
 package softwareProject.persistence;
 
-import softwareProject.business.BillingAddress;
-import softwareProject.business.Cart;
-import softwareProject.business.CartItem;
-import softwareProject.business.ShopOrder;
+import softwareProject.business.*;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class ShopOrderDaoImpl extends MySQLDao implements ShopOrderDao{
@@ -116,6 +114,45 @@ public class ShopOrderDaoImpl extends MySQLDao implements ShopOrderDao{
         }
         return shopOrder;
     }
+
+
+    // get all shop orders by username
+
+    @Override
+    public ArrayList<ShopOrder> getAllShopOrdersByUsername(String username){
+
+        ArrayList<ShopOrder> shopOrders = new ArrayList<>();
+
+        Connection conn = super.getConnection();
+
+        try(PreparedStatement ps = conn.prepareStatement("SELECT * from shop_order WHERE username = ?")){
+            ps.setString(1, username);
+            try(ResultSet rs = ps.executeQuery()){
+                while(rs.next()){
+
+                    ShopOrder s = mapRow(rs);
+                    shopOrders.add(s);
+                }
+            }catch(SQLException e){
+                System.out.println(LocalDateTime.now() + ": An SQLException  occurred while running the query" +
+                        " or processing the result.");
+                System.out.println("Error: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }catch(SQLException e){
+            System.out.println(LocalDateTime.now() + ": An SQLException  occurred while preparing the SQL " +
+                    "statement.");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }finally {
+            // Close the connection using the superclass method
+            super.freeConnection(conn);
+        }
+
+        return shopOrders;
+    }
+
+
 
 
     /**
