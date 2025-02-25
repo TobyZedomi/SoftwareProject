@@ -5,6 +5,8 @@ import softwareProject.business.OrderItem;
 import softwareProject.business.ShopOrder;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class OrderItemDaoImpl extends MySQLDao implements OrderItemDao{
 
@@ -69,6 +71,37 @@ public class OrderItemDaoImpl extends MySQLDao implements OrderItemDao{
     }
 
 
+    // get all order items
+
+    @Override
+    public ArrayList<OrderItem> getAllOrderItems(){
+        ArrayList<OrderItem> orderItems = new ArrayList<>();
+
+        Connection conn = super.getConnection();
+
+        try(PreparedStatement ps = conn.prepareStatement("SELECT * from orderitem")){
+            try(ResultSet rs = ps.executeQuery()){
+                while(rs.next()){
+
+                    OrderItem orderItem = mapRow(rs);
+                    orderItems.add(orderItem);
+                }
+            }catch(SQLException e){
+                System.out.println(LocalDateTime.now() + ": An SQLException  occurred while running the query" +
+                        " or processing the result.");
+                System.out.println("Error: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }catch(SQLException e){
+            System.out.println(LocalDateTime.now() + ": An SQLException  occurred while preparing the SQL " +
+                    "statement.");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return orderItems;
+    }
+
     /**
      * Search through each row in the orderItem
      *
@@ -80,7 +113,7 @@ public class OrderItemDaoImpl extends MySQLDao implements OrderItemDao{
 
         OrderItem o = new OrderItem(
 
-                rs.getInt("order_item_id"),
+                rs.getInt("order_items_id"),
                 rs.getDouble("price"),
                 rs.getInt("order_id"),
                 rs.getInt("movie_id")
