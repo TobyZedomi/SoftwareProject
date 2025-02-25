@@ -46,6 +46,7 @@ public class CartItemController {
 
                     MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
 
+                    // get MovieProduct by movie id
                     MovieProduct movieProduct = movieProductDao.getMovieById(orderItems.get(j).getMovie_id());
 
                     if (movieProduct.getMovie_id() == movieID2) {
