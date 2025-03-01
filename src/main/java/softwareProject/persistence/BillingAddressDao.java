@@ -11,4 +11,6 @@ public interface BillingAddressDao {
     public ArrayList<BillingAddress> getAllBillingAddress();
 
     public BillingAddress getBillingAddressByUsername(String username);
+
+    public BillingAddress getBillingAddressById(int id);
 }

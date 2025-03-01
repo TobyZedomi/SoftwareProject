@@ -387,7 +387,7 @@ public class BillingAddressController {
 
         CartItemDao cartItemDao = new CartItemDaoImpl("database.properties");
 
-        cartItemDao.deleteCartItem(cart.getCart_id());
+        cartItemDao.deleteCartItemByCartId(cart.getCart_id());
     }
 
 

@@ -11,4 +11,6 @@ public interface ShopOrderDao {
     public ShopOrder getOrderWithTheHighestOrderIdByUsername(String username);
 
     public ArrayList<ShopOrder> getAllShopOrdersByUsername(String username);
+
+    public ShopOrder getShopOrderById(int id);
 }

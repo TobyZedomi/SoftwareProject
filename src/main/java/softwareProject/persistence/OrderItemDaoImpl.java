@@ -1,5 +1,6 @@
 package softwareProject.persistence;
 
+import softwareProject.business.BillingAddress;
 import softwareProject.business.MovieProduct;
 import softwareProject.business.OrderItem;
 import softwareProject.business.ShopOrder;
@@ -77,29 +78,93 @@ public class OrderItemDaoImpl extends MySQLDao implements OrderItemDao{
     public ArrayList<OrderItem> getAllOrderItems(){
         ArrayList<OrderItem> orderItems = new ArrayList<>();
 
-        Connection conn = super.getConnection();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        try(PreparedStatement ps = conn.prepareStatement("SELECT * from orderitem")){
-            try(ResultSet rs = ps.executeQuery()){
-                while(rs.next()){
+        try{
+
+            con = getConnection();
+
+            String query = "SELECT * from orderitem";
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery();
+
+            while(rs.next()){
 
                     OrderItem orderItem = mapRow(rs);
                     orderItems.add(orderItem);
                 }
-            }catch(SQLException e){
-                System.out.println(LocalDateTime.now() + ": An SQLException  occurred while running the query" +
-                        " or processing the result.");
-                System.out.println("Error: " + e.getMessage());
-                e.printStackTrace();
+
+        }catch (SQLException e) {
+            System.out.println("Exception occured in the getAllProducts() method: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the getAllProducts() method: " + e.getMessage());
             }
-        }catch(SQLException e){
-            System.out.println(LocalDateTime.now() + ": An SQLException  occurred while preparing the SQL " +
-                    "statement.");
-            System.out.println("Error: " + e.getMessage());
-            e.printStackTrace();
         }
 
         return orderItems;
+    }
+
+
+    // get order item by id
+    @Override
+    public OrderItem getOrderItemById(int id){
+
+        OrderItem orderItem = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
+
+
+            con = getConnection();
+
+            String query = "SELECT * FROM orderitem where order_items_id = ?";
+            ps = con.prepareStatement(query);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+
+
+
+            if(rs.next()){
+
+                orderItem = mapRow(rs);
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception occurred when attempting to prepare SQL for execution");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occurred in the finally section of the method: " + e.getMessage());
+            }
+        }
+        return orderItem;
     }
 
     /**

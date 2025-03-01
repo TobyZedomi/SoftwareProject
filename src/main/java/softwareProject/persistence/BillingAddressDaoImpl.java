@@ -8,6 +8,7 @@ import softwareProject.business.User;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BillingAddressDaoImpl extends MySQLDao implements BillingAddressDao{
 
@@ -83,35 +84,45 @@ public class BillingAddressDaoImpl extends MySQLDao implements BillingAddressDao
     public ArrayList<BillingAddress> getAllBillingAddress(){
 
         ArrayList<BillingAddress> billingAddresses = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        Connection conn = super.getConnection();
+        try{
+            con = getConnection();
 
-        try(PreparedStatement ps = conn.prepareStatement("SELECT * from billing_address")){
-            try(ResultSet rs = ps.executeQuery()){
-                while(rs.next()){
+            String query = "Select * from billing_address";
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery();
 
-                    BillingAddress b = mapRow(rs);
-                    billingAddresses.add(b);
-                }
-            }catch(SQLException e){
-                System.out.println(LocalDateTime.now() + ": An SQLException  occurred while running the query" +
-                        " or processing the result.");
-                System.out.println("Error: " + e.getMessage());
-                e.printStackTrace();
+            while(rs.next())
+            {
+                BillingAddress b = mapRow(rs);
+                billingAddresses.add(b);
             }
         }catch(SQLException e){
             System.out.println(LocalDateTime.now() + ": An SQLException  occurred while preparing the SQL " +
                     "statement.");
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
-        }finally {
-            // Close the connection using the superclass method
-            super.freeConnection(conn);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the  method: " + e.getMessage());
+            }
         }
 
         return billingAddresses;
     }
-
 
     // getBillingAddressByUsername
 
@@ -120,42 +131,101 @@ public class BillingAddressDaoImpl extends MySQLDao implements BillingAddressDao
     public BillingAddress getBillingAddressByUsername(String username){
 
         BillingAddress billingAddress = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        // Get a connection using the superclass
-        Connection conn = super.getConnection();
-        // TRY to get a statement from the connection
-        // When you are parameterizing the query, remember that you need
-        // to use the ? notation (so you can fill in the blanks later)
-        try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM billing_address where username = ? ")) {
+        try{
 
+
+            con = getConnection();
+
+            String query = "SELECT * FROM billing_address where username = ?";
+            ps = con.prepareStatement(query);
             // Fill in the blanks, i.e. parameterize the query
             ps.setString(1, username);
+            rs = ps.executeQuery();
 
-            // TRY to execute the query
-            try (ResultSet rs = ps.executeQuery()) {
-                // Extract the information from the result set
-                // Use extraction method to avoid code repetition!
+
+
                 if(rs.next()){
 
                     billingAddress = mapRow(rs);
                 }
 
-            } catch (SQLException e) {
-                System.out.println("SQL Exception occurred when executing SQL or processing results.");
-                System.out.println("Error: " + e.getMessage());
-                e.printStackTrace();
-            }
+
         } catch (SQLException e) {
             System.out.println("SQL Exception occurred when attempting to prepare SQL for execution");
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
-        }finally {
-            // Close the connection using the superclass method
-            super.freeConnection(conn);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occurred in the finally section of the method: " + e.getMessage());
+            }
         }
         return billingAddress;
     }
 
+    // get BillingAddressById
+
+    @Override
+    public BillingAddress getBillingAddressById(int id){
+
+        BillingAddress billingAddress = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
+
+
+            con = getConnection();
+
+            String query = "SELECT * FROM billing_address where billing_address_id = ?";
+            ps = con.prepareStatement(query);
+            // Fill in the blanks, i.e. parameterize the query
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+
+
+
+            if(rs.next()){
+
+                billingAddress = mapRow(rs);
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception occurred when attempting to prepare SQL for execution");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occurred in the finally section of the method: " + e.getMessage());
+            }
+        }
+        return billingAddress;
+    }
 
     /**
      * Search through each row in the billingAddress

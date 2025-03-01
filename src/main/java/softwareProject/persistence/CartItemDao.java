@@ -1,7 +1,6 @@
 package softwareProject.persistence;
 
 import softwareProject.business.CartItem;
-import softwareProject.business.MovieProduct;
 
 import java.util.ArrayList;
 
@@ -11,9 +10,11 @@ public interface CartItemDao {
 
     public ArrayList<CartItem> getAllCartItemsByCartId(int cartId);
 
-    public int deleteCartItem(int cartId, int movieId);
+    public int deleteCartItemByCartIdAndMovieId(int cartId, int movieId);
 
     public int totalNumberOfCartItems(int cartId);
 
-    public int deleteCartItem(int cartId);
+    public int deleteCartItemByCartId(int cartId);
+
+    public CartItem getCartItemByIdAndMovieId(int cartId, int movieId);
 }

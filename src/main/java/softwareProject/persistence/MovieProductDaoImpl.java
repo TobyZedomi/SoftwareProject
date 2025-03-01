@@ -10,48 +10,65 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class MovieProductDaoImpl extends MySQLDao implements MovieProductDao{
+public class MovieProductDaoImpl extends MySQLDao implements MovieProductDao {
 
     /**
      * get the database information from a particular database
+     *
      * @param databaseName is the database being searched
      */
-    public MovieProductDaoImpl(String databaseName){
+    public MovieProductDaoImpl(String databaseName) {
         super(databaseName);
     }
 
-    public MovieProductDaoImpl(Connection conn){
+    public MovieProductDaoImpl(Connection conn) {
         super(conn);
     }
-    public MovieProductDaoImpl(){
+
+    public MovieProductDaoImpl() {
         super();
     }
 
 
     @Override
-    public ArrayList<MovieProduct> getAllMovieProducts(){
+    public ArrayList<MovieProduct> getAllMovieProducts() {
         ArrayList<MovieProduct> movieProducts = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        Connection conn = super.getConnection();
 
-        try(PreparedStatement ps = conn.prepareStatement("SELECT * from movieProduct")){
-            try(ResultSet rs = ps.executeQuery()){
-                while(rs.next()){
+        try {
 
-                    MovieProduct m = mapRow(rs);
-                    movieProducts.add(m);
-                }
-            }catch(SQLException e){
-                System.out.println(LocalDateTime.now() + ": An SQLException  occurred while running the query" +
-                        " or processing the result.");
-                System.out.println("Error: " + e.getMessage());
-                e.printStackTrace();
+
+            con = getConnection();
+
+            String query = "SELECT * from movieProduct";
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                MovieProduct m = mapRow(rs);
+                movieProducts.add(m);
             }
-        }catch(SQLException e){
-            System.out.println(LocalDateTime.now() + ": An SQLException  occurred while preparing the SQL " +
-                    "statement.");
-            System.out.println("Error: " + e.getMessage());
-            e.printStackTrace();
+
+        } catch (SQLException e) {
+            System.out.println("Exception occured in the getAllProducts() method: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the getAllProducts() method: " + e.getMessage());
+            }
         }
 
         return movieProducts;
@@ -59,40 +76,45 @@ public class MovieProductDaoImpl extends MySQLDao implements MovieProductDao{
 
 
     @Override
-    public MovieProduct getMovieById(int movieId){
+    public MovieProduct getMovieById(int movieId) {
 
         MovieProduct movieProduct = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        // Get a connection using the superclass
-        Connection conn = super.getConnection();
-        // TRY to get a statement from the connection
-        // When you are parameterizing the query, remember that you need
-        // to use the ? notation (so you can fill in the blanks later)
-        try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM movieProduct where movie_id = ?")) {
 
-            // Fill in the blanks, i.e. parameterize the query
+        try {
+
+            con = getConnection();
+
+            String query = "SELECT * FROM movieProduct where movie_id = ?";
+            ps = con.prepareStatement(query);
             ps.setInt(1, movieId);
+            rs = ps.executeQuery();
 
-            // TRY to execute the query
-            try (ResultSet rs = ps.executeQuery()) {
-                // Extract the information from the result set
-                // Use extraction method to avoid code repetition!
-                if(rs.next()){
 
-                    movieProduct = mapRow(rs);
+            if (rs.next()) {
+
+                movieProduct = mapRow(rs);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Exception occured in the getMovieById() method: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
                 }
             } catch (SQLException e) {
-                System.out.println("SQL Exception occurred when executing SQL or processing results.");
-                System.out.println("Error: " + e.getMessage());
-                e.printStackTrace();
+                System.out.println("Exception occured in the finally section of the getProductByCode() method: " + e.getMessage());
             }
-        } catch (SQLException e) {
-            System.out.println("SQL Exception occurred when attempting to prepare SQL for execution");
-            System.out.println("Error: " + e.getMessage());
-            e.printStackTrace();
-        }finally {
-            // Close the connection using the superclass method
-            super.freeConnection(conn);
         }
         return movieProduct;
     }
@@ -105,7 +127,7 @@ public class MovieProductDaoImpl extends MySQLDao implements MovieProductDao{
      * @return the user information
      * @throws SQLException
      */
-    private MovieProduct mapRow(ResultSet rs)throws SQLException {
+    private MovieProduct mapRow(ResultSet rs) throws SQLException {
 
         MovieProduct m = new MovieProduct(
 

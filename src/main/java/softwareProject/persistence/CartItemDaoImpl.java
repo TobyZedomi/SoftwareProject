@@ -78,41 +78,44 @@ public class CartItemDaoImpl extends MySQLDao implements CartItemDao{
     public ArrayList<CartItem> getAllCartItemsByCartId(int cartId){
 
         ArrayList<CartItem> cartItems = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
 
-        // Get a connection using the superclass
-        Connection conn = super.getConnection();
-        // TRY to get a statement from the connection
-        // When you are parameterizing the query, remember that you need
-        // to use the ? notation (so you can fill in the blanks later)
-        try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM cart_items where cart_id = ? ")) {
+        try{
 
+            con = getConnection();
+
+            String query = "SELECT * FROM cart_items where cart_id = ?";
+            ps = con.prepareStatement(query);
             // Fill in the blanks, i.e. parameterize the query
             ps.setInt(1, cartId);
+            rs = ps.executeQuery();
 
-
-            // TRY to execute the query
-            try (ResultSet rs = ps.executeQuery()) {
-                // Extract the information from the result set
-                // Use extraction method to avoid code repetition!
                 while(rs.next()){
                     CartItem c = mapRow(rs);
                     cartItems.add(c);
 
                 }
 
-            } catch (SQLException e) {
-                System.out.println("SQL Exception occurred when executing SQL or processing results.");
-                System.out.println("Error: " + e.getMessage());
-                e.printStackTrace();
-            }
+
         } catch (SQLException e) {
-            System.out.println("SQL Exception occurred when attempting to prepare SQL for execution");
-            System.out.println("Error: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println("SQL Exception occurred when attempting to prepare SQL for execution" + e.getMessage());
         }finally {
-            // Close the connection using the superclass method
-            super.freeConnection(conn);
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the getProductByCode() method: " + e.getMessage());
+            }
         }
         return cartItems;
     }
@@ -121,25 +124,36 @@ public class CartItemDaoImpl extends MySQLDao implements CartItemDao{
     // delete cartItem with particular cart_id and movie_id
 
     @Override
-    public int deleteCartItem(int cartId, int movieId){
+    public int deleteCartItemByCartIdAndMovieId(int cartId, int movieId){
         int rowsAffected = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
 
-        Connection conn = super.getConnection();
+        try{
 
-        try(PreparedStatement ps = conn.prepareStatement("DELETE from cart_items where cart_id = ? and movie_id = ?")){
+            con = getConnection();
+
+            String query = "DELETE from cart_items where cart_id = ? and movie_id = ?";
+
+            ps = con.prepareStatement(query);
             ps.setInt(1,cartId);
             ps.setInt(2,movieId);
+
             rowsAffected = ps.executeUpdate();
-        }// Add an extra exception handling block for where there is already an entry
-        // with the primary key specified
-        catch (SQLIntegrityConstraintViolationException e) {
-            System.out.println("Constraint Exception occurred: " + e.getMessage());
-            // Set the rowsAffected to -1, this can be used as a flag for the display section
-            rowsAffected = -1;
-        }catch(SQLException e){
-            System.out.println("SQL Exception occurred when attempting to prepare/execute SQL");
-            System.out.println("Error: " + e.getMessage());
-            e.printStackTrace();
+        }catch (SQLException e) {
+            System.out.println("Exception occured in the updateProductName() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the updateProductName() method");
+                e.getMessage();
+            }
         }
 
         return rowsAffected;
@@ -152,25 +166,40 @@ public class CartItemDaoImpl extends MySQLDao implements CartItemDao{
     @Override
     public int totalNumberOfCartItems(int cartId){
 
-        Connection conn = super.getConnection();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        try(PreparedStatement ps = conn.prepareStatement("SELECT count(*) from cart_items WHERE cart_id = ?")){
+        try{
+
+
+            con = getConnection();
+
+            String query = "SELECT count(*) from cart_items WHERE cart_id = ?";
+            ps = con.prepareStatement(query);
             ps.setInt(1,cartId);
-            try(ResultSet rs = ps.executeQuery()){
-                if(rs.next()){
+            rs = ps.executeQuery();
+
+            if(rs.next()){
                     return rs.getInt(1);
                 }
-            }catch(SQLException e){
-                System.out.println(LocalDateTime.now() + ": An SQLException  occurred while running the query" +
-                        " or processing the result.");
-                System.out.println("Error: " + e.getMessage());
-                e.printStackTrace();
+
+        }catch (SQLException e) {
+            System.out.println("SQL Exception occurred when attempting to prepare SQL for execution" + e.getMessage());
+        }finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the getProductByCode() method: " + e.getMessage());
             }
-        }catch(SQLException e){
-            System.out.println(LocalDateTime.now() + ": An SQLException  occurred while preparing the SQL " +
-                    "statement.");
-            System.out.println("Error: " + e.getMessage());
-            e.printStackTrace();
         }
 
         return 0;
@@ -180,28 +209,88 @@ public class CartItemDaoImpl extends MySQLDao implements CartItemDao{
     // delete cartItem by cartId
 
     @Override
-    public int deleteCartItem(int cartId){
+    public int deleteCartItemByCartId(int cartId){
         int rowsAffected = 0;
 
-        Connection conn = super.getConnection();
+        Connection con = null;
+        PreparedStatement ps = null;
 
-        try(PreparedStatement ps = conn.prepareStatement("DELETE from cart_items where cart_id = ?")){
+
+        try{
+
+            con = getConnection();
+
+            String query = "DELETE from cart_items where cart_id = ?";
+
+            ps = con.prepareStatement(query);
             ps.setInt(1,cartId);
             rowsAffected = ps.executeUpdate();
-        }// Add an extra exception handling block for where there is already an entry
-        // with the primary key specified
-        catch (SQLIntegrityConstraintViolationException e) {
-            System.out.println("Constraint Exception occurred: " + e.getMessage());
-            // Set the rowsAffected to -1, this can be used as a flag for the display section
-            rowsAffected = -1;
-        }catch(SQLException e){
-            System.out.println("SQL Exception occurred when attempting to prepare/execute SQL");
-            System.out.println("Error: " + e.getMessage());
-            e.printStackTrace();
+        }catch (SQLException e) {
+            System.out.println("Exception occured in the updateProductName() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the updateProductName() method");
+                e.getMessage();
+            }
         }
 
         return rowsAffected;
 
+    }
+
+
+    // getCartItems By cartId and movieId
+
+    @Override
+    public CartItem getCartItemByIdAndMovieId(int cartId, int movieId){
+
+        CartItem cartItem = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+
+        try  {
+
+            con = getConnection();
+
+            String query = "SELECT * FROM cart_items where cart_id = ? AND movie_id = ?";
+            ps = con.prepareStatement(query);
+            ps.setInt(1, cartId);
+            ps.setInt(2, movieId);
+            rs = ps.executeQuery();
+
+            if(rs.next()){
+
+                cartItem = mapRow(rs);
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("Exception occured in the getCartItemByIdAndMovieId() method: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the getProductByCode() method: " + e.getMessage());
+            }
+        }
+        return cartItem;
     }
 
 

@@ -11,4 +11,6 @@ public interface CartDao {
     public ArrayList<Cart> getAllCarts();
 
     public Cart getCartByUsername(String username);
+
+    public Cart getCartById(int id);
 }

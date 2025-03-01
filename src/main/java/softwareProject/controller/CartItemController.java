@@ -161,7 +161,7 @@ public class CartItemController {
 
         // deleting cartItem
 
-        cartItemDao.deleteCartItem(cart.getCart_id(), movieID2);
+        cartItemDao.deleteCartItemByCartIdAndMovieId(cart.getCart_id(), movieID2);
 
         return "cart_index";
     }

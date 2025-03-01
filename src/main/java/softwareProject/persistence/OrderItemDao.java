@@ -9,4 +9,6 @@ public interface OrderItemDao {
     public int addOrderItem(OrderItem orderItem);
 
     public ArrayList<OrderItem> getAllOrderItems();
+
+    public OrderItem getOrderItemById(int id);
 }
