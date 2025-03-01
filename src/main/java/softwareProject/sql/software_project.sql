@@ -1,10 +1,10 @@
 DROP
-    DATABASE IF EXISTS software_project;
+DATABASE IF EXISTS software_project;
 CREATE
-    DATABASE IF NOT EXISTS software_project;
+DATABASE IF NOT EXISTS software_project;
 
 USE
-    software_project;
+software_project;
 
 CREATE TABLE users
 (
@@ -31,7 +31,7 @@ CREATE TABLE subscription
 (
     subscription_id        INT AUTO_INCREMENT,
     username               varchar(255) NOT NULL,
-    subscription_plan_id   INT(11)      NOT NULL,
+    subscription_plan_id   INT(11) NOT NULL,
     subscription_startDate datetime     NOT NULL,
     subscription_endDate   datetime     NOT NULL,
     PRIMARY KEY (subscription_id),
@@ -43,7 +43,7 @@ CREATE TABLE subscription
 CREATE TABLE review
 (
     username   varchar(255) NOT NULL,
-    movieDb_id int(11)      NOT NULL,
+    movieDb_id int(11) NOT NULL,
     rating     double       NOT NULL,
     comment    text,
     PRIMARY KEY (username, movieDb_id),
@@ -54,7 +54,7 @@ CREATE TABLE review
 CREATE TABLE favouriteList
 (
     username   varchar(255) NOT NULL,
-    movieDb_id int(11)      NOT NULL,
+    movieDb_id int(11) NOT NULL,
     PRIMARY KEY (username, movieDb_id),
     FOREIGN KEY (username) REFERENCES users (username)
 );
@@ -160,4 +160,111 @@ CREATE TABLE reviews
 );
 
 
+/* TRIGGERS AND TABLES FOR TRIGGERS  */
 
+CREATE TABLE auditsMovieProduct
+(
+    auditsMovieProductID INT AUTO_INCREMENT,
+    table_name           VARCHAR(255),
+    transaction_name     VARCHAR(10),
+    movieName            VARCHAR(255),
+    transdate            datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (auditsMovieProductID)
+);
+
+CREATE TABLE auditsUpdateMovieProduct
+(
+    auditsMovieProductID INT AUTO_INCREMENT,
+    table_name           VARCHAR(255),
+    transaction_name     VARCHAR(10),
+    movieName            VARCHAR(255),
+    oldPrice             double,
+    newPrice             double,
+    transdate            datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (auditsMovieProductID)
+);
+
+CREATE TABLE auditsCartItems
+(
+    auditsCartItemsID INT AUTO_INCREMENT,
+    table_name        VARCHAR(255),
+    transaction_name  VARCHAR(10),
+    movie_id          int(11),
+    transdate         datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (auditsCartItemsID),
+    FOREIGN KEY (movie_id) REFERENCES movieProduct (movie_id)
+);
+
+DELIMITER //
+
+CREATE TRIGGER addMovieProduct
+    AFTER INSERT
+    ON movieproduct
+    FOR EACH ROW
+BEGIN
+    INSERT INTO auditsMovieProduct(table_name, transaction_name, movieName)
+    VALUES ('MovieProduct', 'INSERT', NEW.movie_name);
+END //
+DELIMITER //
+
+
+DELIMITER //
+
+CREATE TRIGGER deleteMovieProduct
+    AFTER DELETE
+    ON movieproduct
+    FOR EACH ROW
+BEGIN
+    INSERT INTO auditsMovieProduct(table_name, transaction_name, movieName)
+    VALUES ('MovieProduct', 'DELETE', OLD.movie_name);
+END //
+DELIMITER //
+
+
+DELIMITER //
+
+CREATE TRIGGER updateMovieProduct
+    AFTER UPDATE
+    ON movieproduct
+    FOR EACH ROW
+BEGIN
+    INSERT INTO auditsUpdateMovieProduct(table_name, transaction_name, movieName, oldPrice, newPrice)
+    VALUES ('MovieProduct', 'UPDATE', OLD.movie_name, OLD.listPrice, NEW.listPrice);
+END //
+DELIMITER //
+
+
+
+DELIMITER //
+
+CREATE TRIGGER addCartItems
+    AFTER INSERT
+    ON cart_items
+    FOR EACH ROW
+BEGIN
+    INSERT INTO auditsCartItems(table_name, transaction_name, movie_id)
+    VALUES ('MovieProduct', 'INSERT', NEW.movie_id);
+END //
+DELIMITER //
+
+
+/*
+ Stored Procedures
+ */
+
+
+DELIMITER //
+CREATE PROCEDURE selectAllMovieProducts()
+BEGIN
+SELECT *
+FROM movieproduct;
+END //
+DELIMITER //
+
+
+DELIMITER //
+CREATE PROCEDURE addIntoCartItem(param_cart_id INT, param_movie_id INT)
+BEGIN
+INSERT INTO cart_items(cart_id, movie_id) VALUES (param_cart_id, param_movie_id);
+END //
+DELIMITER //
