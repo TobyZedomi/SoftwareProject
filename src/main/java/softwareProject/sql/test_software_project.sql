@@ -243,7 +243,7 @@ CREATE TRIGGER addCartItems
     FOR EACH ROW
 BEGIN
     INSERT INTO auditsCartItems(table_name, transaction_name, movie_id)
-    VALUES ('MovieProduct', 'INSERT', NEW.movie_id);
+    VALUES ('cart_items', 'INSERT', NEW.movie_id);
 END //
 DELIMITER //
 
