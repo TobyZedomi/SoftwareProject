@@ -1,8 +1,9 @@
 INSERT INTO `users` (`username`, `displayName`, `email`, `password`, `dateOfBirth`, `isAdmin`, `createdAt`)
 VALUES ('admin', 'adminUser123', 'admin@gmail.com', 'AgcGk+yZvOCWx6I30PDQlfW/62dOVXmuX7TdXxeNlK0=', '2003-02-16', true, '2025-01-30 00:00:00'),
-       ('Andrew', 'andrewGamer123', 'andrew@gmail.com', 'passwordDone123@', '2000-12-10', false, '2025-01-30 00:00:00'),
-       ('Toby', 'toby123', 'toby@gmail.com', 'password123@',  '2001-18-08', false, '2025-01-30 00:00:00'),
-       ('James', 'james123', 'james@gmail.com', 'Football123', '1999-11-18', false, '2025-01-30 00:00:00');
+       ('Andrew', 'andrewGamer123', 'andrew@gmail.com', 'AgcGk+yZvOCWx6I30PDQlfW/62dOVXmuX7TdXxeNlK0=', '2000-12-10', false, '2025-01-30 00:00:00'),
+       ('Toby', 'toby123', 'toby@gmail.com', 'AgcGk+yZvOCWx6I30PDQlfW/62dOVXmuX7TdXxeNlK0=',  '2001-18-08', false, '2025-01-30 00:00:00'),
+       ('Kate', 'kate123', 'kate@gmail.com', 'AgcGk+yZvOCWx6I30PDQlfW/62dOVXmuX7TdXxeNlK0=',  '2001-18-08', false, '2025-01-30 00:00:00'),
+       ('James', 'james123', 'james@gmail.com', 'AgcGk+yZvOCWx6I30PDQlfW/62dOVXmuX7TdXxeNlK0=', '1999-11-18', false, '2025-01-30 00:00:00');
 
 
 INSERT INTO `subscriptionPlan` (`subscription_plan_id`, `subscription_plan_name`, `cost`)
@@ -48,7 +49,35 @@ VALUES (1, 'Spider-Man-2',  '2004-07-16 ', '02:07:00', 'Peter Parker is very unh
 
 
 INSERT INTO `carts` (`cart_id`, `username`)
-VALUES (1, 'admin');
+VALUES (1, 'admin'),
+       (2, 'Andrew'),
+       (3, 'Toby'),
+       (4, 'Kate'),
+       (5, 'James');
+
+
+INSERT INTO `cart_items` (cart_id, movie_id)
+VALUES (1, 1),
+       (1, 2),
+       (2, 1),
+       (2, 2),
+       (3, 1),
+       (3, 2);
+
+INSERT INTO `billing_address` (billing_address_id, username, fullName, email, address, city, county, postcode)
+VALUES (1, 'Kate', 'Kate A', 'kate@gmail.com', '70 Vinland Road', 'Dublin', 'Co.Louth', 'A92 QW2Q'),
+       (2, 'James', 'James M', 'james@gmail.com', '90 Wheaton Hall', 'Dublin', 'Co.Louth', 'A92 SQ3Q');
+
+INSERT INTO `shop_order` (order_id, username, billing_address_id, order_date, total_price, order_status)
+VALUES (1, 'Kate', 1, '2025-01-30 12:00:00', 19.98, 'COMPLETE'),
+       (2, 'James', 2, '2025-01-30 12:00:00', 19.98, 'COMPLETE');
+
+
+INSERT INTO `orderItem` (order_items_id, price, order_id, movie_id)
+VALUES (1, 8.99, 1, 14),
+       (2, 10.99, 1, 15),
+       (3, 8.99, 2, 14),
+       (4, 10.99, 2, 15);
 
 
 INSERT INTO `reviews` (`name`, `email`, `content`, `createdAt`)

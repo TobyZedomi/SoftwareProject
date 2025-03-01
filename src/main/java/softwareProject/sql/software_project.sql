@@ -9,7 +9,7 @@ USE
 CREATE TABLE users
 (
     username    varchar(50) UNIQUE  NOT NULL,
-    displayName varchar(50) UNIQUE  NOT NULL,
+    displayName varchar(50)         NOT NULL,
     email       varchar(255) UNIQUE NOT NULL,
     password    varchar(255)        NOT NULL,
     dateOfBirth DATE                NOT NULL,
