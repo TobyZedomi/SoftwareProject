@@ -43,7 +43,8 @@ public class MovieProductDaoImpl extends MySQLDao implements MovieProductDao {
 
             con = getConnection();
 
-            String query = "SELECT * from movieProduct";
+           // String query = "SELECT * from movieProduct";
+            String query = "CALL selectAllMovieProducts";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
 

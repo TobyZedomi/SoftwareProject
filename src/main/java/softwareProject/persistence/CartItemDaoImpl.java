@@ -46,8 +46,7 @@ public class CartItemDaoImpl extends MySQLDao implements CartItemDao{
         // TRY to prepare a statement from the connection
         // When you are parameterizing the update, remember that you need
         // to use the ? notation (so you can fill in the blanks later)
-        try(PreparedStatement ps = conn.prepareStatement("INSERT INTO cart_items(cart_id, movie_id) VALUES ( ?, " +
-                "?)")) {
+        try(PreparedStatement ps = conn.prepareStatement("CALL addIntoCartItem(?, ?)")) {
             // Fill in the blanks, i.e. parameterize the update
             ps.setInt(1, cartItem.getCart_id());
             ps.setInt(2, cartItem.getMovie_id());
