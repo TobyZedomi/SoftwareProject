@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="UTF-8">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
@@ -45,52 +45,49 @@
 
     <div class="signup-box"><br><br>
 
-      <form name="form" id="form" method="post" action="/registerUser" onsubmit="return validateForm(this)">
+      <form name="form" id="form" method="post" action="/registerUser" onsubmit="return validateRegister()" onreset="resetForm()">
         <p>
           <label for="username" style="margin-top: 300px;" >Username:</label>
-          <input type="text" id="username" name="username"
+          <input type="text" th:value="${username}" id="username" name="username"
                  placeholder="Enter username">
-        <p class="message" th:text="${message}"></p>
         <span id="username-error" class="error-message"></span>
         </p>
         <p>
           <label for="displayName" >Display Name:</label>
-          <input type="text" id="displayName" name="displayName"
+          <input type="text" th:value="${displayName}" id="displayName" name="displayName"
                  placeholder="Enter display name">
-        <p class="message" th:text="${message2}"></p>
         <span id="displayName-error" class="error-message"></span>
         </p>
         <p>
           <label for="email" >Email:</label>
-          <input type="email" id="email" name="email"
+          <input type="email" th:value="${email}" id="email" name="email"
                  placeholder="Enter email">
-        <p class="message" th:text="${message3}"></p>
         <span id="email-error" class="error-message"></span>
         </p>
         <p>
           <label for="password" >Password:</label>
-          <input type="password" id="password" name="password"
+          <input type="password" th:value="${password}" id="password" name="password"
                  placeholder="Enter password" >
-        <p class="message" th:text="${message4}"></p>
         <span id="password-error" class="error-message"></span>
         </p>
         <p>
           <label for="password2" >Confirm Password:</label>
-          <input type="password" id="password2" name="password2"
+          <input type="password" th:value="${password2}" id="password2" name="password2"
                  placeholder="Confirm password">
-        <p class="message" th:text="${message5}"></p>
         <span id="password2-error" class="error-message"></span>
         </p>
         <p>
           <label for="dateOfBirth" >Date Of Birth:</label>
-          <input type="date" id="dateOfBirth" name="dateOfBirth"
+          <input type="date" th:value="${dateOfBirth}" id="dateOfBirth" name="dateOfBirth"
                  placeholder="Enter your date of birth">
-        <p class="message" th:text="${message7}"></p>
         <span id="dateOfBirth-error" class="error-message"></span>
         </p>
         <div class="wrap">
-          <button type="submit" value="Submit">
+          <button type="submit" value="Submit" style=" margin-right: 10px;">
             Sign up
+          </button>
+          <button type="reset" value="Reset" name="Reset">
+            Reset Form
           </button>
         </div>
       </form>
@@ -102,59 +99,106 @@
 </div>
 
 <script>
-  function validateForm(form) {
+  function validateRegister() {
+
+
+    const username = document.getElementById("username").value;
+    const displayName = document.getElementById("displayName").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const password2 = document.getElementById("password2").value;
+    const dateOfBirth = document.getElementById("dateOfBirth").value;
 
 
 
-    username = form.username.value;
-    password = form.password.value;
-    password2 = form.password2.value;
-    email = form.email.value;
-    displayName = form.displayName.value;
-    dateOfBirth = form.dateOfBirth.value;
+    const usernameErr = document.getElementById("username-error");
+    const displayNameErr = document.getElementById("displayName-error");
+    const emailErr = document.getElementById("email-error");
+    const passwordErr1 = document.getElementById("password-error");
+    const passwordErr2 = document.getElementById("password2-error");
+    const dateOfBirthErr = document.getElementById("dateOfBirth-error");
+
+    usernameErr.textContent = "";
+    displayNameErr.textContent = "";
+    emailErr.textContent = "";
+    passwordErr1.textContent = "";
+    passwordErr2.textContent = "";
+    dateOfBirthErr.textContent = "";
 
 
     const usernameRegex = /^[a-zA-Z]{3,25}$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,70}$/;
     const displayNameRegex = /^[a-zA-Z0-9]{3,25}$/;
 
+    let valid = true;
+
     if (username === ""){
-      alert("Username is left empty, try register again");
+      usernameErr.textContent = "Username is left empty";
+      valid = false
     }
-    else if (!usernameRegex.test(username)){
-      alert("Username must be between 3-25 characters (letters only), try register again");
+     else if (!usernameRegex.test(username)){
+       usernameErr.textContent = "Username must be between 3-25 characters (letters only), try register again";
+       valid = false
     }
-    else if(displayName === ""){
-      alert("Display Name was left empty, try register again");
+
+      if(displayName === ""){
+       displayNameErr.textContent = "Display Name was left empty, try register again";
+       valid = false
     }
-    else if(!displayNameRegex.test(displayName)){
-      alert("Display Name has to be between 3-25 characters (letters and numbers only), try register again");
+     else if(!displayNameRegex.test(displayName)){
+       displayNameErr.textContent = "Display Name has to be between 3-25 characters (letters and numbers only), try register again";
+       valid = false
     }
-    else if (email === ""){
-      alert("Email was left empty, try register again")
+     if (email === ""){
+       emailErr.textContent = "Email was left empty, try register again";
+       valid = false
     }
-    else if(password === ""){
-      alert("Password was left empty, try register again")
+
+     if(password === ""){
+       passwordErr1.textContent = "Password was left empty, try register again";
+       valid = false
+    } else if (!passwordRegex.test(password)){
+       passwordErr1.textContent = "Password must be within 7-70 characters, one uppercase letter, one lowercase letter, one number and one special character";
+       valid = false
     }
-    else if (!passwordRegex.test(password)){
-      alert("Please enter a password with at least 7 characters and maximum 70 characters, one uppercase letter, one lowercase letter, one number and one special character, try register again")
+     if (password2 === ""){
+       passwordErr2.textContent = "Confirm Password was left empty, try register again";
+       valid = false
+    }else if (password != password2){
+       passwordErr2.textContent = "Password did not match, try register again";
+       valid = false
     }
-    else if (password2 === ""){
-      alert("Confirm Password was left empty, try register again")
+
+    const today = new Date();
+    const bDate = new Date(dateOfBirth);
+    const age = today.getFullYear() - bDate.getFullYear();
+    const month = today.getMonth() - bDate.getMonth();
+     if (dateOfBirth === ""){
+       dateOfBirthErr.textContent = "Date Of Birth was left empty, try register again";
+       valid = false
+    } else if (age < 12 || (age === 12 && month < 0)) {
+      document.getElementById("dateOfBirth-error").textContent =
+              "You must be at least 12 years old.";
+      valid = false;
     }
-    else if (password != password2){
-      alert("Password did not match, try register again")
-    }
-    else if (dateOfBirth === ""){
-      alert("Date Of Birth was left empty, try register again")
-    }
-    else{
-    //  alert("Registration form complete, lets see if you are successfully registered")
-      return true;
+
+    if (valid){
+      // alert("Register Completed")
+    }else{
+      return false;
     }
 
   }
 
+
+  function resetForm() {
+    document.getElementById("username-error").textContent = "";
+    document.getElementById("displayName-error").textContent = "";
+    document.getElementById("email-error").textContent = "";
+    document.getElementById("password-error").textContent = "";
+    document.getElementById("password2-error").textContent = "";
+    document.getElementById("dateOfBirth-error").textContent = "";
+  }
 
 </script>
 

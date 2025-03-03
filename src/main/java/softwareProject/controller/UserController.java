@@ -58,6 +58,9 @@ public class UserController {
             String message = "Username was left blank";
             model.addAttribute("message", message);
             System.out.println("Username was left blank");
+
+            modelAttributeForRegister(username, displayName, email, password, password2, dateOfBirth, model);
+
             return "user_indexSignUp";
         }
 
@@ -69,14 +72,16 @@ public class UserController {
             String message = "Username must be between 3-25 characters, letters only";
             model.addAttribute("message", message);
             System.out.println("Username must be between 3-25 characters, letters only");
-          return "user_indexSignUp";
+
+            modelAttributeForRegister(username, displayName, email, password, password2, dateOfBirth, model);
+            return "user_indexSignUp";
         }
 
         // displayName validation
 
         if (displayName.isBlank()){
-            String message2 = "Display Name was left blank";
-            model.addAttribute("message2", message2);
+
+            modelAttributeForRegister(username, displayName, email, password, password2, dateOfBirth, model);
 
             System.out.println("Display Name was left blank");
             return "user_indexSignUp";
@@ -87,8 +92,8 @@ public class UserController {
         boolean matchfoundDisplayName= match2.find();
 
         if (!matchfoundDisplayName){
-            String message2 = "Display Name must be between 3-25 characters and only letters and numbers";
-            model.addAttribute("message2", message2);
+            modelAttributeForRegister(username, displayName, email, password, password2, dateOfBirth, model);
+
             System.out.println("Display Name must be between 3-25 characters and only letters and numbers");
            return "user_indexSignUp";
         }
@@ -96,8 +101,8 @@ public class UserController {
         // email validation
 
         if(email.isBlank()){
-            String message3 = "Email was left blank";
-            model.addAttribute("message3", message3);
+            modelAttributeForRegister(username, displayName, email, password, password2, dateOfBirth, model);
+
             System.out.println("Email was left blank");
             return "user_indexSignUp";
         }
@@ -105,8 +110,8 @@ public class UserController {
         // password validation
 
         if (password.isBlank()){
-            String message4 = "Password was left blank";
-            model.addAttribute("message4", message4);
+            modelAttributeForRegister(username, displayName, email, password, password2, dateOfBirth, model);
+
             System.out.println("Password was left blank");
 
             return "user_indexSignUp";
@@ -117,22 +122,22 @@ public class UserController {
         boolean matchfoundPassword = match1.find();
 
         if (!matchfoundPassword){
-            String message4 = "Password didnt have at least 7-70 characters, one uppercase letter, one lowercase letter, one number and one special character";
-            model.addAttribute("message4", message4);
+            modelAttributeForRegister(username, displayName, email, password, password2, dateOfBirth, model);
+
             System.out.println("Password must have at least 7 characters and maximum 70 characters, one uppercase letter, one lowercase letter and one number");
            return "user_indexSignUp";
         }
 
         if (password2.isBlank()){
-            String message5 = "Confirm Password was left blank";
-            model.addAttribute("message5", message5);
+            modelAttributeForRegister(username, displayName, email, password, password2, dateOfBirth, model);
+
             System.out.println("Confirm password was left blank");
             return "user_indexSignUp";
         }
 
         if (!password.equals(password2)){
-            String message5 = "Password and Confirm Password didnt match";
-            model.addAttribute("message5", message5);
+            modelAttributeForRegister(username, displayName, email, password, password2, dateOfBirth, model);
+
             System.out.println("Passwords dont match");
             return "user_indexSignUp";
         }
@@ -140,8 +145,8 @@ public class UserController {
         // dateOfBirth validation
 
         if (dateOfBirth.isBlank()){
-            String message7 = "Date Of Birth was left blank";
-            model.addAttribute("message7", message7);
+            modelAttributeForRegister(username, displayName, email, password, password2, dateOfBirth, model);
+
             System.out.println("Date of birth was left blank");
             return "user_indexSignUp";
         }
@@ -150,8 +155,9 @@ public class UserController {
         LocalDate today = LocalDate.now();
 
         if (!dob.isBefore(today.minusYears(12))){
-            String message7 = "Date Of Birth has to be 12 years old or over";
-            model.addAttribute("message7", message7);
+
+            modelAttributeForRegister(username, displayName, email, password, password2, dateOfBirth, model);
+
             System.out.println("Date Of Birth has to be 12 years old or over");
             return "user_indexSignUp";
         }
@@ -177,6 +183,15 @@ public class UserController {
         return view;
     }
 
+    private static void modelAttributeForRegister(String username, String displayName, String email, String password, String password2, String dateOfBirth, Model model) {
+        model.addAttribute("username", username);
+        model.addAttribute("displayName", displayName);
+        model.addAttribute("email", email);
+        model.addAttribute("password", password);
+        model.addAttribute("password2", password2);
+        model.addAttribute("dateOfBirth", dateOfBirth);
+    }
+
 
     /**
      * This method is used to log in the user to the system and if the user doesn't have a subscription or subscription has expired they wont be able to login
@@ -195,7 +210,6 @@ public class UserController {
             Model model, HttpSession session) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
         if(username1.isBlank() || password1.isBlank()){
-
             System.out.println("Username or password was left blank");
             return "user_index";
         }

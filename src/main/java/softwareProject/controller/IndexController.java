@@ -91,7 +91,9 @@ public class IndexController {
 
 
     @GetMapping("/registerSuccessUser")
-    public String regIndex(){
+    public String regIndex(Model model){
+        List<MovieTest> movies = movieService.getMovies();
+        model.addAttribute("movies", movies);
         return "registerSuccessUser";
     }
 
