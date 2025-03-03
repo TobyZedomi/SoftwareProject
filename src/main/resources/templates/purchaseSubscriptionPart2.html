@@ -11,8 +11,12 @@
   <title>Title</title>
 
   <style>
-    .message{
+
+
+    .error-message {
       color: red;
+      font-size: 14px;
+      margin-top: 5px;
     }
   </style>
 </head>
@@ -24,68 +28,145 @@
 
 <div th:if="${#ctx.session.loggedInUser != null}">
 
-  <form class="credit-card"  method="post" action="/addSubscriptionForUserPart2">
+  <form class="credit-card"  method="post" action="/addSubscriptionForUserPart2" onsubmit="return validateSubscription()">
     <div class="form-header">
       <h4 class="title">Credit card detail</h4>
     </div>
 
-    <div class="form-body">
+    <div class="form-body" >
       <!-- Card Number -->
-      <input type="text" class="card-number" id="cardNumber" name="cardNumber" placeholder="Card Number">
-
+      <p>
+        <input type="text" th:value="${cardNumber}" class="card-number" id="cardNumber" name="cardNumber" placeholder="Card Number">
+        <span id="cardNumber-error" class="error-message"></span>
+      </p>
       <!-- Date Field -->
       <div class="date-field">
         <div class="month">
-          <select name="Month" id="Month">
-            <option value="january">January</option>
-            <option value="february">February</option>
-            <option value="march">March</option>
-            <option value="april">April</option>
-            <option value="may">May</option>
-            <option value="june">June</option>
-            <option value="july">July</option>
-            <option value="august">August</option>
-            <option value="september">September</option>
-            <option value="october">October</option>
-            <option value="november">November</option>
-            <option value="december">December</option>
-          </select>
+          <p>
+            <select th:value="${Month}" name="Month" id="Month">
+              <option value="january">January</option>
+              <option value="february">February</option>
+              <option value="march">March</option>
+              <option value="april">April</option>
+              <option value="may">May</option>
+              <option value="june">June</option>
+              <option value="july">July</option>
+              <option value="august">August</option>
+              <option value="september">September</option>
+              <option value="october">October</option>
+              <option value="november">November</option>
+              <option value="december">December</option>
+            </select>
+            <span id="month-error" class="error-message"></span>
+          </p>
         </div>
         <div class="year">
-          <select name="Year" id="Year">
-            <option value="2025">2025</option>
-            <option value="2026">2026</option>
-            <option value="2027">2027</option>
-            <option value="2028">2028</option>
-            <option value="2029">2029</option>
-            <option value="2030">2030</option>
-            <option value="2031">2031</option>
-            <option value="2032">2032</option>
-            <option value="2033">2033</option>
-          </select>
+          <p>
+            <select th:value="${Year}" name="Year" id="Year">
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+              <option value="2028">2028</option>
+              <option value="2029">2029</option>
+              <option value="2030">2030</option>
+              <option value="2031">2031</option>
+              <option value="2032">2032</option>
+              <option value="2033">2033</option>
+            </select>
+            <span id="year-error" class="error-message"></span>
+          </p>
         </div>
       </div>
 
       <!-- Card Verification Field -->
       <div class="card-verification">
         <div class="cvv-input">
-          <input type="text" placeholder="CVV" name="cvv" id="cvv">
+          <p>
+            <input type="text" th:value="${cvv}" placeholder="CVV" name="cvv" id="cvv">
+          </p>
         </div>
         <div class="cvv-details">
-          <p>3 or 4 digits usually found <br> on the signature strip</p>
+
+          <span id="cvv-error" class="error-message" style="color: red"></span>
         </div>
       </div>
 
       <!-- Buttons -->
       <button type="submit" class="proceed-btn">Proceed</button>
 
-      <div id="message" class="message" th:text="${message}"></div>
+
     </div>
 
   </form>
 
 </div>
 
+<script>
+
+  function validateSubscription() {
+
+
+    const cardNumber = document.getElementById("cardNumber").value;
+    const month = document.getElementById("Month").value;
+    const year = document.getElementById("Year").value;
+    const cvv = document.getElementById("cvv").value;
+
+
+
+    const cardNumberErr = document.getElementById("cardNumber-error");
+    const monthErr = document.getElementById("month-error");
+    const yearErr = document.getElementById("year-error");
+    const cvvErr = document.getElementById("cvv-error");
+
+
+    cardNumberErr.textContent = "";
+    monthErr.textContent = "";
+    yearErr.textContent = "";
+    cvvErr.textContent = "";
+
+
+    const cardNumberRegex = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
+    const cvvRegex = /^[0-9]{3,4}$/;
+
+
+    let valid = true;
+
+    if (cardNumber === ""){
+      cardNumberErr.textContent = "CardNumber is left empty";
+      valid = false
+    }
+    else if (!cardNumberRegex.test(cardNumber)){
+      cardNumberErr.textContent = "Card Number must be a valid Visa credit card number";
+      valid = false
+    }
+
+    if (month === ""){
+      monthErr.textContent = "Month is left empty"
+      valid = false;
+    }
+
+    if (year === ""){
+      yearErr.textContent = "Year is left empty";
+      valid = false;
+    }
+
+    if (cvv === ""){
+      cvvErr.textContent = "Cvv number is left empty";
+      valid = false;
+    }else if (!cvvRegex.test(cvv)){
+      cvvErr.textContent = "Cvv number has to be 3 or 4 digits"
+      valid = false;
+    }
+
+    if (valid){
+      // alert("Login Attempt")
+    }else{
+      return false;
+    }
+
+  }
+
+</script>
 
 
 </body>

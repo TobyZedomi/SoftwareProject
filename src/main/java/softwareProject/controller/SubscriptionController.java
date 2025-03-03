@@ -47,24 +47,27 @@ public class SubscriptionController {
         boolean matchfoundCardNumber = match.find();
 
         if (!matchfoundCardNumber){
-            String message = "Card Number must be a valid Visa credit card number";
-            model.addAttribute("message", message);
+
+            modelCreditCard(cardNumber, Month, Year, cvv, model);
+
             System.out.println("Card Number must be a valid Visa credit card number");
             return  "purchaseSubscription";
         }
 
 
         if (Month.isBlank()){
-            String message = "You must choose a month";
-            model.addAttribute("message", message);
+
             System.out.println("You must choose a month");
+
+            modelCreditCard(cardNumber, Month, Year, cvv, model);
             return  "purchaseSubscription";
         }
 
         if (Year.isBlank()){
-            String message = "You must choose a Year";
-            model.addAttribute("message", message);
+
             System.out.println("You must choose a year");
+
+            modelCreditCard(cardNumber, Month, Year, cvv, model);
             return  "purchaseSubscription";
         }
 
@@ -74,9 +77,10 @@ public class SubscriptionController {
         boolean matchfoundCvvNumber = match1.find();
 
         if (!matchfoundCvvNumber){
-            String message = "Cvv number must be 3 or 4 numbers long";
-            model.addAttribute("message", message);
+
             System.out.println("Cvv number must be 3 or 4 numbers long");
+
+            modelCreditCard(cardNumber, Month, Year, cvv, model);
             return  "purchaseSubscription";
         }
 
@@ -113,6 +117,13 @@ public class SubscriptionController {
         return view;
     }
 
+    private static void modelCreditCard(String cardNumber, String Month, String Year, String cvv, Model model) {
+        model.addAttribute("cardNumber", cardNumber);
+        model.addAttribute("Month", Month);
+        model.addAttribute("Year", Year);
+        model.addAttribute("cvv", cvv);
+    }
+
 
 /// subscription for if user registered but doesn't have a subscription
 
@@ -145,23 +156,26 @@ public class SubscriptionController {
         boolean matchfoundCardNumber = match.find();
 
         if (!matchfoundCardNumber){
-            String message = "Card Number must be a valid Visa credit card number";
-            model.addAttribute("message", message);
+
+            modelCreditCard(cardNumber, Month, Year, cvv, model);
+
             System.out.println("Card Number must be a valid Visa credit card number");
             return  "purchaseSubscriptionPart2";
         }
 
 
         if (Month.isBlank()){
-            String message = "You must choose a month";
-            model.addAttribute("message", message);
+
+            modelCreditCard(cardNumber, Month, Year, cvv, model);
+
             System.out.println("You must choose a month");
             return  "purchaseSubscriptionPart2";
         }
 
         if (Year.isBlank()){
-            String message = "You must choose a Year";
-            model.addAttribute("message", message);
+
+            modelCreditCard(cardNumber, Month, Year, cvv, model);
+
             System.out.println("You must choose a year");
             return  "purchaseSubscriptionPart2";
         }
@@ -172,8 +186,9 @@ public class SubscriptionController {
         boolean matchfoundCvvNumber = match1.find();
 
         if (!matchfoundCvvNumber){
-            String message = "Cvv number must be 3 or 4 numbers long";
-            model.addAttribute("message", message);
+
+            modelCreditCard(cardNumber, Month, Year, cvv, model);
+
             System.out.println("Cvv number must be 3 or 4 numbers long");
             return  "purchaseSubscriptionPart2";
         }
