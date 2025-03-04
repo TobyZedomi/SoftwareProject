@@ -97,7 +97,7 @@ CREATE TABLE cart_items
     movie_id INT(11) NOT NULL,
     PRIMARY KEY (cart_id, movie_id),
     FOREIGN KEY (cart_id) REFERENCES carts (cart_id),
-    FOREIGN KEY (movie_id) REFERENCES movieProduct (movie_id)
+    FOREIGN KEY (movie_id) REFERENCES movieProduct (movie_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE billing_address
@@ -135,7 +135,7 @@ CREATE TABLE orderItem
     order_id       int(11),
     movie_id       int(11),
     PRIMARY KEY (order_items_id),
-    FOREIGN KEY (movie_id) REFERENCES movieProduct (movie_id),
+    FOREIGN KEY (movie_id) REFERENCES movieProduct (movie_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (order_id) REFERENCES shop_order (order_id)
 );
 
@@ -192,7 +192,7 @@ CREATE TABLE auditsCartItems
     movie_id          int(11),
     transdate         datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (auditsCartItemsID),
-    FOREIGN KEY (movie_id) REFERENCES movieProduct (movie_id)
+    FOREIGN KEY (movie_id) REFERENCES movieProduct (movie_id)  ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 DELIMITER //
