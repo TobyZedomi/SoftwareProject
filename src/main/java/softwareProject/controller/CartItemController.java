@@ -1,6 +1,7 @@
 package softwareProject.controller;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@Slf4j
 public class CartItemController {
 
 
@@ -50,8 +52,11 @@ public class CartItemController {
                     MovieProduct movieProduct = movieProductDao.getMovieById(orderItems.get(j).getMovie_id());
 
                     if (movieProduct.getMovie_id() == movieID2) {
-                        String message = "Movie has already been purchased by you";
+
+                        MovieProduct movieProduct1 = movieProductDao.getMovieById(movieID2);
+                        String message = movieProduct1.getMovie_name()+" has already been purchased by you, check order history";
                         model.addAttribute("message", message);
+                        log.info(" User {} tried to purchase {} movie again",u.getUsername(), movieProduct1.getMovie_name());
 
                         List<MovieProduct> movieProducts = movieProductDao.getAllMovieProducts();
                         model.addAttribute("movieProducts", movieProducts);
@@ -79,11 +84,15 @@ public class CartItemController {
         System.out.println("Cart Id" + cart.getCart_id());
 
         if (answer == -1) {
-            System.out.println(answer);
-            String message = "Movie Product was not added to cart because you already have it in your cart";
-            model.addAttribute("message", message);
-
+            // Get MovieProduct By movie id
             MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+            MovieProduct movieProduct = movieProductDao.getMovieById(movieID2);
+
+            System.out.println(answer);
+            String message = movieProduct.getMovie_name() + " was not added to cart because you already have it in your cart";
+            model.addAttribute("message", message);
+            log.info(" User {} already has {} in cart ",u.getUsername(), movieProduct.getMovie_name());
 
             List<MovieProduct> movieProducts = movieProductDao.getAllMovieProducts();
             model.addAttribute("movieProducts", movieProducts);
@@ -94,11 +103,14 @@ public class CartItemController {
             return "store_index";
         } else {
 
-            System.out.println(answer);
-            String message = "Movie Product was added to cart";
-            model.addAttribute("message", message);
-
             MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+            MovieProduct movieProduct = movieProductDao.getMovieById(movieID2);
+            System.out.println(answer);
+
+            String message =movieProduct.getMovie_name()+ " was added to cart";
+            model.addAttribute("message", message);
+            log.info(" User {} added movie {} to cart ",u.getUsername(), movieProduct.getMovie_name());
+
 
             List<MovieProduct> movieProducts = movieProductDao.getAllMovieProducts();
             model.addAttribute("movieProducts", movieProducts);
