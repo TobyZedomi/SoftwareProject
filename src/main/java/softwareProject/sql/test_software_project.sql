@@ -237,13 +237,13 @@ DELIMITER //
 
 DELIMITER //
 
-CREATE TRIGGER addCartItems
-    AFTER INSERT
+CREATE TRIGGER addDeletedCartItems
+    AFTER DELETE
     ON cart_items
     FOR EACH ROW
 BEGIN
     INSERT INTO auditsCartItems(table_name, transaction_name, movie_id)
-    VALUES ('cart_items', 'INSERT', NEW.movie_id);
+    VALUES ('cart_items', 'DELETE', OLD.movie_id);
 END //
 DELIMITER //
 
