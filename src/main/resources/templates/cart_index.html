@@ -21,6 +21,25 @@
       -webkit-text-stroke: 3px black;
     }
 
+    .notBought{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 300px;
+      font-weight: bold;
+    }
+
+
+    .center {
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      margin-top: 150px;
+    }
+
   </style>
 </head>
 <body>
@@ -29,6 +48,20 @@
 <div>
   <h1>Shopping Cart</h1>
 </div>
+
+<div th:if="${movies == null}">
+
+  <p th:text="|You have nothing in your cart ${#ctx.session.loggedInUser.getUsername()} |" class="notBought" ></p>
+
+
+  <div class="center">
+    <a th:href="@{/store_index}"><button type="button" class="btn btn-danger" title="Store">Go to store</button></a>
+  </div>
+
+
+</div>
+
+<div th:unless="${movies == null}">
 
 <div class="col-lg-9 col-md-9 col-sm-12" style="margin-left: 200px; margin-bottom: 50px;">
   <div class="col-lg-12 col-sm-12">
@@ -76,7 +109,7 @@
   </div>
 </div>
 
-
+</div>
 
 </body>
 </html>

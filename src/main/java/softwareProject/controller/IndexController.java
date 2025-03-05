@@ -315,9 +315,6 @@ public class IndexController {
 
         for (int i = 0; i < shopOrdersForUser.size();i++) {
 
-            // session to see if shop user exist for html page
-            session.setAttribute("shopOrderForUser", shopOrdersForUser.get(i).getUsername());
-
             for (int j = 0; j < orderItems.size(); j++) {
 
                 if (shopOrdersForUser.get(i).getOrder_id() == orderItems.get(j).getOrder_id()) {
