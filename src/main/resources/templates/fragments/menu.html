@@ -45,13 +45,16 @@
             <a class="nav-link active" aria-current="page" th:href="@{/store_index}" >Store</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link active" aria-current="page" th:href="@{/purchased_movies}" >Purchased Movies</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link active" aria-current="page" th:href="@{/friends}" >Friends</a>
           </li>
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" th:href="@{/notifications}" >notifications</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" th:href="@{/review_form}" >Review</a>
+          <li th:if="${#ctx.session.loggedInUser != null && #ctx.session.loggedInUser.isAdmin() == true}" class="nav-item">
+            <a class="nav-link active" aria-current="page" th:href="@{/adminPanel_index}" >AdminPanel</a>
           </li>
           <li class="nav-item">
             <a class="nav-link active" th:href="@{/logOut}" >Logout</a>

@@ -295,6 +295,52 @@ public class IndexController {
     }
 
 
+    @GetMapping("/purchased_movies")
+    public String purchasedMovies(HttpSession session, Model model){
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+        ShopOrderDao shopOrderDao = new ShopOrderDaoImpl("database.properties");
+
+        // get all shoporders by username
+        ArrayList<ShopOrder> shopOrdersForUser = shopOrderDao.getAllShopOrdersByUsername(u.getUsername());
+
+
+        // get all orders
+
+        OrderItemDao orderItemDao = new OrderItemDaoImpl("database.properties");
+        ArrayList<OrderItem> orderItems = orderItemDao.getAllOrderItems();
+
+        ArrayList<MovieProduct> allMovieProducts = new ArrayList<>();
+
+        for (int i = 0; i < shopOrdersForUser.size();i++) {
+
+            for (int j = 0; j < orderItems.size(); j++) {
+
+                if (shopOrdersForUser.get(i).getOrder_id() == orderItems.get(j).getOrder_id()) {
+
+                    // get by movie product in order table and put in arraylist of movie Products
+
+                    MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+                    movieProductDao.getMovieById(orderItems.get(j).getMovie_id());
+
+                    allMovieProducts.add(movieProductDao.getMovieById(orderItems.get(j).getMovie_id()));
+
+                }
+            }
+        }
+
+        // model to loop through arraylist
+        model.addAttribute("allMovieProducts", allMovieProducts);
+
+        // method to get total in cart
+        getTotalAmountOfItemsInCart(session,model);
+
+        return "purchased_movies";
+    }
+
+
     public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
 
         /// get total number of items in cart for user
