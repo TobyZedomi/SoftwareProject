@@ -14,4 +14,6 @@ public interface FriendDao {
     public int getNumberOfFriends(String user);
     public boolean getAFriend(String user, String friend);
     public ArrayList<Friends> getAllFriends(String user);
+    public ArrayList<Friends> searchForFriends(String user, String friend);
+    public int deleteAFriend(String user,String friend);
 }
