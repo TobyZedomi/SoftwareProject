@@ -227,6 +227,237 @@ public class BillingAddressDaoImpl extends MySQLDao implements BillingAddressDao
         return billingAddress;
     }
 
+
+    // update fullname
+
+    @Override
+    public int updateBillingAddressFullName(String fullName, int billingId)
+    {
+        Connection con = null;
+        PreparedStatement ps = null;
+        int rowsAffected = 0;
+
+        try{
+            con = getConnection();
+
+            String query = "UPDATE billing_address SET fullName = ? WHERE billing_address_id = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setString(1, fullName);
+            ps.setInt(2, billingId);
+
+            rowsAffected = ps.executeUpdate();
+
+        }catch (SQLException e) {
+            System.out.println("Exception occured in the updateProductName() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the updateProductName() method");
+                e.getMessage();
+            }
+        }
+
+        return rowsAffected;
+    }
+
+
+    @Override
+    public int updateBillingAddressEmail(String email, int billingId)
+    {
+        Connection con = null;
+        PreparedStatement ps = null;
+        int rowsAffected = 0;
+
+        try{
+            con = getConnection();
+
+            String query = "UPDATE billing_address SET email = ? WHERE billing_address_id = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setString(1, email);
+            ps.setInt(2, billingId);
+
+            rowsAffected = ps.executeUpdate();
+
+        }catch (SQLException e) {
+            System.out.println("Exception occured in the updateProductName() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the updateProductName() method");
+                e.getMessage();
+            }
+        }
+
+        return rowsAffected;
+    }
+
+
+    @Override
+    public int updateAddressForBillingAddress(String address, int billingId)
+    {
+        Connection con = null;
+        PreparedStatement ps = null;
+        int rowsAffected = 0;
+
+        try{
+            con = getConnection();
+
+            String query = "UPDATE billing_address SET address = ? WHERE billing_address_id = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setString(1, address);
+            ps.setInt(2, billingId);
+
+            rowsAffected = ps.executeUpdate();
+
+        }catch (SQLException e) {
+            System.out.println("Exception occured in the updateProductName() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the updateProductName() method");
+                e.getMessage();
+            }
+        }
+
+        return rowsAffected;
+    }
+
+
+    @Override
+    public int updateBillingAddressCity(String city, int billingId)
+    {
+        Connection con = null;
+        PreparedStatement ps = null;
+        int rowsAffected = 0;
+
+        try{
+            con = getConnection();
+
+            String query = "UPDATE billing_address SET city = ? WHERE billing_address_id = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setString(1, city);
+            ps.setInt(2, billingId);
+
+            rowsAffected = ps.executeUpdate();
+
+        }catch (SQLException e) {
+            System.out.println("Exception occured in the updateProductName() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the updateProductName() method");
+                e.getMessage();
+            }
+        }
+
+        return rowsAffected;
+    }
+
+
+    @Override
+    public int updateBillingAddressCounty(String county, int billingId)
+    {
+        Connection con = null;
+        PreparedStatement ps = null;
+        int rowsAffected = 0;
+
+        try{
+            con = getConnection();
+
+            String query = "UPDATE billing_address SET county = ? WHERE billing_address_id = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setString(1, county);
+            ps.setInt(2, billingId);
+
+            rowsAffected = ps.executeUpdate();
+
+        }catch (SQLException e) {
+            System.out.println("Exception occured in the updateProductName() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the updateProductName() method");
+                e.getMessage();
+            }
+        }
+
+        return rowsAffected;
+    }
+
+
+    @Override
+    public int updateBillingAddressPostCode(String postCode, int billingId)
+    {
+        Connection con = null;
+        PreparedStatement ps = null;
+        int rowsAffected = 0;
+
+        try{
+            con = getConnection();
+
+            String query = "UPDATE billing_address SET postcode = ? WHERE billing_address_id = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setString(1, postCode);
+            ps.setInt(2, billingId);
+
+            rowsAffected = ps.executeUpdate();
+
+        }catch (SQLException e) {
+            System.out.println("Exception occured in the updateProductName() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the updateProductName() method");
+                e.getMessage();
+            }
+        }
+
+        return rowsAffected;
+    }
+
+
     /**
      * Search through each row in the billingAddress
      *
