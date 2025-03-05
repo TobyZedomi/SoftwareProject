@@ -102,6 +102,11 @@ public class IndexController {
         return "subscription_index";
     }
 
+    @GetMapping("/addFriends")
+    public String addFriends(HttpSession session,Model model){
+
+        return "addFriends";
+    }
     @GetMapping("/friends")
     public String friends(HttpSession session, Model model){
         User loggedInUser = (User) session.getAttribute("loggedInUser");
@@ -110,6 +115,10 @@ public class IndexController {
 
         ArrayList<Friends> friends = friendDao.getAllFriends(loggedInUser.getUsername());
         ArrayList<User> details = new ArrayList<>();
+        ArrayList<Friends> numberOfFriends = new ArrayList<>();
+        if(friends.isEmpty()){
+            model.addAttribute("noFriends", "You currently have no friends");
+        }
 
         for(int i = 0; i< friends.size();i++){
             String name;
@@ -119,15 +128,20 @@ public class IndexController {
                 name = friends.get(i).getFriend1();
             }
             User friendUser = userDao.findUserByUsername(name);
+            numberOfFriends = FriendController.getAllFriends(session,friendUser.getUsername(),model);
             if(name != null){
                 details.add(friendUser);
             }
         }
 
-        model.addAttribute("Friends", details);
+        model.addAttribute("allFriends", details);
+        model.addAttribute("numberOfFriends", numberOfFriends);
+        model.addAttribute("total",numberOfFriends.size());
 
         return "friends";
     }
+
+
 
     @GetMapping("/notifications")
     public String notifications(HttpSession session, Model model){
