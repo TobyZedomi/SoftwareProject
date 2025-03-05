@@ -294,26 +294,6 @@ public class UserController {
 
     }
 
-    @GetMapping("/searchForFriends")
-    public String user(HttpSession session,@RequestParam(name="username") String username, Model model) {
-
-        User u = (User) session.getAttribute("loggedInUser");
-        UserDao userDao = new UserDaoImpl("database.properties");
-
-        List<User> found = userDao.findUserByUsername2(username);
-        if (found != null) {
-            model.addAttribute("username", found);
-            log.info("User found" + username);
-            return "friends";
-        } else {
-            log.info("User not found: " + username);
-            model.addAttribute("error", "User not found");
-            return "friends";
-        }
-
-    }
-
-
 
     // totalAmount in Cart
 
