@@ -5,6 +5,7 @@ import softwareProject.business.Movie;
 import softwareProject.business.MovieProduct;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -207,6 +208,160 @@ public class MovieProductDaoImpl extends MySQLDao implements MovieProductDao {
     }
 
 
+    // update movie name
+
+    @Override
+    public int updateMovieProductNameByMovieId(String movieName, int movieId)
+    {
+        Connection con = null;
+        PreparedStatement ps = null;
+        int rowsAffected = 0;
+
+        try{
+            con = getConnection();
+
+            String query = "UPDATE movieProduct SET movie_name = ? WHERE movie_id = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setString(1, movieName);
+            ps.setInt(2, movieId);
+
+            rowsAffected = ps.executeUpdate();
+
+        }catch (SQLException e) {
+            System.out.println("Exception occured in the updateProductName() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the updateProductName() method");
+                e.getMessage();
+            }
+        }
+
+        return rowsAffected;
+    }
+
+
+
+    @Override
+    public int updateMovieProductDateOfReleaseByMovieId(LocalDate dateOfRelease, int movieId)
+    {
+        Connection con = null;
+        PreparedStatement ps = null;
+        int rowsAffected = 0;
+
+        try{
+            con = getConnection();
+
+            String query = "UPDATE movieProduct SET date_of_release = ? WHERE movie_id = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setDate(1, Date.valueOf(dateOfRelease));
+            ps.setInt(2, movieId);
+
+            rowsAffected = ps.executeUpdate();
+
+        }catch (SQLException e) {
+            System.out.println("Exception occured in the updateProductName() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the updateProductName() method");
+                e.getMessage();
+            }
+        }
+
+        return rowsAffected;
+    }
+
+
+
+    @Override
+    public int updateMovieProductInfoByMovieId(String movieInfo, int movieId)
+    {
+        Connection con = null;
+        PreparedStatement ps = null;
+        int rowsAffected = 0;
+
+        try{
+            con = getConnection();
+
+            String query = "UPDATE movieProduct SET movie_info = ? WHERE movie_id = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setString(1, movieInfo);
+            ps.setInt(2, movieId);
+
+            rowsAffected = ps.executeUpdate();
+
+        }catch (SQLException e) {
+            System.out.println("Exception occured in the updateProductName() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the updateProductName() method");
+                e.getMessage();
+            }
+        }
+
+        return rowsAffected;
+    }
+
+
+    @Override
+    public int updateMovieProductPriceByMovieId(double listPrice, int movieId)
+    {
+        Connection con = null;
+        PreparedStatement ps = null;
+        int rowsAffected = 0;
+
+        try{
+            con = getConnection();
+
+            String query = "UPDATE movieProduct SET listPrice = ? WHERE movie_id = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setDouble(1, listPrice);
+            ps.setInt(2, movieId);
+
+            rowsAffected = ps.executeUpdate();
+
+        }catch (SQLException e) {
+            System.out.println("Exception occured in the updateProductName() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the updateProductName() method");
+                e.getMessage();
+            }
+        }
+
+        return rowsAffected;
+    }
 
     /**
      * Search through each row in the movie
