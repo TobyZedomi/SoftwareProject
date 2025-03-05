@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import softwareProject.business.Cart;
+import softwareProject.business.Movie;
 import softwareProject.business.MovieProduct;
-import softwareProject.persistence.MovieProductDao;
-import softwareProject.persistence.MovieProductDaoImpl;
+import softwareProject.business.User;
+import softwareProject.persistence.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,8 +60,10 @@ public class MovieProductController {
             model.addAttribute("message",message);
             log.info(message);
 
-            List<MovieProduct> movieProducts = movieProductDao.getAllMovieProducts();
-            model.addAttribute("movieProducts", movieProducts);
+            getAllMovieProducts(model, movieProductDao);
+
+            getTotalAmountOfItemsInCart( session,model);
+
             return "adminPanel_index";
 
 
@@ -68,13 +72,16 @@ public class MovieProductController {
             message = "Movie added: "+newMovieProduct.getMovie_name();
             model.addAttribute("message", message);
 
-            List<MovieProduct> movieProducts = movieProductDao.getAllMovieProducts();
-            model.addAttribute("movieProducts", movieProducts);
+            getAllMovieProducts(model, movieProductDao);
             log.info(message);
+
+            getTotalAmountOfItemsInCart( session,model);
 
             return "adminPanel_index";
         }
     }
+
+
 
 
     @GetMapping("/deleteMovieProduct")
@@ -98,8 +105,9 @@ public class MovieProductController {
             model.addAttribute("message", message);
             log.info(message);
 
-            List<MovieProduct> movieProducts = movieProductDao.getAllMovieProducts();
-            model.addAttribute("movieProducts", movieProducts);
+            getAllMovieProducts(model, movieProductDao);
+
+            getTotalAmountOfItemsInCart( session,model);
 
         }else{
 
@@ -107,12 +115,115 @@ public class MovieProductController {
             model.addAttribute("message", message);
             log.info(message);
 
-            List<MovieProduct> movieProducts = movieProductDao.getAllMovieProducts();
-            model.addAttribute("movieProducts", movieProducts);
+            getAllMovieProducts(model, movieProductDao);
 
+            getTotalAmountOfItemsInCart( session,model);
         }
         return "adminPanel_index";
 
     }
+
+
+    @GetMapping("/getMovieProductById")
+    public String getMovieProductById(HttpSession session,
+                                     @RequestParam(name = "movieId") String movieId, Model model) {
+
+
+        int movieID2 = Integer.parseInt(movieId);
+
+        MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+
+        MovieProduct movieProduct = movieProductDao.getMovieById(movieID2);
+
+        model.addAttribute("movieProduct", movieProduct);
+
+        getTotalAmountOfItemsInCart( session,model);
+
+        return "adminUpdate";
+
+    }
+
+
+    @PostMapping("updateMovieProduct")
+    public String updateMovieProduct(@RequestParam(name = "movie_id") String movie_id,
+                                     @RequestParam(name = "movie_name") String movie_name,
+                                     @RequestParam (name = "date_of_release") String date_of_release,
+                                     @RequestParam (name = "movie_info")String movie_info,
+                                     @RequestParam (name = "listPrice")String listPrice, HttpSession session, Model model){
+
+
+        MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+        int movieId2 = Integer.parseInt(movie_id);
+
+        MovieProduct movieProduct = movieProductDao.getMovieById(movieId2);
+
+        model.addAttribute("movieProduct", movieProduct);
+
+
+        String messageUpdate;
+        // update product name
+         movieProductDao.updateMovieProductNameByMovieId(movie_name, movieId2);
+
+
+
+        // update product dateOfRelease
+        LocalDate releaseDate = LocalDate.parse(date_of_release);
+
+        movieProductDao.updateMovieProductDateOfReleaseByMovieId(releaseDate, movieId2);
+
+
+        // update movie info
+
+       movieProductDao.updateMovieProductInfoByMovieId(movie_info, movieId2);
+
+
+        // update listPrice
+
+        double listPrice2 = Double.parseDouble(listPrice);
+
+        movieProductDao.updateMovieProductPriceByMovieId(listPrice2, movieId2);
+
+
+        // showing all movie Product
+
+        getTotalAmountOfItemsInCart( session,model);
+
+
+        messageUpdate = "Movie Product " +movieProduct.getMovie_name()+ " was updated";
+        model.addAttribute("messageUpdate", messageUpdate);
+        log.info(messageUpdate);
+
+        getAllMovieProducts(model, movieProductDao);
+
+
+        return "adminPanel_index";
+    }
+
+    private static void getAllMovieProducts(Model model, MovieProductDao movieProductDao) {
+        List<MovieProduct> movieProducts = movieProductDao.getAllMovieProducts();
+        model.addAttribute("movieProducts", movieProducts);
+    }
+
+
+
+    public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
+
+        /// get total number of items in cart for user
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+        CartDao cartDao = new CartDaoImpl("database.properties");
+
+        Cart cart = cartDao.getCartByUsername(u.getUsername());
+
+        CartItemDao cartItemDao = new CartItemDaoImpl("database.properties");
+
+        int totalCartItems = cartItemDao.totalNumberOfCartItems(cart.getCart_id());
+        model.addAttribute("totalCartItems", totalCartItems);
+    }
+
+
 
 }

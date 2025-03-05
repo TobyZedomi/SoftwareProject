@@ -5,16 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import softwareProject.business.*;
 import softwareProject.persistence.FriendDao;
 import softwareProject.persistence.FriendDaoImpl;
-import softwareProject.business.*;
 import softwareProject.persistence.*;
 import softwareProject.service.MovieService;
 
-import java.util.ArrayList;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -283,6 +279,20 @@ public class IndexController {
         return "confirmationPaymentPage";
     }
 
+    @GetMapping("/adminPanel_index")
+    public String adminPanel_index(HttpSession session, Model model){
+
+        MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+        List<MovieProduct> movieProducts = movieProductDao.getAllMovieProducts();
+        model.addAttribute("movieProducts", movieProducts);
+
+        /// get total number of items in cart for user
+
+        getTotalAmountOfItemsInCart(session,model);
+
+        return "adminPanel_index";
+    }
 
 
     public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
