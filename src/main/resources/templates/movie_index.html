@@ -55,10 +55,13 @@
 
         }
 
+        /*
         .dropdown{
             margin-top: 50px;
             margin-left: 50px;
         }
+
+         */
 
         button{
             box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
@@ -83,10 +86,12 @@
         p.two:visited {color:#0000ff;}
         p.two:hover {font-size:150%;}
 
-
+/*
         .dropdown-menu{
             box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
         }
+
+ */
     </style>
 </head>
 <body>
@@ -94,11 +99,11 @@
 
 
 
-<div class="dropdown">
+<div class="dropdown" style=" margin-top: 50px; margin-left: 50px;">
     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Select Genre Of Movie
     </button>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" style=" box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)">
         <div th:each="genre : ${genres}">
             <li><a class="three" th:href="@{/viewMovieByGenre(id=${genre.getId()})}"><p class="two" th:text="${genre.getName()}"></p></a></li>
         </div>
