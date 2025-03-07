@@ -222,6 +222,28 @@
       top: 0;
       z-index: -1;
     }
+
+    p, lable, input, span, td{
+
+      font-family: poppins;
+      font-size: 15px;
+    }
+
+    tr, h2{
+      font-family: poppins;
+    }
+
+    h1{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 50px;
+      color: white;
+      font-weight: bold;
+      -webkit-text-stroke: 1px darkred;
+      font-family: poppins;
+    }
+
   </style>
   <title>Admin Panel</title>
 </head>
@@ -232,7 +254,11 @@
 <div th:replace="~{fragments/menu :: menu-bar}"></div>
 
 <div th:if="${#ctx.session.loggedInUser != null && #ctx.session.loggedInUser.isAdmin() == true}">
-  <p class="adminUser">Welcome, admin user!</p>
+
+  <div>
+    <h1>Admin Panel</h1>
+  </div>
+
 
 
   <div id="message" class="message" th:text="${message}"></div>
@@ -249,7 +275,7 @@
               <h2>Manage <b>Movie Products</b></h2>
             </div>
             <div class="col-sm-6">
-              <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Movie Product</span></a>
+              <a href="#addEmployeeModal" class="btn btn-danger" data-toggle="modal" style="background-color: black"><i class="material-icons">&#xE147;</i> <span style="color: white; font-weight: bold;">Add New Movie Product</span></a>
             </div>
           </div>
         </div>
@@ -321,8 +347,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-            <input type="submit" class="btn btn-success" value="Add">
+            <input type="button" class="btn btn-danger" data-dismiss="modal" value="Cancel" style="font-family: poppins; font-weight: bold;">
+            <input type="submit" class="btn btn-danger" value="Add" style="font-family: poppins; font-weight: bold;">
           </div>
         </form>
       </div>

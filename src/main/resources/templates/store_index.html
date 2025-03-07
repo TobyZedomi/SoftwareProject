@@ -17,10 +17,7 @@
             color: red;
             font-weight: bold;
             margin-bottom: 50px;
-        }
-
-        body{
-            background-color: black;
+            font-family: poppins;
         }
 
         h1{
@@ -31,6 +28,7 @@
             color: white;
             font-weight: bold;
             -webkit-text-stroke: 1px darkred;
+            font-family: poppins;
         }
 
         .wrapper{
@@ -56,7 +54,7 @@
             max-width: 300px;
             height: 420px;
             margin: auto;
-            background-color: red;
+            background-color: black;
             padding: 1em;
            /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
             font-family: Arial, Helvetica, sans-serif;
@@ -78,6 +76,7 @@
             font-size: 1.3em;
             margin: 0.5em 0;
             font-weight: bold;
+            color: white;
         }
         .product-card div {
             font-size: 1.2em;
@@ -160,6 +159,11 @@
             top: 0;
             z-index: -1;
         }
+
+        p, lable, input, span, h4{
+
+            font-family: poppins;
+        }
     </style>
 </head>
 <body>
@@ -186,7 +190,7 @@
         </div>
         <h4 th:text="${movieProduct.movie_name}"></h4>
         <div>
-            <span th:text="|£${movieProduct.listPrice} |" style="font-weight: bold"></span>
+            <span th:text="|£${movieProduct.listPrice} |" style="font-weight: bold; color: white"></span>
             <button title="Add To Cart"><a th:href="@{/addCartItem(movieId=${movieProduct.getMovie_id()})}"><i class="fa fa-shopping-cart"></i></a></button>
         </div>
     </div>
