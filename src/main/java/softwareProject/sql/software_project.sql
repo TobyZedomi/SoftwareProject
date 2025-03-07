@@ -139,6 +139,13 @@ CREATE TABLE orderItem
     FOREIGN KEY (order_id) REFERENCES shop_order (order_id)
 );
 
+CREATE TABLE genre
+(
+    id   INT(255),
+    name VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
 
 CREATE TABLE password_reset_tokens
 (
@@ -192,10 +199,11 @@ CREATE TABLE auditsCartItems
     movie_id          int(11),
     transdate         datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (auditsCartItemsID),
-    FOREIGN KEY (movie_id) REFERENCES movieProduct (movie_id)  ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (movie_id) REFERENCES movieProduct (movie_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-DELIMITER //
+DELIMITER
+//
 
 CREATE TRIGGER addMovieProduct
     AFTER INSERT
@@ -258,13 +266,16 @@ CREATE PROCEDURE selectAllMovieProducts()
 BEGIN
 SELECT *
 FROM movieproduct;
-END //
+END
+//
 DELIMITER //
 
 
 DELIMITER //
 CREATE PROCEDURE addIntoCartItem(param_cart_id INT, param_movie_id INT)
 BEGIN
-INSERT INTO cart_items(cart_id, movie_id) VALUES (param_cart_id, param_movie_id);
-END //
+INSERT INTO cart_items(cart_id, movie_id)
+VALUES (param_cart_id, param_movie_id);
+END
+//
 DELIMITER //
