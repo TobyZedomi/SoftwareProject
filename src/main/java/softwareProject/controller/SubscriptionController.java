@@ -2,24 +2,27 @@ package softwareProject.controller;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import softwareProject.business.Cart;
-import softwareProject.business.Subscription;
-import softwareProject.business.SubscriptionPlan;
-import softwareProject.business.User;
+import softwareProject.business.*;
 import softwareProject.persistence.*;
+import softwareProject.service.MovieService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
 @Controller
 public class SubscriptionController {
+
+    @Autowired
+    private MovieService movieService;
 
 
     /**
@@ -111,10 +114,22 @@ public class SubscriptionController {
             view =  "subscriptionFailed";
         } else {
             log.info("User {} purchased subscription", user.getUsername());
+            toViewMoviesFromMovieDbApi(model);
             view =  "registerSuccessUser";
         }
 
         return view;
+    }
+
+    private void toViewMoviesFromMovieDbApi(Model model) {
+        List<MovieTest> movies = movieService.getMovies();
+        model.addAttribute("movies", movies);
+
+        for (int i = 0; i < movies.size(); i++) {
+
+            List<MovieTrailer> trailers = movieService.getTrailer(movies.get(i).getId());
+            model.addAttribute("trailers", trailers);
+        }
     }
 
     private static void modelCreditCard(String cardNumber, String Month, String Year, String cvv, Model model) {

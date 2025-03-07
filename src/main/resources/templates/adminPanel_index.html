@@ -206,9 +206,28 @@
       align-items: center;
     }
   </style>
+
+  <style>
+    body{
+      margin: 0;
+    }
+
+    #background{
+      background-image: url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D.avif");
+      height: 100vh;
+      width: 100%;
+      background-size: cover;
+      background-position: center center;
+      position: fixed;
+      top: 0;
+      z-index: -1;
+    }
+  </style>
   <title>Admin Panel</title>
 </head>
 <body>
+
+<div id="background"></div>
 <!-- Include the menu bar fragment -->
 <div th:replace="~{fragments/menu :: menu-bar}"></div>
 

@@ -10,62 +10,129 @@
 
     <title>Title</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
     <style>
-        .swiper {
-            width: 74%;
-            height: 70%;
-            margin-top: 100px;
+        *{
+            margin: 0;
+            padding: 0;
+            /* font-family: poppins;
+
+             */
+            box-sizing: border-box;
         }
 
 
-        .swiper-slide {
-            text-align: center;
-            font-size: 18px;
-            background: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
+        .wrapper{
+            padding: 10px 10%;
         }
 
-        .swiper {
-            margin-left: auto;
-            margin-right: auto;
+
+        #card-area{
+            padding: 50px 0;
         }
 
-        .card{
-            margin: 0.9em;
-            height: 28em;
+
+        .box-area{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-gap: 40px;
+            margin-top: 50px;
+        }
+
+
+        .box{
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
             transition: transform .5s;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
         }
 
-        .card:hover {
+        .box:hover {
             transform: scale(1.05);
         }
 
+        .box img{
+            width: 100%;
+            object-fit: fill;
+            border-radius: 10px;
+            display: block;
+            transistion: transform 0.5s
+        }
+
+
+        .overlay{
+            height: 0;
+            width: 100%;
+            background: linear-gradient(transparent, #1c1c1c 100% );
+            border-radius: 10px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 40px;
+            text-align: center;
+            font-size: 14px;
+            transition: height 0.5s;
+        }
+
+        .overlay h3{
+            font-weight: 500;
+            margin-bottom: 5px;
+            margin-top: 2%;
+            font-family: bebas neue;
+            font-size: 30px;
+            letter-spacing: 2px;
+        }
+
+
+        .overlay a{
+            margin-top: 10px;
+            color: #262626;
+            text-decoration: none;
+            font-size: 14px;
+            background: #fff;
+            border-radius: 50px;
+            text-align: center;
+            padding: 5px 15px;
+        }
+
+        .boxLhover img{
+            transform: scale(1.2);
+        }
+
+        .box:hover .overlay{
+            height: 100%;
+        }
+
+        h1{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            color: white;
+            font-weight: bold;
+            -webkit-text-stroke: 1px darkred;
+
+        }
 
         p{
-            font-size: 10px;
+            font-size: 9px;
             font-family: poppins;
-
-
+            color: white;
+            font-weight: bold;
         }
 
-        /*
-        .dropdown{
-            margin-top: 50px;
-            margin-left: 50px;
+        h3{
+            font-weight: bold;
+            font-family: poppins;
+            color: white;
         }
 
-         */
 
-        button{
-            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-        }
 
         a.three:link {
             text-decoration: none;
@@ -83,24 +150,42 @@
             text-decoration: underline;
         }
 
+        p.two{
+            color: black;
+        }
+
         p.two:visited {color:#0000ff;}
         p.two:hover {font-size:150%;}
 
-/*
         .dropdown-menu{
             box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
         }
+    </style>
 
- */
+    <style>
+        body{
+            margin: 0;
+        }
+
+        #background{
+            background-image: url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D.avif");
+            height: 100vh;
+            width: 100%;
+            background-size: cover;
+            background-position: center center;
+            position: fixed;
+            top: 0;
+            z-index: -1;
+        }
     </style>
 </head>
 <body>
 <div th:replace="~{fragments/menu :: menu-bar}"></div>
 
-
+<div id="background"></div>
 
 <div class="dropdown" style=" margin-top: 50px; margin-left: 50px;">
-    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Select Genre Of Movie
     </button>
     <ul class="dropdown-menu" style=" box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)">
@@ -111,57 +196,26 @@
 </div>
 
 
-<div class="swiper mySwiper">
-    <div class="swiper-wrapper">
-        <div class="swiper-slide">
+<div id="card-area">
+    <div class="wrapper">
+        <div class="box-area">
             <div th:each="movieByGenre : ${movieByGenres}">
-
-
-            <div class="card" style="width: 18rem;">
-                <img th:src="@{'https://image.tmdb.org/t/p/w500/'+${movieByGenre.getBackdrop_path()}}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 th:text="${movieByGenre.getTitle()}" class="card-title"></h5>
-                    <p th:text="${movieByGenre.getOverview()}"class="card-text"></p>
-                    <a th:href="@{/movieTrailer(id=${movieByGenre.getId()})}" class="btn btn-primary">View Videos</a>
-                </div>
-                <div class="card-footer">
-                    <small th:text="  |Date Of Release:  ${movieByGenre.getRelease_date()} |"  class="text-muted">Last updated 3 mins ago</small>
+                <div class="box">
+                    <img th:src="@{'https://image.tmdb.org/t/p/w500/'+${movieByGenre.getBackdrop_path()}}"  alt="">
+                    <div class="overlay">
+                        <h3 th:text="${movieByGenre.getTitle()}"> Mountain</h3>
+                        <p th:text="${movieByGenre.getOverview()}" ></p>
+                        <a th:href="@{/movieTrailer(id=${movieByGenre.getId()})}">View Videos</a>
+                    </div>
                 </div>
             </div>
 
-
-            </div>
-
         </div>
-        <div class="swiper-slide">
-        </div>
-        <div class="swiper-slide"></div>
-
-
     </div>
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
 </div>
 
-<!-- Swiper JS -->
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-<!-- Initialize Swiper -->
-<script>
-    var swiper = new Swiper(".mySwiper", {
-        slidesPerView: 1,
-        spaceBetween: 30,
-        loop: true,
-        pagination: {
-            el: ".swiper-pagination",
-            clickable: true,
-        },
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-        },
-    });
-</script>
+<!-- <th:block th:each="i: ${#numbers.sequence(1, 5)}"></th:block> -->
 
 </body>
 </html>
