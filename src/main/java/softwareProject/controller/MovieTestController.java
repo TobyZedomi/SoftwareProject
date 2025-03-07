@@ -7,10 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import softwareProject.business.*;
-import softwareProject.persistence.CartDao;
-import softwareProject.persistence.CartDaoImpl;
-import softwareProject.persistence.CartItemDao;
-import softwareProject.persistence.CartItemDaoImpl;
+import softwareProject.persistence.*;
 import softwareProject.service.MovieService;
 
 import java.util.List;
@@ -77,6 +74,12 @@ public class MovieTestController {
 
         List<MovieTest> movieByGenres = movieService.getMoviesByGenre(genre_id);
         model.addAttribute("movieByGenres", movieByGenres);
+
+        GenreDao genreDao = new GenreDaoImpl("database.properties");
+
+        GenreTest genre = genreDao.getGenreById(id);
+
+        model.addAttribute("genreName", genre.getName());
 
         return "movie_index";
     }

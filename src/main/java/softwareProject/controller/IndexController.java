@@ -12,7 +12,9 @@ import softwareProject.persistence.*;
 import softwareProject.service.MovieService;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class IndexController {
@@ -22,29 +24,29 @@ public class IndexController {
 
 
     @GetMapping("/")
-    public String userIndex(){
+    public String userIndex() {
         return "user_index";
     }
 
     @GetMapping("/user_indexSignUp")
-    public String userIndexSignUp(){
+    public String userIndexSignUp() {
         return "user_indexSignUp";
     }
 
     // add these .add model from list of movies from movie db into index controller
     @GetMapping("/index")
-    public String home(HttpSession session,Model model){
+    public String home(HttpSession session, Model model) {
 
         /// get total number of items in cart for user
 
-        getTotalAmountOfItemsInCart(session,model);
+        getTotalAmountOfItemsInCart(session, model);
 
         ///
 
         List<MovieTest> movies = movieService.getMovies();
         model.addAttribute("movies", movies);
 
-        for (int i = 0; i < movies.size();i++) {
+        for (int i = 0; i < movies.size(); i++) {
 
             List<MovieTrailer> trailers = movieService.getTrailer(movies.get(i).getId());
             model.addAttribute("trailers", trailers);
@@ -55,12 +57,12 @@ public class IndexController {
     }
 
     @GetMapping("/movie_index")
-    public String movieIndex(HttpSession session, Model model){
+    public String movieIndex(HttpSession session, Model model) {
 
 
         /// get total number of items in cart for user
 
-        getTotalAmountOfItemsInCart(session,model);
+        getTotalAmountOfItemsInCart(session, model);
 
         //
 
@@ -70,8 +72,16 @@ public class IndexController {
         List<MovieTest> movieByGenres = movieService.getMoviesByGenre("878");
         model.addAttribute("movieByGenres", movieByGenres);
 
+        // genre by id and get the name
 
-        for (int i = 0; i < movieByGenres.size();i++) {
+        GenreDao genreDao = new GenreDaoImpl("database.properties");
+
+        GenreTest genre = genreDao.getGenreById(878);
+
+        model.addAttribute("genreName", genre.getName());
+
+
+        for (int i = 0; i < movieByGenres.size(); i++) {
 
             List<MovieTrailer> trailers = movieService.getTrailer(movieByGenres.get(i).getId());
             model.addAttribute("trailers", trailers);
@@ -81,13 +91,13 @@ public class IndexController {
     }
 
     @GetMapping("/logout_index")
-    public String userIndex2(){
+    public String userIndex2() {
         return "logout_index";
     }
 
 
     @GetMapping("/registerSuccessUser")
-    public String regIndex(Model model){
+    public String regIndex(Model model) {
         List<MovieTest> movies = movieService.getMovies();
         model.addAttribute("movies", movies);
         return "registerSuccessUser";
@@ -95,20 +105,21 @@ public class IndexController {
 
 
     @GetMapping("/subscription_index")
-    public String subscriptionIndex(HttpSession session,Model model){
+    public String subscriptionIndex(HttpSession session, Model model) {
 
-        getTotalAmountOfItemsInCart(session,model);
+        getTotalAmountOfItemsInCart(session, model);
 
         return "subscription_index";
     }
 
     @GetMapping("/addFriends")
-    public String addFriends(HttpSession session,Model model){
+    public String addFriends(HttpSession session, Model model) {
 
         return "addFriends";
     }
+
     @GetMapping("/friends")
-    public String friends(HttpSession session, Model model){
+    public String friends(HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         FriendDao friendDao = new FriendDaoImpl("database.properties");
         UserDao userDao = new UserDaoImpl("database.properties");
@@ -116,11 +127,11 @@ public class IndexController {
         ArrayList<Friends> friends = friendDao.getAllFriends(loggedInUser.getUsername());
         ArrayList<User> details = new ArrayList<>();
         ArrayList<Friends> numberOfFriends = new ArrayList<>();
-        if(friends.isEmpty()){
+        if (friends.isEmpty()) {
             model.addAttribute("noFriends", "You currently have no friends");
         }
 
-        for(int i = 0; i< friends.size();i++){
+        for (int i = 0; i < friends.size(); i++) {
             String name;
             if (friends.get(i).getFriend1().equals(loggedInUser.getUsername())) {
                 name = friends.get(i).getFriend2();
@@ -128,23 +139,22 @@ public class IndexController {
                 name = friends.get(i).getFriend1();
             }
             User friendUser = userDao.findUserByUsername(name);
-            numberOfFriends = FriendController.getAllFriends(session,friendUser.getUsername(),model);
-            if(name != null){
+            numberOfFriends = FriendController.getAllFriends(session, friendUser.getUsername(), model);
+            if (name != null) {
                 details.add(friendUser);
             }
         }
 
         model.addAttribute("allFriends", details);
         model.addAttribute("numberOfFriends", numberOfFriends);
-        model.addAttribute("total",numberOfFriends.size());
+        model.addAttribute("total", numberOfFriends.size());
 
         return "friends";
     }
 
 
-
     @GetMapping("/notifications")
-    public String notifications(HttpSession session, Model model){
+    public String notifications(HttpSession session, Model model) {
 
         User loggedInUser = (User) session.getAttribute("loggedInUser");
 
@@ -161,18 +171,22 @@ public class IndexController {
     }
 
     @GetMapping("/forgot_password")
-    public String forgotPasswordIndex(){ return "forgot_password"; }
+    public String forgotPasswordIndex() {
+        return "forgot_password";
+    }
 
     @GetMapping("/review_form")
-    public String reviewIndex(){ return "review_form"; }
+    public String reviewIndex() {
+        return "review_form";
+    }
 
 
     @GetMapping("/store_index")
-    public String storeIndex(HttpSession session, Model model){
+    public String storeIndex(HttpSession session, Model model) {
 
         /// get total number of items in cart for user
 
-        getTotalAmountOfItemsInCart(session,model);
+        getTotalAmountOfItemsInCart(session, model);
 
         ////
 
@@ -182,13 +196,12 @@ public class IndexController {
         model.addAttribute("movieProducts", movieProducts);
 
 
-
         return "store_index";
     }
 
 
     @GetMapping("/cart_index")
-    public String cartIndex(HttpSession session, Model model){
+    public String cartIndex(HttpSession session, Model model) {
 
         User u = (User) session.getAttribute("loggedInUser");
 
@@ -203,19 +216,19 @@ public class IndexController {
 
         ArrayList<MovieProduct> movies = new ArrayList<>();
 
-            for (int i = 0; i < cartItems.size();i++) {
+        for (int i = 0; i < cartItems.size(); i++) {
 
-                MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+            MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
 
-                movies.add(movieProductDao.getMovieById(cartItems.get(i).getMovie_id()));
-                model.addAttribute("movies", movies);
-            }
+            movies.add(movieProductDao.getMovieById(cartItems.get(i).getMovie_id()));
+            model.addAttribute("movies", movies);
+        }
 
-            // get total Price
+        // get total Price
 
         double total = 0;
 
-        for (int i = 0; i < movies.size();i++){
+        for (int i = 0; i < movies.size(); i++) {
 
             total = total + movies.get(i).getListPrice();
         }
@@ -231,11 +244,11 @@ public class IndexController {
     }
 
     @GetMapping("/checkout_index")
-    public String checkout_index(HttpSession session, Model model){
+    public String checkout_index(HttpSession session, Model model) {
 
         /// get total number of items in cart for user
 
-        getTotalAmountOfItemsInCart(session,model);
+        getTotalAmountOfItemsInCart(session, model);
 
         // session for billng user
 
@@ -260,7 +273,7 @@ public class IndexController {
 
         ArrayList<MovieProduct> movies = new ArrayList<>();
 
-        for (int i = 0; i < cartItems.size();i++) {
+        for (int i = 0; i < cartItems.size(); i++) {
 
             MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
 
@@ -272,7 +285,7 @@ public class IndexController {
 
         double total = 0;
 
-        for (int i = 0; i < movies.size();i++){
+        for (int i = 0; i < movies.size(); i++) {
 
             total = total + movies.get(i).getListPrice();
         }
@@ -282,19 +295,19 @@ public class IndexController {
 
         /// get total number of items in cart for user
 
-        getTotalAmountOfItemsInCart(session,model);
+        getTotalAmountOfItemsInCart(session, model);
 
         return "checkout_index";
     }
 
 
     @GetMapping("/confirmationPaymentPage")
-    public String confirmationPaymentPage(){
+    public String confirmationPaymentPage() {
         return "confirmationPaymentPage";
     }
 
     @GetMapping("/adminPanel_index")
-    public String adminPanel_index(HttpSession session, Model model){
+    public String adminPanel_index(HttpSession session, Model model) {
 
         MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
 
@@ -303,14 +316,14 @@ public class IndexController {
 
         /// get total number of items in cart for user
 
-        getTotalAmountOfItemsInCart(session,model);
+        getTotalAmountOfItemsInCart(session, model);
 
         return "adminPanel_index";
     }
 
 
     @GetMapping("/purchased_movies")
-    public String purchasedMovies(HttpSession session, Model model){
+    public String purchasedMovies(HttpSession session, Model model) {
 
         User u = (User) session.getAttribute("loggedInUser");
 
@@ -327,7 +340,10 @@ public class IndexController {
 
         ArrayList<MovieProduct> allMovieProducts = new ArrayList<>();
 
-        for (int i = 0; i < shopOrdersForUser.size();i++) {
+        for (int i = 0; i < shopOrdersForUser.size(); i++) {
+
+            // session to see if shop user exist for html page
+            session.setAttribute("shopOrderForUser", shopOrdersForUser.get(i).getUsername());
 
             for (int j = 0; j < orderItems.size(); j++) {
 
@@ -349,13 +365,51 @@ public class IndexController {
         model.addAttribute("allMovieProducts", allMovieProducts);
 
         // method to get total in cart
-        getTotalAmountOfItemsInCart(session,model);
+        getTotalAmountOfItemsInCart(session, model);
 
         return "purchased_movies";
     }
 
 
-    public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
+    @GetMapping("/adminPanelStats")
+    public String adminPanelStats(HttpSession session, Model model) {
+
+
+        AuditCartItemDao auditCartItemDao = new AuditCartItemDaoImpl("database.properties");
+
+
+        ArrayList<AuditCartItem2> auditCartItems = auditCartItemDao.getMovieIdsInDescOrderOfCount();
+
+        System.out.println(auditCartItems);
+
+        MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+
+        Map<MovieProduct, Integer> deletedCartItemsMap = new LinkedHashMap<>();
+
+        MovieProduct movieProduct = null;
+
+        for (int i = 0; i < auditCartItems.size(); i++) {
+
+            movieProduct = movieProductDao.getMovieById(auditCartItems.get(i).getMovie_id());
+
+
+            deletedCartItemsMap.put(movieProduct, auditCartItems.get(i).getCount());
+
+        }
+
+        model.addAttribute("deletedCartItemsMap", deletedCartItemsMap);
+        System.out.println(movieProduct);
+
+
+        // method to get total in cart
+        getTotalAmountOfItemsInCart(session, model);
+
+        return "adminPanelStats";
+    }
+
+
+    public void getTotalAmountOfItemsInCart(HttpSession session, Model model) {
 
         /// get total number of items in cart for user
 

@@ -1,7 +1,7 @@
 package softwareProject.persistence;
 
-import softwareProject.business.Genre;
-
+import softwareProject.business.GenreTest;
+import softwareProject.business.MovieProduct;
 
 
 import java.sql.Connection;
@@ -32,9 +32,9 @@ public class GenreDaoImpl extends MySQLDao implements GenreDao{
      * @return an arrayList of movies based on the genre
      */
     @Override
-    public ArrayList<Genre> getAllGenres(){
+    public ArrayList<GenreTest> getAllGenres(){
 
-        ArrayList<Genre> genres = new ArrayList<>();
+        ArrayList<GenreTest> genres = new ArrayList<>();
 
         // Get a connection using the superclass
         Connection conn = super.getConnection();
@@ -48,7 +48,7 @@ public class GenreDaoImpl extends MySQLDao implements GenreDao{
                 // Use extraction method to avoid code repetition!
                 while(rs.next()){
 
-                    Genre g = mapRow(rs);
+                    GenreTest g = mapRow(rs);
                     genres.add(g);
                 }
             } catch (SQLException e) {
@@ -66,12 +66,62 @@ public class GenreDaoImpl extends MySQLDao implements GenreDao{
         }
         return genres;
     }
-    private Genre mapRow(ResultSet rs)throws SQLException {
 
-        Genre g = new Genre(
+    // genre name by id
 
-                rs.getInt("genre_id"),
-                rs.getString("genre_name")
+    @Override
+    public GenreTest getGenreById(int id) {
+
+        GenreTest genreTest = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+
+        try {
+
+            con = getConnection();
+
+            String query = "SELECT * FROM genre where id = ?";
+            ps = con.prepareStatement(query);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+
+
+            if (rs.next()) {
+
+                genreTest = mapRow(rs);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Exception occured in the getMovieById() method: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the getProductByCode() method: " + e.getMessage());
+            }
+        }
+        return genreTest;
+    }
+
+
+
+
+    private GenreTest mapRow(ResultSet rs)throws SQLException {
+
+        GenreTest g = new GenreTest(
+
+                rs.getInt("id"),
+                rs.getString("name")
         );
         return g;
     }

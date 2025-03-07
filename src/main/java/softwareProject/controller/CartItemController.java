@@ -175,6 +175,15 @@ public class CartItemController {
 
         cartItemDao.deleteCartItemByCartIdAndMovieId(cart.getCart_id(), movieID2);
 
+        // message to user about deleted movie and log files
+
+        MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+        MovieProduct movieProduct = movieProductDao.getMovieById(movieID2);
+
+        String message =movieProduct.getMovie_name()+ " was deleted from the cart";
+        model.addAttribute("message", message);
+        log.info(" User {} deleted movie {} from cart ",u.getUsername(), movieProduct.getMovie_name());
+
         return "cart_index";
     }
 
