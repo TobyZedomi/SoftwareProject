@@ -23,8 +23,6 @@
       font-weight: bold;
     }
 
-
-
   </style>
 </head>
 <body>
@@ -40,50 +38,50 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" th:href="@{/index}" style="font-weight: bold">Home</a>
+            <a class="nav-link active" aria-current="page" th:href="@{/index}" style="font-weight: bold; font-family: poppins;">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" th:href="@{/movie_index}" style="font-weight: bold" >Movies</a>
+            <a class="nav-link active" aria-current="page" th:href="@{/movie_index}" style="font-weight: bold;font-family: poppins;" >Movies</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" th:href="@{/subscription_index}" style="font-weight: bold" >Subscriptions</a>
+            <a class="nav-link active" aria-current="page" th:href="@{/subscription_index}" style="font-weight: bold;font-family: poppins;" >Subscriptions</a>
           </li>
 
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-weight: bold">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-weight: bold;font-family: poppins;">
               Store
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" th:href="@{/store_index}" style="font-weight: bold">Store</a></li>
-              <li><a class="dropdown-item" th:href="@{/purchased_movies}" style="font-weight: bold">Purchased Movies</a></li>
+              <li><a class="dropdown-item" th:href="@{/store_index}" style="font-weight: bold;font-family: poppins;">Store</a></li>
+              <li><a class="dropdown-item" th:href="@{/purchased_movies}" style="font-weight: bold;font-family: poppins;">Purchased Movies</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-weight: bold">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-weight: bold;font-family: poppins;">
               Friends
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" th:href="@{/friends}" style="font-weight: bold">My Friends</a></li>
-              <li><a class="dropdown-item" th:href="@{/addFriends}" style="font-weight: bold">Add Friends</a></li>
+              <li><a class="dropdown-item" th:href="@{/friends}" style="font-weight: bold;font-family: poppins;">My Friends</a></li>
+              <li><a class="dropdown-item" th:href="@{/addFriends}" style="font-weight: bold;font-family: poppins;">Add Friends</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" th:href="@{/notifications}" style="font-weight: bold">Friend Requests</a></li>
+              <li><a class="dropdown-item" th:href="@{/notifications}" style="font-weight: bold;font-family: poppins;">Friend Requests</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-weight: bold">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-weight: bold;font-family: poppins;">
              Admin Panel
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li th:if="${#ctx.session.loggedInUser != null && #ctx.session.loggedInUser.isAdmin() == true}" ><a class="dropdown-item" th:href="@{/adminPanel_index}" style="font-weight: bold">Admin Movie Product Panel</a></li>
-              <li th:if="${#ctx.session.loggedInUser != null && #ctx.session.loggedInUser.isAdmin() == true}"><a class="dropdown-item" th:href="@{/adminPanelStats}" style="font-weight: bold">Statistics</a></li>
+              <li th:if="${#ctx.session.loggedInUser != null && #ctx.session.loggedInUser.isAdmin() == true}" ><a class="dropdown-item" th:href="@{/adminPanel_index}" style="font-weight: bold;font-family: poppins;">Admin Movie Product Panel</a></li>
+              <li th:if="${#ctx.session.loggedInUser != null && #ctx.session.loggedInUser.isAdmin() == true}"><a class="dropdown-item" th:href="@{/adminPanelStats}" style="font-weight: bold;font-family: poppins;">Statistics</a></li>
             </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" th:href="@{/logOut}" style="font-weight: bold">Logout</a>
+            <a class="nav-link active" th:href="@{/logOut}" style="font-weight: bold;font-family: poppins;">Logout</a>
           </li>
 
           <a class="nav-link active" th:href="@{/cart_index}" > <i class="fa" style="font-size:24px; margin-left: 850px">&#xf07a;</i>
-            <span class="cartNumber" th:text="${totalCartItems}">5 </span></a>
+            <span class="cartNumber" th:text="${totalCartItems}" style="font-family: poppins; font-weight: bold;">5 </span></a>
 
         </ul>
         <!--<form class="d-flex" role="search">

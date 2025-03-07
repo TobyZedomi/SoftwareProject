@@ -16,9 +16,10 @@
       justify-content: center;
       align-items: center;
       font-size: 50px;
-      color: darkred;
+      color: white;
       font-weight: bold;
-      -webkit-text-stroke: 3px black;
+      -webkit-text-stroke: 1px darkred;
+      font-family: poppins;
     }
 
     .notBought{
@@ -53,6 +54,14 @@
       position: fixed;
       top: 0;
       z-index: -1;
+    }
+
+    p, label, input, span, td, tr{
+
+      font-family: poppins;
+      font-size: 15px;
+      color: white;
+      font-weight: bold;
     }
 
   </style>
@@ -121,8 +130,8 @@
       </table>
     </div>
     <div class="btn-group btns-cart">
-      <a href ="/store_index"><button type="button" class="btn btn-primary"><i class="fa fa-arrow-circle-left"></i> Continue Shopping</button></a>
-      <a href ="/checkout_index"><button type="button" class="btn btn-primary">Checkout <i class="fa fa-arrow-circle-right"></i></button></a>
+      <a href ="/store_index"><button type="button" class="btn btn-danger"  style="font-family: poppins; font-weight: bold; margin-right: 10px;"> Continue Shopping</button></a>
+      <a href ="/checkout_index"><button type="button" class="btn btn-danger" style="font-family: poppins; font-weight: bold;">Checkout</button></a>
     </div>
 
   </div>

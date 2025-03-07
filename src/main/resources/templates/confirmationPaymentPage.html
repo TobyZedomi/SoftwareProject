@@ -9,15 +9,6 @@
     <title>Title</title>
 
   <style>
-    h1{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 50px;
-      color: darkred;
-      font-weight: bold;
-      -webkit-text-stroke: 3px black;
-    }
 
     .order{
       background:#f4f8fc;
@@ -70,6 +61,32 @@
       top: 0;
       z-index: -1;
     }
+
+    p, label, input, option, select{
+
+      font-family: poppins;
+      font-size: 15px;
+      font-weight: bold;
+      color: white;
+    }
+
+    h3, h5{
+      font-family: poppins;
+      font-weight: bold;
+      color: white;
+    }
+
+    h1{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 50px;
+      color: black;
+      font-weight: bold;
+      -webkit-text-stroke: 1px darkred;
+      font-family: poppins;
+    }
+
   </style>
 </head>
 <body>
@@ -81,9 +98,9 @@
 
 <div class="order">
   <h1>You have Purchased a Digital Movie!</h1>
-  <p>Thank you for your purchase</p>
+  <p style="color: black">Thank you for your purchase</p>
 
-  <p>You have been sent an email confirmation of your purchase</p>
+  <p style="color: black;">You have been sent an email confirmation of your purchase</p>
 </div>
 <section class="transaction">
   <h3>Transaction details</h3>
