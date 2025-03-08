@@ -76,4 +76,16 @@ public class MovieService {
         return response.getBody().getResults();
     }
 
+
+
+    /// get movie by movie name
+
+    public List<MovieTest> getMoviesBySearch(String query){
+
+        ResponseEntity<MovieResponse> response = restTemplate.getForEntity("https://api.themoviedb.org/3/search/movie?query="+query+"&api_key="+API_KEY, MovieResponse.class);
+
+
+        return response.getBody().getResults();
+    }
+
 }

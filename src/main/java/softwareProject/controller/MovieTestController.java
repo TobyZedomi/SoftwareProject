@@ -86,6 +86,27 @@ public class MovieTestController {
 
 
 
+    @GetMapping("/viewMovieBySearch")
+    public String viewMovieBySearch(HttpSession session, Model model, @RequestParam(name = "query") String query){
+
+
+
+        // totalAmountOItems in basket
+        getTotalAmountOfItemsInCart(session,model);
+
+        List<MovieTest> movieBySearch = movieService.getMoviesBySearch(query);
+        model.addAttribute("movieBySearch", movieBySearch);
+
+        model.addAttribute("query", query);
+
+
+        return "search_index";
+    }
+
+
+
+
+
 
     // total amount of items in cart
     public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
