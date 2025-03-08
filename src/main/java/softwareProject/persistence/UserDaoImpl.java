@@ -4,9 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import softwareProject.business.Friends;
 import softwareProject.business.User;
 import org.springframework.stereotype.Repository;
+
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 
@@ -56,7 +63,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             ps.setString(1, newUser.getUsername());
             ps.setString(2, newUser.getDisplayName());
             ps.setString(3, newUser.getEmail());
-            ps.setString(4, newUser.getPassword());
+            ps.setString(4, hashPassword(newUser.getPassword()));
             ps.setDate(5, Date.valueOf(newUser.getDateOfBirth()));
             ps.setBoolean(6, newUser.isAdmin());
             ps.setTimestamp(7, Timestamp.valueOf(newUser.getCreatedAt()));
@@ -75,6 +82,10 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             System.out.println("SQL Exception occurred when attempting to prepare/execute SQL");
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
 
         return rowsAffected;
@@ -94,7 +105,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         Connection c = super.getConnection();
         try (PreparedStatement ps = c.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?")) {
             ps.setString(1, username);
-            ps.setString(2, password);
+            ps.setString(2, hashPassword(password));
 
             try(ResultSet rs = ps.executeQuery()){
                 if(rs.next()){
@@ -105,6 +116,10 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             }
         }catch (SQLException e) {
             log.error("SQLException occurred when attempting to login User", e);
+        } catch (InvalidKeySpecException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
         super.freeConnection(c);
 
@@ -266,6 +281,32 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
     }
 
 
+
+    /**
+     * Hashing the password
+     * @param password is being searched to hash
+     * @return the hashed password
+     * @throws InvalidKeySpecException if something goes wrong with hashing password
+     * @throws NoSuchAlgorithmException if something goes wrong with hashing password
+     */
+    public String hashPassword(String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
+
+        char[]passwordChars = password.toCharArray();
+        byte [] saltBytes = "NotSoSecretSalt".getBytes();
+        int iterations = 65536;
+        int keySize = 256;
+
+        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
+
+        PBEKeySpec spec = new PBEKeySpec(passwordChars,saltBytes,iterations,keySize);
+
+        SecretKey key = factory.generateSecret(spec);
+
+        String keyAsString = Base64.getEncoder().encodeToString(key.getEncoded());
+
+        return keyAsString;
+
+    }
 
 
     /**

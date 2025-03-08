@@ -164,7 +164,7 @@ public class UserController {
 
         String view = "";
         UserDao userDao = new UserDaoImpl("database.properties");
-        User u = new User(username, displayName, email, hashPassword(password), dob, false, LocalDateTime.now());
+        User u = new User(username, displayName, email, password, dob, false, LocalDateTime.now());
         int added = userDao.registerUser(u);
         if(added == 1){
 
@@ -215,7 +215,7 @@ public class UserController {
         }
 
         UserDao userDao = new UserDaoImpl("database.properties");
-        User user = userDao.login(username1, hashPassword(password1));
+        User user = userDao.login(username1, password1);
 
 
         if(user == null){
