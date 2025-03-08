@@ -41,15 +41,28 @@ public class IndexController {
 
         getTotalAmountOfItemsInCart(session, model);
 
-        ///
+        /// movie db get most popular movies
 
         List<MovieTest> movies = movieService.getMovies();
-        model.addAttribute("movies", movies);
+
+        // create new list to add the movies from the movie db into
+        List<MovieTest> newMovie = new ArrayList<>();
+
+        // loop through the movie db list and reduce the size by 2
+        for (int i = 0; i < movies.size()-2;i++) {
+
+            // if any backdrop image is unavailable it will not add it to the new arraylist
+            if (movies.get(i).getBackdrop_path() != null) {
+                // add the movies from the movie db into the new arraylist
+                newMovie.add(movies.get(i));
+                model.addAttribute("movies", newMovie);
+            }
+        }
 
         for (int i = 0; i < movies.size(); i++) {
 
-            List<MovieTrailer> trailers = movieService.getTrailer(movies.get(i).getId());
-            model.addAttribute("trailers", trailers);
+                List<MovieTrailer> trailers = movieService.getTrailer(movies.get(i).getId());
+                model.addAttribute("trailers", trailers);
         }
 
 
@@ -70,7 +83,16 @@ public class IndexController {
         model.addAttribute("genres", genres);
 
         List<MovieTest> movieByGenres = movieService.getMoviesByGenre("878");
-        model.addAttribute("movieByGenres", movieByGenres);
+
+        List<MovieTest> newMovie = new ArrayList<>();
+
+        for (int i = 0; i < movieByGenres.size() -2; i++) {
+
+            if (movieByGenres.get(i).getBackdrop_path() != null) {
+                newMovie.add(movieByGenres.get(i));
+                model.addAttribute("movieByGenres", newMovie);
+            }
+        }
 
         // genre by id and get the name
 
@@ -99,7 +121,20 @@ public class IndexController {
     @GetMapping("/registerSuccessUser")
     public String regIndex(Model model) {
         List<MovieTest> movies = movieService.getMovies();
-        model.addAttribute("movies", movies);
+
+        // create new list to add the movies from the movie db into
+        List<MovieTest> newMovie = new ArrayList<>();
+
+        // loop through the movie db list and reduce the size by 2
+        for (int i = 0; i < movies.size()-2;i++) {
+
+            // if any backdrop image is unavailable it will not add it to the new arraylist
+            if (movies.get(i).getBackdrop_path() != null) {
+                // add the movies from the movie db into the new arraylist
+                newMovie.add(movies.get(i));
+                model.addAttribute("movies", newMovie);
+            }
+        }
         return "registerSuccessUser";
     }
 

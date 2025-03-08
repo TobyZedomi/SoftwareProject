@@ -10,6 +10,7 @@ import softwareProject.business.*;
 import softwareProject.persistence.*;
 import softwareProject.service.MovieService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -73,7 +74,16 @@ public class MovieTestController {
         model.addAttribute("genres", genres);
 
         List<MovieTest> movieByGenres = movieService.getMoviesByGenre(genre_id);
-        model.addAttribute("movieByGenres", movieByGenres);
+
+        List<MovieTest> newMovie = new ArrayList<>();
+
+        for (int i = 0; i < movieByGenres.size() -2;i++) {
+
+            if (movieByGenres.get(i).getBackdrop_path() != null) {
+                newMovie.add(movieByGenres.get(i));
+                model.addAttribute("movieByGenres", newMovie);
+            }
+        }
 
         GenreDao genreDao = new GenreDaoImpl("database.properties");
 
@@ -95,7 +105,16 @@ public class MovieTestController {
         getTotalAmountOfItemsInCart(session,model);
 
         List<MovieTest> movieBySearch = movieService.getMoviesBySearch(query);
-        model.addAttribute("movieBySearch", movieBySearch);
+
+        List<MovieTest> newMovieBySearch = new ArrayList<>();
+
+        for (int i = 0; i < movieBySearch.size() -2;i++){
+
+            if (movieBySearch.get(i).getBackdrop_path() != null) {
+                newMovieBySearch.add(movieBySearch.get(i));
+                model.addAttribute("movieBySearch", newMovieBySearch);
+            }
+        }
 
         model.addAttribute("query", query);
 

@@ -228,8 +228,7 @@ public class UserController {
         session.setAttribute("loggedInUser", user);
         // between this line get list of movies from movie db
         // model .add attribute here for list of movies form movie db
-        List<MovieTest> movies = movieService.getMovies();
-        model.addAttribute("movies", movies);
+        mostPopularMoviesMovieDbApi(model);
         log.info("User {} log into system", user.getUsername());
 
         // totalAmountOItems in basket
@@ -238,6 +237,23 @@ public class UserController {
         return "loginSuccessful";
     }
 
+    private void mostPopularMoviesMovieDbApi(Model model) {
+        List<MovieTest> movies = movieService.getMovies();
+
+        // create new list to add the movies from the movie db into
+        List<MovieTest> newMovie = new ArrayList<>();
+
+        // loop through the movie db list and reduce the size by 2
+        for (int i = 0; i < movies.size()-2;i++) {
+
+            // if any backdrop image is unavailable it will not add it to the new arraylist
+            if (movies.get(i).getBackdrop_path() != null) {
+                // add the movies from the movie db into the new arraylist
+                newMovie.add(movies.get(i));
+                model.addAttribute("movies", newMovie);
+            }
+        }
+    }
 
 
     ///logout
