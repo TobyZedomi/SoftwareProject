@@ -9,14 +9,15 @@
 <style>
 
 
-  h2{
+  h1{
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 50px;
-    color: darkred;
+    color: white;
     font-weight: bold;
-    -webkit-text-stroke: 3px black;
+    -webkit-text-stroke: 1px darkred;
+    font-family: poppins;
   }
 
   a{
@@ -40,20 +41,31 @@
     z-index: -1;
   }
 
+  .center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    margin-top: 150px;
+  }
+
 </style>
 <body>
 
-<header>
-  <h2 class="heading" style="margin-right: 1400px;">ScreenSafari</h2>
-</header>
+
+  <h1 class="heading">ScreenSafari</h1>
+
 
 <div id="background"></div>
 
-<h2>Registration Failed</h2>
-
-<a href ="/user_indexSignUp"><button type="button" class="btn btn-primary">Go back to Register Page</button></a>
 
 
+  <div class="center">
+    <h2 style="font-weight: bold; color: white; font-family: poppins">Registration Failed</h2>
+    <a th:href="@{/user_indexSignUp}" style="text-decoration:none"><button type="button" class="btn btn-danger" style="font-weight: bold; color: white; font-family: poppins" >Go back to Register Page</button></a>
+  </div>
 
 </body>
 </html>

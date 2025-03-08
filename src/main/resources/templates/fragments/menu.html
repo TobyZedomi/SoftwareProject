@@ -68,7 +68,7 @@
             </ul>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-weight: bold;font-family: poppins;">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-weight: bold;font-family: poppins;"  th:if="${#ctx.session.loggedInUser != null && #ctx.session.loggedInUser.isAdmin() == true}">
              Admin Panel
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
