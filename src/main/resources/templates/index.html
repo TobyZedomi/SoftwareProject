@@ -123,7 +123,7 @@
     }
 
     p{
-      font-size: 10px;
+      font-size: 12px;
       font-family: poppins;
       color: white;
       font-weight: bold;
@@ -133,6 +133,7 @@
       font-weight: bold;
       font-family: poppins;
       color: white;
+      font-size: 25px;
     }
 
   </style>
@@ -231,7 +232,7 @@
           <img th:src="@{'https://image.tmdb.org/t/p/w500/'+${movie.getBackdrop_path()}}"  alt="">
           <div class="overlay">
             <h3 th:text="${movie.getTitle()}"> Mountain</h3>
-            <p th:text="${movie.getOverview()}" ></p>
+            <p th:text="${movie.getOverview()}" style="overflow: auto; scrollbar-width: none;" ></p>
             <a th:href="@{/movieTrailer(id=${movie.getId()})}">View Videos</a>
           </div>
         </div>

@@ -120,7 +120,7 @@
         }
 
         p{
-            font-size: 9px;
+            font-size: 12px;
             font-family: poppins;
             color: white;
             font-weight: bold;
@@ -130,6 +130,7 @@
             font-weight: bold;
             font-family: poppins;
             color: white;
+            font-size: 25px;
         }
 
 
@@ -190,7 +191,7 @@
     </button>
     <ul class="dropdown-menu" style=" box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)">
         <div th:each="genre : ${genres}">
-            <li><a class="three" th:href="@{/viewMovieByGenre(id=${genre.getId()})}"><p class="two" th:text="${genre.getName()}"></p></a></li>
+            <li><a class="three" th:href="@{/viewMovieByGenre(id=${genre.getId()})}" style="text-decoration:none"><p class="two" th:text="${genre.getName()}"></p></a></li>
         </div>
     </ul>
 </div>
@@ -209,7 +210,7 @@
                     <img th:src="@{'https://image.tmdb.org/t/p/w500/'+${movieByGenre.getBackdrop_path()}}"  alt="">
                     <div class="overlay">
                         <h3 th:text="${movieByGenre.getTitle()}"> Mountain</h3>
-                        <p th:text="${movieByGenre.getOverview()}" ></p>
+                        <p th:text="${movieByGenre.getOverview()}" style="overflow: auto; scrollbar-width: none;" ></p>
                         <a th:href="@{/movieTrailer(id=${movieByGenre.getId()})}">View Videos</a>
                     </div>
                 </div>
