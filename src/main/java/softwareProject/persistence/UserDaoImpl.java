@@ -1,6 +1,7 @@
 package softwareProject.persistence;
 
 import lombok.extern.slf4j.Slf4j;
+import softwareProject.business.BillingAddress;
 import softwareProject.business.Friends;
 import softwareProject.business.User;
 import org.springframework.stereotype.Repository;
@@ -100,72 +101,117 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
      * @return the user if username and password match, if username or password doesn't match it will return null
      */
     @Override
-    public User login(String username, String password) {
+    public User login(String username, String password){
+
         User user = null;
-        Connection c = super.getConnection();
-        try (PreparedStatement ps = c.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?")) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
+
+
+            con = getConnection();
+
+            String query = "SELECT * FROM users WHERE username = ? AND password = ?";
+            ps = con.prepareStatement(query);
+            // Fill in the blanks, i.e. parameterize the query
             ps.setString(1, username);
             ps.setString(2, hashPassword(password));
+            rs = ps.executeQuery();
 
-            try(ResultSet rs = ps.executeQuery()){
-                if(rs.next()){
-                    user = mapRow(rs);
-                }
-            }catch (SQLException e) {
-                log.error("SQLException occurred when processing login query resultset", e);
+
+
+            if(rs.next()){
+
+                user = mapRow(rs);
             }
-        }catch (SQLException e) {
-            log.error("SQLException occurred when attempting to login User", e);
+
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception occurred when attempting to prepare SQL for execution");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
         } catch (InvalidKeySpecException e) {
             throw new RuntimeException(e);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occurred in the finally section of the method: " + e.getMessage());
+            }
         }
-        super.freeConnection(c);
-
         return user;
     }
+
+
+
+
+
+
 
     /**
      * Get a particular user based on the username
      * @param username is the user being searched
      * @return the user from that particular username
      */
+
+
     @Override
     public User findUserByUsername(String username){
 
         User user = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        // Get a connection using the superclass
-        Connection conn = super.getConnection();
-        // TRY to get a statement from the connection
-        // When you are parameterizing the query, remember that you need
-        // to use the ? notation (so you can fill in the blanks later)
-        try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM users where username = ?")) {
+        try{
 
+
+            con = getConnection();
+
+            String query = "SELECT * FROM users where username = ?";
+            ps = con.prepareStatement(query);
             // Fill in the blanks, i.e. parameterize the query
             ps.setString(1, username);
+            rs = ps.executeQuery();
 
-            // TRY to execute the query
-            try (ResultSet rs = ps.executeQuery()) {
-                // Extract the information from the result set
-                // Use extraction method to avoid code repetition!
-                if(rs.next()){
 
-                    user = mapRow(rs);
-                }
-            } catch (SQLException e) {
-                System.out.println("SQL Exception occurred when executing SQL or processing results.");
-                System.out.println("Error: " + e.getMessage());
-                e.printStackTrace();
+
+            if(rs.next()){
+
+                user = mapRow(rs);
             }
+
+
         } catch (SQLException e) {
             System.out.println("SQL Exception occurred when attempting to prepare SQL for execution");
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
-        }finally {
-            // Close the connection using the superclass method
-            super.freeConnection(conn);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occurred in the finally section of the method: " + e.getMessage());
+            }
         }
         return user;
     }
