@@ -55,6 +55,11 @@ public class MovieTestController {
 
 
     List<MovieTrailer> trailers = movieService.getTrailer(movieId);
+
+    if (trailers.isEmpty()){
+
+        return "noVideo";
+    }
     model.addAttribute("trailers", trailers);
 
     return "videos";

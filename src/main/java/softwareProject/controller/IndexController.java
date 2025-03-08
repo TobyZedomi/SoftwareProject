@@ -443,6 +443,12 @@ public class IndexController {
         return "adminPanelStats";
     }
 
+    @GetMapping("/noVideo")
+    public String noVideosForMovie(HttpSession session, Model model) {
+
+        return "noVideo";
+    }
+
 
     public void getTotalAmountOfItemsInCart(HttpSession session, Model model) {
 
