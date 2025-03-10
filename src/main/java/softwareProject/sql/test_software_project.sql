@@ -15,6 +15,7 @@ CREATE TABLE users
     dateOfBirth DATE                NOT NULL,
     isAdmin     boolean             NOT NULL DEFAULT false,
     createdAt   datetime            NOT NULL,
+    user_image     varchar(255) NOT NULL,
     PRIMARY KEY (username)
 );
 
