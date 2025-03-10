@@ -372,7 +372,8 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
                 rs.getString("password"),
                 rs.getDate("dateOfBirth").toLocalDate(),
                 rs.getBoolean("isAdmin"),
-                rs.getTimestamp("createdAt").toLocalDateTime()
+                rs.getTimestamp("createdAt").toLocalDateTime(),
+                rs.getString("user_image")
         );
         return u;
     }
