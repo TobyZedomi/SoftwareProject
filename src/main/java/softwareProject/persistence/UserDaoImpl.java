@@ -59,7 +59,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         // When you are parameterizing the update, remember that you need
         // to use the ? notation (so you can fill in the blanks later)
         try(PreparedStatement ps = conn.prepareStatement("insert into users values(?, ?, ?, ?, ?, ?, " +
-                "?)")) {
+                "?,?)")) {
             // Fill in the blanks, i.e. parameterize the update
             ps.setString(1, newUser.getUsername());
             ps.setString(2, newUser.getDisplayName());
@@ -68,6 +68,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             ps.setDate(5, Date.valueOf(newUser.getDateOfBirth()));
             ps.setBoolean(6, newUser.isAdmin());
             ps.setTimestamp(7, Timestamp.valueOf(newUser.getCreatedAt()));
+            ps.setString(8, newUser.getUser_image());
 
             // Execute the update and store how many rows were affected/changed
             // when inserting, this number indicates if the row was

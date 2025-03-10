@@ -24,6 +24,7 @@ public class User {
     private LocalDate dateOfBirth;
     private boolean isAdmin;
     private LocalDateTime createdAt;
+    private String user_image;
 
 
 }

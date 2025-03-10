@@ -163,8 +163,9 @@ public class UserController {
         }
 
         String view = "";
+        String image = "DefaultUserImage.jpg";
         UserDao userDao = new UserDaoImpl("database.properties");
-        User u = new User(username, displayName, email, password, dob, false, LocalDateTime.now());
+        User u = new User(username, displayName, email, password, dob, false, LocalDateTime.now(),image);
         int added = userDao.registerUser(u);
         if(added == 1){
 
