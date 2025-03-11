@@ -473,6 +473,12 @@ public class IndexController {
     }
 
 
+    @GetMapping("/subscriptionConfirmPayment")
+    public String subscriptionConfirmPayment() {
+        return "subscriptionConfirmPayment";
+    }
+
+
     public void getTotalAmountOfItemsInCart(HttpSession session, Model model) {
 
         /// get total number of items in cart for user

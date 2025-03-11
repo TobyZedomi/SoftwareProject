@@ -71,20 +71,14 @@ public class SubscriptionController {
         // session for subscription to get the subscription id
         SubscriptionPlan subscriptionPlan = (SubscriptionPlan) session.getAttribute("subscriptionPicked");
 
-        /*
-        for (int i = 0; i < allSubscriptions.size(); i++) {
-
-            if (allSubscriptions.get(i).getUsername().equals(user.getUsername())) {
-                view = "subscriptionFailed";
-            }
-        }
-
-         */
-
         LocalDateTime date = LocalDateTime.now();
         LocalDateTime endDate = date.plusYears(1);
         Subscription subscription = new Subscription(user.getUsername(),subscriptionPlan.getSubscription_plan_id(), LocalDateTime.now(), endDate);
         int added = subscriptionDao.addSubscription(subscription);
+
+        model.addAttribute("subPrice", subscriptionPlan.getCost());
+        model.addAttribute("orderSubDate", subscription.getSubscription_startDate());
+        model.addAttribute("subName", subscriptionPlan.getSubscription_plan_name());
 
         if (added == -1) {
 
@@ -92,7 +86,7 @@ public class SubscriptionController {
         } else {
             log.info("User {} purchased subscription", user.getUsername());
             toViewMoviesFromMovieDbApi(model);
-            view =  "registerSuccessUser";
+            view =  "subscriptionConfirmPayment";
         }
 
         return view;
@@ -386,33 +380,21 @@ public class SubscriptionController {
         // session for subscription to get the subscription id
         SubscriptionPlan subscriptionPlan = (SubscriptionPlan) session.getAttribute("subscriptionPicked");
 
-        /*
-
-        for (int i = 0; i < allSubscriptions.size(); i++) {
-
-            if (allSubscriptions.get(i).getUsername().equals(user.getUsername())) {
-
-                Subscription subbedUser = subscriptionDao.getSubscriptionFromUsername(user.getUsername());
-                session.setAttribute("subbedUser", subbedUser);
-                return "subscriptionFailed";
-            }
-        }
-
-
-
-         */
-
         LocalDateTime date = LocalDateTime.now();
         LocalDateTime endDate = date.plusYears(1);
         Subscription subscription = new Subscription(user.getUsername(),subscriptionPlan.getSubscription_plan_id(), LocalDateTime.now(), endDate);
         int added = subscriptionDao.addSubscription(subscription);
+
+        model.addAttribute("subPrice", subscriptionPlan.getCost());
+        model.addAttribute("orderSubDate", subscription.getSubscription_startDate());
+        model.addAttribute("subName", subscriptionPlan.getSubscription_plan_name());
 
         if (added == -1) {
 
             view =  "subscriptionFailed";
         } else {
             log.info("User {} purchased subscription", user.getUsername());
-            view =  "purchaseSubDetails";
+            view =  "subscriptionConfirmPayment";
         }
 
         return view;
@@ -749,13 +731,18 @@ public class SubscriptionController {
         Subscription subscription = new Subscription(user.getUsername(),subscriptionPlan.getSubscription_plan_id(), LocalDateTime.now(), endDate);
         int added = subscriptionDao.addSubscription(subscription);
 
+                model.addAttribute("subPrice", subscriptionPlan.getCost());
+                model.addAttribute("orderSubDate", subscription.getSubscription_startDate());
+                model.addAttribute("subName", subscriptionPlan.getSubscription_plan_name());
+
         if (added == -1) {
 
             log.info("User {} didnt purchase subscription", user.getUsername());
             view =  "subscriptionFailed";
         } else {
+            model.addAttribute("orderSubDate", subscription.getSubscription_startDate());
             log.info("User {} purchased subscription", user.getUsername());
-            view =  "purchaseSubDetails";
+            view =  "subscriptionConfirmPayment";
         }
 
 
