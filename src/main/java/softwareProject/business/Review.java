@@ -1,7 +1,6 @@
 package softwareProject.business;
 
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Getter
@@ -13,9 +12,11 @@ import java.time.LocalDateTime;
 @Builder
 public class Review {
     @EqualsAndHashCode.Include
-    private int id;
-    private String name;
-    private String email;
+    private String username;
+
+    private int movieId;
+    private String movieTitle;
     private String content;
+    private int rating;
     private LocalDateTime createdAt;
 }
