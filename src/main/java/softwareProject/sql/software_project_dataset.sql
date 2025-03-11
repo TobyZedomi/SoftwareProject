@@ -82,11 +82,6 @@ VALUES (1, 8.99, 1, 14),
        (4, 10.99, 2, 15);
 
 
-INSERT INTO `reviews` (`name`, `email`, `content`, `createdAt`)
-VALUES
-    ('Sarah', 'sarah@mail.com', 'Amazing product, highly recommended!', '2025-02-24 22:15:30'),
-    ('Michael', 'michael@gmail.com', 'Pretty Good Site', '2025-02-24 22:20:10'),
-    ('Emma', 'emma@gmail.com', 'Best experience ever!', '2025-02-24 22:45:55');
 
 
 INSERT INTO `genre` (`id`, `name`)
