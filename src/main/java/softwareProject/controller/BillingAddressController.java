@@ -1,12 +1,16 @@
 package softwareProject.controller;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import softwareProject.business.*;
 import softwareProject.persistence.*;
+import softwareProject.service.EmailSenderService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,6 +19,15 @@ import java.util.regex.Pattern;
 
 @Controller
 public class BillingAddressController {
+
+
+    @Autowired
+    private EmailSenderService senderService;
+
+    public void sendMail(String userEmail, String subject, String body ){
+
+        senderService.sendEmail(userEmail, subject, body);
+    }
 
     @PostMapping("/addBillingAddress")
     public String addBillingAddress(
@@ -320,6 +333,12 @@ public class BillingAddressController {
         // totalAmountInCartInNavBar
 
         getTotalAmountOfItemsInCart(session,model);
+
+        // sendEmail
+
+        //sendMail(u.getEmail(), "Purchased Digital Movies",  addOrderItemsOfWhatUserPurchasedToEmail(session));
+
+        sendMail(u.getEmail(), "Purchased Digital Movies",  "You have successfully purchased digital movies with us");
 
         return "confirmationPaymentPage";
 
@@ -669,6 +688,11 @@ public class BillingAddressController {
 
                 getTotalAmountOfItemsInCart(session,model);
 
+                // sendEmail
+
+                //sendMail(u.getEmail(), "Purchased Digital Movies",  addOrderItemsOfWhatUserPurchasedToEmail(session));
+
+                sendMail(u.getEmail(), "Purchased Digital Movies",  "You have successfully purchased digital movies with us");
 
                 return "confirmationPaymentPage";
 
@@ -816,6 +840,73 @@ public class BillingAddressController {
 
 
         }
+
+    }
+
+
+
+
+    /// add What User Purchased to the email
+
+    public String addOrderItemsOfWhatUserPurchasedToEmail(HttpSession session){
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+        CartDao cartDao = new CartDaoImpl("database.properties");
+
+        // gettingCartId from username
+        Cart cart = cartDao.getCartByUsername(u.getUsername());
+
+        CartItemDao cartItemDao = new CartItemDaoImpl("database.properties");
+
+
+        // getting all cart Items from cartId
+        ArrayList<CartItem> cartItems = cartItemDao.getAllCartItemsByCartId(cart.getCart_id());
+
+        ArrayList<MovieProduct> movies = new ArrayList<>();
+
+
+        String purchase = null;
+
+        OrderItem orderItem = null;
+
+
+        double total = 0;
+
+        for (int i = 0; i < cartItems.size();i++) {
+
+
+            // getting movies by movies in cartItem Id
+            MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+            movies.add(movieProductDao.getMovieById(cartItems.get(i).getMovie_id()));
+
+            // getting orderId
+
+            // adding to orderItems
+            OrderItemDao orderItemDao = new OrderItemDaoImpl("database.properties");
+
+            ShopOrderDao shopOrderDao = new ShopOrderDaoImpl("database.properties");
+
+            ShopOrder shopOrder = shopOrderDao.getOrderWithTheHighestOrderIdByUsername(u.getUsername());
+
+             orderItem = new OrderItem(0, movies.get(i).getListPrice(), shopOrder.getOrder_id(), cartItems.get(i).getMovie_id());
+
+             // create an arraylist of order items based on order items id above
+
+            // loop through that arraylist and add the names of the purchased movies into the body
+
+        }
+
+        MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");;
+
+        MovieProduct movieProduct = movieProductDao.getMovieById(1);
+
+        purchase = "You have purchased the movies: " +movieProduct.getMovie_name() + " with a total price of " + total;
+
+        System.out.println(purchase);
+
+        return purchase;
 
     }
 
