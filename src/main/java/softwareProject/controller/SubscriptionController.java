@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import softwareProject.business.*;
 import softwareProject.persistence.*;
+import softwareProject.service.EmailSenderService;
 import softwareProject.service.MovieService;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,14 @@ public class SubscriptionController {
     @Autowired
     private MovieService movieService;
 
+
+    @Autowired
+    private EmailSenderService senderService;
+
+    public void sendMail(String userEmail, String subject, String body ){
+
+        senderService.sendEmail(userEmail, subject, body);
+    }
 
     /**
      * Adds a yearly subscription for the user when new user is registered
@@ -79,6 +88,10 @@ public class SubscriptionController {
         model.addAttribute("subPrice", subscriptionPlan.getCost());
         model.addAttribute("orderSubDate", subscription.getSubscription_startDate());
         model.addAttribute("subName", subscriptionPlan.getSubscription_plan_name());
+
+        String bodyEmail = subscriptionPlan.getSubscription_plan_name() + " for the price of: "+ "£"+ subscriptionPlan.getCost();
+
+        sendMail(user.getEmail(), "Purchased Subscription",  bodyEmail);
 
         if (added == -1) {
 
@@ -390,6 +403,10 @@ public class SubscriptionController {
         model.addAttribute("subPrice", subscriptionPlan.getCost());
         model.addAttribute("orderSubDate", subscription.getSubscription_startDate());
         model.addAttribute("subName", subscriptionPlan.getSubscription_plan_name());
+
+        String bodyEmail = subscriptionPlan.getSubscription_plan_name() + " for the price of: "+ "£"+ subscriptionPlan.getCost();
+
+        sendMail(user.getEmail(), "Purchased Subscription",  bodyEmail);
 
         if (added == -1) {
 
@@ -738,6 +755,10 @@ public class SubscriptionController {
                 model.addAttribute("subPrice", subscriptionPlan.getCost());
                 model.addAttribute("orderSubDate", subscription.getSubscription_startDate());
                 model.addAttribute("subName", subscriptionPlan.getSubscription_plan_name());
+
+                String bodyEmail = subscriptionPlan.getSubscription_plan_name() + " for the price of: "+ "£"+ subscriptionPlan.getCost();
+
+                sendMail(user.getEmail(), "Purchased Subscription",  bodyEmail);
 
         if (added == -1) {
 
