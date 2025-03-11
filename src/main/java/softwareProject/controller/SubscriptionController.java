@@ -33,6 +33,13 @@ public class SubscriptionController {
      */
     @PostMapping("addSubscriptionForUser")
     public String addSubscriptionForUser(HttpSession session,
+                                         @RequestParam(name="fullName") String fullName,
+                                         @RequestParam(name = "email") String email,
+                                         @RequestParam(name="address") String address,
+                                         @RequestParam(name="city") String city,
+                                         @RequestParam(name="county") String county,
+                                         @RequestParam(name="postcode") String postcode,
+                                         @RequestParam(name = "cardName") String cardName,
                                          @RequestParam(name = "cardNumber") String cardNumber,
                                          @RequestParam(name = "Month") String Month,
                                          @RequestParam(name = "Year") String Year,
@@ -45,51 +52,21 @@ public class SubscriptionController {
         ArrayList<Subscription> allSubscriptions = subscriptionDao.getAllSubscriptions();
 
 
-        Pattern cardNumberRegex = Pattern.compile("^(?:4[0-9]{12}(?:[0-9]{3})?)$");
-        Matcher match = cardNumberRegex.matcher(cardNumber);
-        boolean matchfoundCardNumber = match.find();
-
-        if (!matchfoundCardNumber){
-
-            modelCreditCard(cardNumber, Month, Year, cvv, model);
-
-            System.out.println("Card Number must be a valid Visa credit card number");
-            return  "purchaseSubscription";
-        }
-
-
-        if (Month.isBlank()){
-
-            System.out.println("You must choose a month");
-
-            modelCreditCard(cardNumber, Month, Year, cvv, model);
-            return  "purchaseSubscription";
-        }
-
-        if (Year.isBlank()){
-
-            System.out.println("You must choose a year");
-
-            modelCreditCard(cardNumber, Month, Year, cvv, model);
-            return  "purchaseSubscription";
-        }
-
-
-        Pattern cvvNumberRegex = Pattern.compile("^[0-9]{3,4}$");
-        Matcher match1 = cvvNumberRegex.matcher(cvv);
-        boolean matchfoundCvvNumber = match1.find();
-
-        if (!matchfoundCvvNumber){
-
-            System.out.println("Cvv number must be 3 or 4 numbers long");
-
-            modelCreditCard(cardNumber, Month, Year, cvv, model);
-            return  "purchaseSubscription";
-        }
+        String purchaseSubscription = validationForAddSubscription(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+        if (purchaseSubscription != null) return purchaseSubscription;
 
 
         // session for user
         User user = (User) session.getAttribute("loggedInUser");
+
+        // user to be added if billing User doesn't exist in billingAddress table
+
+        BillingAddressDao billingAddressDao = new BillingAddressDaoImpl("database.properties");
+
+        // update email
+
+        BillingAddress billingUser = new BillingAddress(0, user.getUsername(),fullName, email, address, city, county, postcode);
+        billingAddressDao.addBillingAddress(billingUser);
 
         // session for subscription to get the subscription id
         SubscriptionPlan subscriptionPlan = (SubscriptionPlan) session.getAttribute("subscriptionPicked");
@@ -121,6 +98,209 @@ public class SubscriptionController {
         return view;
     }
 
+    private static String validationForAddSubscription(String fullName, String email, String address, String city, String county, String postcode, String cardName, String cardNumber, String Month, String Year, String cvv, Model model) {
+        // validation for billingAddress
+
+        if (fullName.isBlank()){
+            // message for error
+            String message1 = "Full Name was left blank";
+            model.addAttribute("message1",message1);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+            return "purchaseSubscription";
+        }
+
+        Pattern fullNameRegex = Pattern.compile("^[a-zA-Z]{3,25}.*[\\s\\.]*$");
+        Matcher match12 = fullNameRegex.matcher(fullName);
+        boolean matchfoundFullName = match12.find();
+
+        if (!matchfoundFullName){
+
+            System.out.println("Full Name must be between 3-25 characters, letters only");
+            // message for error
+            String message1 = "Full Name must be between 3-25 characters, letters only";
+            model.addAttribute("message1",message1);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+            return "purchaseSubscription";
+        }
+
+        if (email.isBlank()){
+            // message for error
+            String messageEmail = "Email was left blank";
+            model.addAttribute("messageEmail",messageEmail);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);            // method to get Cart information with movies and pricing
+
+
+            return "purchaseSubscription";
+        }
+
+        if (address.isBlank()){
+
+            System.out.println("You must choose an address");
+            // message for error
+            String message2 = "Address was left blank";
+            model.addAttribute("message2",message2);
+            // method to get Cart information with movies and pricing
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+            return "purchaseSubscription";
+        }
+
+        if (city.isBlank()){
+
+            System.out.println("You must choose a city");
+            // message for error
+            String message3 = "City was left blank";
+            model.addAttribute("message3",message3);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+            return "purchaseSubscription";
+        }
+
+        if (county.isBlank()){
+
+            System.out.println("You must choose a county");
+            // message for error
+            String message4 = "County was left blank";
+            model.addAttribute("message4",message4);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+            return "purchaseSubscription";
+        }
+
+        if (postcode.isBlank()){
+
+            System.out.println("You must choose a postcode");
+            // message for error
+            String message5 = "Postcode was left blank";
+            model.addAttribute("message5",message5);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+            return "purchaseSubscription";
+        }
+
+        // validation for cardDetails
+
+        if (cardName.isBlank()){
+            System.out.println("Card Name was left blank");
+            // message for error
+            String message6 = "Card Name was left blank";
+            model.addAttribute("message6",message6);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+            return "purchaseSubscription";
+
+        }
+
+        Pattern cardNameRegex = Pattern.compile("^[a-zA-Z]{3,25}.*[\\s\\.]*$");
+        Matcher match11 = cardNameRegex.matcher(cardName);
+        boolean matchfoundCardName = match11.find();
+
+        if (!matchfoundCardName){
+
+            System.out.println("Card Name must be between 3-25 characters, letters only");
+            // message for error
+            String message6 = "Card Name must be between 3-25 characters, letters only";
+            model.addAttribute("message6",message6);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+            return "purchaseSubscription";
+        }
+
+
+        if (cardNumber.isBlank()){
+            System.out.println("Card Number was left blank");
+            // message for error
+            String message7 = "Card Number was left blank";
+            model.addAttribute("message7",message7);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+            return "purchaseSubscription";
+        }
+
+        Pattern cardNumberRegex = Pattern.compile("^(?:4[0-9]{12}(?:[0-9]{3})?)$");
+        Matcher match = cardNumberRegex.matcher(cardNumber);
+        boolean matchfoundCardNumber = match.find();
+
+        if (!matchfoundCardNumber){
+
+            System.out.println("Card Number must be a valid Visa credit card number");
+            // message for error
+            String message7 = "Card Number must be a valid Visa credit card number";
+            model.addAttribute("message7",message7);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+            return "purchaseSubscription";
+        }
+
+
+        if (Month.isBlank()){
+
+            System.out.println("You must choose a month");
+            // message for error
+            String message8 = "Month was left blank";
+            model.addAttribute("message8",message8);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+            return "purchaseSubscription";
+        }
+
+        if (Year.isBlank()){
+
+            System.out.println("You must choose a year");
+            // message for error
+            String message9 = "Year was left blank";
+            model.addAttribute("message9",message9);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+            return "purchaseSubscription";
+        }
+
+
+        Pattern cvvNumberRegex = Pattern.compile("^[0-9]{3,4}$");
+        Matcher match1 = cvvNumberRegex.matcher(cvv);
+        boolean matchfoundCvvNumber = match1.find();
+
+        if (!matchfoundCvvNumber){
+
+            System.out.println("Cvv number must be 3 or 4 numbers long");
+            // message for error
+            String message10 = "Cvv number must be 3 or 4 numbers long";
+            model.addAttribute("message10",message10);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+            return "purchaseSubscription";
+        }
+        return null;
+    }
+
     private void toViewMoviesFromMovieDbApi(Model model) {
         List<MovieTest> movies = movieService.getMovies();
         model.addAttribute("movies", movies);
@@ -139,6 +319,20 @@ public class SubscriptionController {
         model.addAttribute("cvv", cvv);
     }
 
+    private static void modelValidationBillingAddress(String fullName,String email, String address, String city, String county, String postcode, String cardName, String cardNumber, String Month, String Year, String cvv, Model model) {
+        model.addAttribute("fullName", fullName);
+        model.addAttribute("email", email);
+        model.addAttribute("address", address);
+        model.addAttribute("city", city);
+        model.addAttribute("county", county);
+        model.addAttribute("postcode", postcode);
+        model.addAttribute("cardName", cardName);
+        model.addAttribute("cardNumber", cardNumber);
+        model.addAttribute("Month", Month);
+        model.addAttribute("Year", Year);
+        model.addAttribute("cvv", cvv);
+    }
+
 
 /// subscription for if user registered but doesn't have a subscription
 
@@ -150,10 +344,17 @@ public class SubscriptionController {
      */
     @PostMapping("addSubscriptionForUserPart2")
     public String addSubscriptionForUserPart2(HttpSession session,
-                                         @RequestParam(name = "cardNumber") String cardNumber,
-                                         @RequestParam(name = "Month") String Month,
-                                         @RequestParam(name = "Year") String Year,
-                                         @RequestParam(name = "cvv") String cvv,
+                                              @RequestParam(name="fullName") String fullName,
+                                              @RequestParam(name = "email") String email,
+                                              @RequestParam(name="address") String address,
+                                              @RequestParam(name="city") String city,
+                                              @RequestParam(name="county") String county,
+                                              @RequestParam(name="postcode") String postcode,
+                                              @RequestParam(name = "cardName") String cardName,
+                                              @RequestParam(name = "cardNumber") String cardNumber,
+                                              @RequestParam(name = "Month") String Month,
+                                              @RequestParam(name = "Year") String Year,
+                                              @RequestParam(name = "cvv") String cvv,
                                          Model model) {
 
         String view = "";
@@ -166,51 +367,21 @@ public class SubscriptionController {
         ArrayList<Subscription> allSubscriptions = subscriptionDao.getAllSubscriptions();
 
 
-        Pattern cardNumberRegex = Pattern.compile("^(?:4[0-9]{12}(?:[0-9]{3})?)$");
-        Matcher match = cardNumberRegex.matcher(cardNumber);
-        boolean matchfoundCardNumber = match.find();
-
-        if (!matchfoundCardNumber){
-
-            modelCreditCard(cardNumber, Month, Year, cvv, model);
-
-            System.out.println("Card Number must be a valid Visa credit card number");
-            return  "purchaseSubscriptionPart2";
-        }
-
-
-        if (Month.isBlank()){
-
-            modelCreditCard(cardNumber, Month, Year, cvv, model);
-
-            System.out.println("You must choose a month");
-            return  "purchaseSubscriptionPart2";
-        }
-
-        if (Year.isBlank()){
-
-            modelCreditCard(cardNumber, Month, Year, cvv, model);
-
-            System.out.println("You must choose a year");
-            return  "purchaseSubscriptionPart2";
-        }
-
-
-        Pattern cvvNumberRegex = Pattern.compile("^[0-9]{3,4}$");
-        Matcher match1 = cvvNumberRegex.matcher(cvv);
-        boolean matchfoundCvvNumber = match1.find();
-
-        if (!matchfoundCvvNumber){
-
-            modelCreditCard(cardNumber, Month, Year, cvv, model);
-
-            System.out.println("Cvv number must be 3 or 4 numbers long");
-            return  "purchaseSubscriptionPart2";
-        }
+        String purchaseSubscriptionPart2 = validationForPurchaseSubPart2(session, fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+        if (purchaseSubscriptionPart2 != null) return purchaseSubscriptionPart2;
 
 
         // session for user
         User user = (User) session.getAttribute("loggedInUser");
+
+        // user to be added if billing User doesn't exist in billingAddress table
+
+        BillingAddressDao billingAddressDao = new BillingAddressDaoImpl("database.properties");
+
+        // update email
+
+        BillingAddress billingUser = new BillingAddress(0, user.getUsername(),fullName, email, address, city, county, postcode);
+        billingAddressDao.addBillingAddress(billingUser);
 
         // session for subscription to get the subscription id
         SubscriptionPlan subscriptionPlan = (SubscriptionPlan) session.getAttribute("subscriptionPicked");
@@ -246,6 +417,355 @@ public class SubscriptionController {
 
         return view;
     }
+
+    private String validationForPurchaseSubPart2(HttpSession session, String fullName, String email, String address, String city, String county, String postcode, String cardName, String cardNumber, String Month, String Year, String cvv, Model model) {
+        if (fullName.isBlank()){
+            // message for error
+            String message1 = "Full Name was left blank";
+            model.addAttribute("message1",message1);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+            // method for total cart amount
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "purchaseSubscriptionPart2";
+        }
+
+        Pattern fullNameRegex = Pattern.compile("^[a-zA-Z]{3,25}.*[\\s\\.]*$");
+        Matcher match12 = fullNameRegex.matcher(fullName);
+        boolean matchfoundFullName = match12.find();
+
+        if (!matchfoundFullName){
+
+            System.out.println("Full Name must be between 3-25 characters, letters only");
+            // message for error
+            String message1 = "Full Name must be between 3-25 characters, letters only";
+            model.addAttribute("message1",message1);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+            // method for total cart amount
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "purchaseSubscriptionPart2";
+        }
+
+        if (email.isBlank()){
+            // message for error
+            String messageEmail = "Email was left blank";
+            model.addAttribute("messageEmail",messageEmail);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);            // method to get Cart information with movies and pricing
+
+            // method for total cart amount
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "purchaseSubscriptionPart2";
+        }
+
+        if (address.isBlank()){
+
+            System.out.println("You must choose an address");
+            // message for error
+            String message2 = "Address was left blank";
+            model.addAttribute("message2",message2);
+            // method to get Cart information with movies and pricing
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+
+            // method for total cart amount
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "purchaseSubscriptionPart2";
+        }
+
+        if (city.isBlank()){
+
+            System.out.println("You must choose a city");
+            // message for error
+            String message3 = "City was left blank";
+            model.addAttribute("message3",message3);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+
+            // method for total cart amount
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "purchaseSubscriptionPart2";
+        }
+
+        if (county.isBlank()){
+
+            System.out.println("You must choose a county");
+            // message for error
+            String message4 = "County was left blank";
+            model.addAttribute("message4",message4);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+
+            // method for total cart amount
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "purchaseSubscriptionPart2";
+        }
+
+        if (postcode.isBlank()){
+
+            System.out.println("You must choose a postcode");
+            // message for error
+            String message5 = "Postcode was left blank";
+            model.addAttribute("message5",message5);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+
+            // method for total cart amount
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "purchaseSubscriptionPart2";
+        }
+
+        // validation for cardDetails
+
+        if (cardName.isBlank()){
+            System.out.println("Card Name was left blank");
+            // message for error
+            String message6 = "Card Name was left blank";
+            model.addAttribute("message6",message6);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+            // method for total cart amount
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "purchaseSubscriptionPart2";
+        }
+
+        Pattern cardNameRegex = Pattern.compile("^[a-zA-Z]{3,25}.*[\\s\\.]*$");
+        Matcher match11 = cardNameRegex.matcher(cardName);
+        boolean matchfoundCardName = match11.find();
+
+        if (!matchfoundCardName){
+
+            System.out.println("Card Name must be between 3-25 characters, letters only");
+            // message for error
+            String message6 = "Card Name must be between 3-25 characters, letters only";
+            model.addAttribute("message6",message6);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+
+            // method for total cart amount
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "purchaseSubscriptionPart2";
+        }
+
+
+        if (cardNumber.isBlank()){
+            System.out.println("Card Number was left blank");
+            // message for error
+            String message7 = "Card Number was left blank";
+            model.addAttribute("message7",message7);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+
+            // method for total cart amount
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "purchaseSubscriptionPart2";
+        }
+
+        Pattern cardNumberRegex = Pattern.compile("^(?:4[0-9]{12}(?:[0-9]{3})?)$");
+        Matcher match = cardNumberRegex.matcher(cardNumber);
+        boolean matchfoundCardNumber = match.find();
+
+        if (!matchfoundCardNumber){
+
+            System.out.println("Card Number must be a valid Visa credit card number");
+            // message for error
+            String message7 = "Card Number must be a valid Visa credit card number";
+            model.addAttribute("message7",message7);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+
+            // method for total cart amount
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "purchaseSubscriptionPart2";
+        }
+
+
+        if (Month.isBlank()){
+
+            System.out.println("You must choose a month");
+            // message for error
+            String message8 = "Month was left blank";
+            model.addAttribute("message8",message8);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+
+            // method for total cart amount
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "purchaseSubscriptionPart2";
+        }
+
+        if (Year.isBlank()){
+
+            System.out.println("You must choose a year");
+            // message for error
+            String message9 = "Year was left blank";
+            model.addAttribute("message9",message9);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+            // method for total cart amount
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "purchaseSubscriptionPart2";
+        }
+
+
+        Pattern cvvNumberRegex = Pattern.compile("^[0-9]{3,4}$");
+        Matcher match1 = cvvNumberRegex.matcher(cvv);
+        boolean matchfoundCvvNumber = match1.find();
+
+        if (!matchfoundCvvNumber){
+
+            System.out.println("Cvv number must be 3 or 4 numbers long");
+            // message for error
+            String message10 = "Cvv number must be 3 or 4 numbers long";
+            model.addAttribute("message10",message10);
+
+            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+
+            // method for total cart amount
+            getTotalAmountOfItemsInCart(session, model);
+            return "purchaseSubscriptionPart2";
+        }
+        return null;
+    }
+
+
+    ///// if billing address already exist to purchase subscription
+
+
+    /**
+     * Adds a yearly subscription for the user when new user is registered
+     * @param session is the users details being held when registration is complete
+     * @param model stores data
+     * @return index page to go to the home page of the system if purchased subscription was a success or goes to the subscriptionFailed page if not a success
+     */
+    @PostMapping("addSubscriptionForUserPart2IfBillingExist")
+    public String addSubscriptionForUserPart2IfBillingExist(HttpSession session,
+                                              @RequestParam(name="fullName") String fullName,
+                                              @RequestParam(name = "email") String email,
+                                              @RequestParam(name="address") String address,
+                                              @RequestParam(name="city") String city,
+                                              @RequestParam(name="county") String county,
+                                              @RequestParam(name="postcode") String postcode,
+                                              @RequestParam(name = "cardName") String cardName,
+                                              @RequestParam(name = "cardNumber") String cardNumber,
+                                              @RequestParam(name = "Month") String Month,
+                                              @RequestParam(name = "Year") String Year,
+                                              @RequestParam(name = "cvv") String cvv,
+                                              Model model) {
+
+        String view = "";
+
+        // totalAmountOItems in basket
+        getTotalAmountOfItemsInCart(session,model);
+
+
+        SubscriptionDao subscriptionDao = new SubscriptionDaoImpl("database.properties");
+        ArrayList<Subscription> allSubscriptions = subscriptionDao.getAllSubscriptions();
+
+
+        String purchaseSubscriptionPart2 = validationForPurchaseSubPart2(session, fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+        if (purchaseSubscriptionPart2 != null) return purchaseSubscriptionPart2;
+
+
+        // session for user
+        User user = (User) session.getAttribute("loggedInUser");
+
+        // session for subscription to get the subscription id
+        SubscriptionPlan subscriptionPlan = (SubscriptionPlan) session.getAttribute("subscriptionPicked");
+
+
+
+
+        // get all billingAddress to see if user already created a billing address
+
+        BillingAddressDao billingAddressDao = new BillingAddressDaoImpl("database.properties");
+
+
+        ArrayList<BillingAddress> billingAddresses = billingAddressDao.getAllBillingAddress();
+
+        for (int i = 0; i < billingAddresses.size();i++) {
+
+
+            if (billingAddresses.get(i).getUsername().equals(user.getUsername())) {
+
+
+                // get billing address by username
+
+                BillingAddress billingAddressByUsername = billingAddressDao.getBillingAddressByUsername(user.getUsername());
+                model.addAttribute("billingAddressByUsername", billingAddressByUsername);
+                session.setAttribute("billingAddressUser", billingAddressByUsername);
+
+                // update billingAddress details
+
+                billingAddressDao.updateBillingAddressFullName(fullName, billingAddressByUsername.getBilling_address_id());
+                billingAddressDao.updateBillingAddressEmail(email, billingAddressByUsername.getBilling_address_id());
+                billingAddressDao.updateAddressForBillingAddress(address, billingAddressByUsername.getBilling_address_id());
+                billingAddressDao.updateBillingAddressCity(city, billingAddressByUsername.getBilling_address_id());
+                billingAddressDao.updateBillingAddressCounty(county, billingAddressByUsername.getBilling_address_id());
+                billingAddressDao.updateBillingAddressPostCode(postcode, billingAddressByUsername.getBilling_address_id());
+
+
+        LocalDateTime date = LocalDateTime.now();
+        LocalDateTime endDate = date.plusYears(1);
+        Subscription subscription = new Subscription(user.getUsername(),subscriptionPlan.getSubscription_plan_id(), LocalDateTime.now(), endDate);
+        int added = subscriptionDao.addSubscription(subscription);
+
+        if (added == -1) {
+
+            log.info("User {} didnt purchase subscription", user.getUsername());
+            view =  "subscriptionFailed";
+        } else {
+            log.info("User {} purchased subscription", user.getUsername());
+            view =  "purchaseSubDetails";
+        }
+
+
+            }
+        }
+
+        return view;
+    }
+
+
 
 
 

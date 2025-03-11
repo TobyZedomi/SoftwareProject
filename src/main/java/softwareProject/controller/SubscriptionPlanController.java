@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import softwareProject.business.Cart;
+import softwareProject.business.Subscription;
 import softwareProject.business.SubscriptionPlan;
 import softwareProject.business.User;
 import softwareProject.persistence.*;
+
+import java.util.ArrayList;
 
 @Slf4j
 @Controller
@@ -45,6 +48,27 @@ public class SubscriptionPlanController {
 
         // totalAmountOItems in basket
         getTotalAmountOfItemsInCart(session,model);
+
+        User user = (User) session.getAttribute("loggedInUser");
+
+        SubscriptionDao subscriptionDao = new SubscriptionDaoImpl("database.properties");
+
+        ArrayList<Subscription> subscriptions = subscriptionDao.getAllSubscriptions();
+
+        for (int i = 0; i < subscriptions.size();i++){
+
+            if (subscriptions.get(i).getUsername().equals(user.getUsername())){
+
+                String message = "You already have a subscription with us";
+                model.addAttribute("message",message);
+
+                log.info("User {} already has a subscription with us", user.getUsername());
+
+                return "subscription_index";
+            }
+
+
+        }
 
 
         SubscriptionPlanDao subscriptionPlanDao = new SubscriptionPlanDaoImpl("database.properties");

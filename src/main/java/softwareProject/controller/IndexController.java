@@ -455,6 +455,23 @@ public class IndexController {
         return "noVideo";
     }
 
+    @GetMapping("/purchaseSubscriptionPart2")
+    public String purchasedSubPart2(HttpSession session, Model model){
+
+        /// get total number of items in cart for user
+
+        getTotalAmountOfItemsInCart(session, model);
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+        BillingAddressDao billingAddressDao = new BillingAddressDaoImpl("database.properties");
+
+        BillingAddress billingAddressUser = billingAddressDao.getBillingAddressByUsername(u.getUsername());
+        session.setAttribute("billingAddressUser", billingAddressUser);
+
+        return "purchaseSubscriptionPart2";
+    }
+
 
     public void getTotalAmountOfItemsInCart(HttpSession session, Model model) {
 
