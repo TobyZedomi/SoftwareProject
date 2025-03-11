@@ -215,6 +215,12 @@ public class IndexController {
         return "review_form";
     }
 
+    @GetMapping("/writeReviewPage")
+    public String writeReviewIndex() {
+        return "writeReview";
+    }
+
+
 
     @GetMapping("/store_index")
     public String storeIndex(HttpSession session, Model model) {
