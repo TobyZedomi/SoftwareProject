@@ -69,6 +69,8 @@
 
 <div id="background"></div>
 
+<div th:if="${#ctx.session.loggedInUser != null}">
+
 <div th:replace="~{fragments/menu :: menu-bar}"></div>
 
 
@@ -78,6 +80,8 @@
 
 <div class="center">
   <a th:href="@{/movie_index}"><button type="button" class="btn btn-danger" title="Store">Go to Movie page</button></a>
+</div>
+
 </div>
 
 </body>
