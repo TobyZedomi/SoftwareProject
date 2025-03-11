@@ -44,10 +44,11 @@
         }
 
         .container {
-            background-color: #f2f2f2;
+            background-color: black;
             padding: 5px 20px 15px 20px;
-            border: 1px solid lightgrey;
             border-radius: 3px;
+            outline-color: darkred;
+            outline-style: solid;
         }
 
         input[type=text] {
@@ -70,8 +71,8 @@
         }
 
         .continueButton {
-            background-color: black;
-            color: white;
+            background-color: white;
+            color: black;
             padding: 12px;
             margin: 10px 0;
             border: none;
@@ -82,11 +83,11 @@
         }
 
         .continueButton p{
-            background-color: white;
+            background-color: red;
         }
 
         .continueButton:hover {
-            background-color: black;
+            background-color: white;
         }
 
         span.price {
@@ -95,14 +96,7 @@
         }
 
         /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (and change the direction - make the "cart" column go on top) */
-        @media (max-width: 800px) {
-            .row {
-                flex-direction: column-reverse;
-            }
-            .col-25 {
-                margin-bottom: 20px;
-            }
-        }
+
 
 
         h1{
@@ -115,6 +109,21 @@
             -webkit-text-stroke: 1px darkred;
             font-family: poppins;
         }
+
+        label, li, ul{
+
+            font-family: poppins;
+            font-weight: bold;
+            font-size: 15px;
+            color: white;
+        }
+
+        h3, h2{
+            font-family: poppins;
+            font-weight: bold;
+            color: white;
+        }
+
     </style>
 
     <style>
@@ -140,7 +149,7 @@
             z-index: -1;
         }
 
-        p, label, input, option, select{
+        label, input, option, select{
 
             font-family: poppins;
             font-size: 15px;
@@ -148,6 +157,18 @@
         }
 
         h4, h3, b,span{
+            font-family: poppins;
+            font-weight: bold;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        p{
+            color: white;
             font-family: poppins;
             font-weight: bold;
         }
@@ -306,17 +327,17 @@
 
         <div class="col-25">
             <div class="container">
-                <h4>Cart
-                    <span class="price" style="color:black">
+                <h4 style="color: white">Cart
+                    <span class="price" style="color:white">
           <i class="fa fa-shopping-cart"></i>
           <b th:text="${totalCartItems}"></b>
         </span>
                 </h4>
                 <div th:each="movie : ${movies}" style="display: flex; justify-content: space-between;">
-                    <p  th:text="${movie.getMovie_name()}"><a href="#"></a> <p style="font-weight: bold; margin-left: 30px"><span class="price" th:text=" |£${movie.listPrice} |" style="color: black; font-weight: bold;"></span></p></p>
+                    <p  th:text="${movie.getMovie_name()}"><a href="#"></a> <p style="font-weight: bold; margin-left: 30px"><span class="price" th:text=" |£${movie.listPrice} |" style="color: white; font-weight: bold;"></span></p></p>
                 </div>
                 <hr>
-                <p>Total <span class="price" style="color:black"><b th:text=" |£${total} |"></b></span></p>
+                <p>Total <span class="price" style="color:white"><b th:text=" |£${total} |"></b></span></p>
             </div>
         </div>
     </div>
@@ -466,17 +487,17 @@
 
         <div class="col-25">
             <div class="container">
-                <h4>Cart
-                    <span class="price" style="color:black">
+                <h4 style="color: white">Cart
+                    <span class="price" style="color:white">
           <i class="fa fa-shopping-cart"></i>
           <b th:text="${totalCartItems}"></b>
         </span>
                 </h4>
                 <div th:each="movie : ${movies}" style="display: flex; justify-content: space-between;">
-                    <p  th:text="${movie.getMovie_name()}"><a href="#"></a> <p style="font-weight: bold; margin-left: 30px"><span class="price" th:text=" |£${movie.listPrice} |" style="color: black; font-weight: bold;"></span></p></p>
+                    <p  th:text="${movie.getMovie_name()}"><a href="#"></a> <p style="font-weight: bold; margin-left: 30px"><span class="price" th:text=" |£${movie.listPrice} |" style="color: white; font-weight: bold;"></span></p></p>
                 </div>
                 <hr>
-                <p>Total <span class="price" style="color:black"><b th:text=" |£${total} |"></b></span></p>
+                <p>Total <span class="price" style="color:white"><b style="color:white" th:text=" |£${total} |"></b></span></p>
             </div>
         </div>
     </div>
