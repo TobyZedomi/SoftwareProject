@@ -139,6 +139,43 @@
   </style>
 
   <style>
+    /* Dropdown Button */
+    .filter-btn {
+      background-color: red; /* Red button */
+      color: white; /* White text */
+      border: 2px solid white; /* White border */
+      padding: 10px 15px;
+      font-weight: bold;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    /* Hover Effect */
+    .filter-btn:hover {
+      background-color: darkred;
+      box-shadow: 0 0 10px red;
+    }
+
+    /* Dropdown Menu */
+    .dropdown-menu {
+      background: black; /* Black dropdown */
+      border: 1px solid red; /* Red border */
+    }
+
+    /* Dropdown Items */
+    .dropdown-item {
+      color: white !important;
+      transition: background 0.3s;
+    }
+
+    /* Hover Effect for Items */
+    .dropdown-item:hover {
+      background: darkred;
+      color: white !important;
+    }
+
+  </style>
+
+  <style>
 
     body{
       margin: 0;
@@ -169,43 +206,56 @@
   <h1>Most Popular Movies</h1>
 </div>
 
-<!--
-
-<div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Select Genre of movie
-  </button>
-  <ul class="dropdown-menu">
-    <li><a th:href="@{/viewByGenre(genre=${1})}">Action</a></li>
-    <li><a th:href="@{/viewByGenre(genre=${2})}">Comedy</a></li>
-    <li><a th:href="@{/viewByGenre(genre=${3})}">Science-Fiction</a></li>
-    <li><a th:href="@{/viewByGenre(genre=${4})}">Thriller</a></li>
-    <li><a th:href="@{/viewByGenre(genre=${5})}">Animation</a></li>
-  </ul>
-</div>
-<br>
+  <div class="dropdown" style="margin-top: 20px; margin-left: 20px;">
+    <button class="filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Filter Movies
+    </button>
+    <ul class="dropdown-menu shadow">
+      <li><a class="dropdown-item" href="/highestRated">Highest Rated Movies</a></li>
+      <li><a class="dropdown-item" href="/lowestRated">Lowest Rated Movies</a></li>
+      <li><a class="dropdown-item" href="/userReviews">View My Reviews</a></li>
+    </ul>
+  </div>
 
 
 
-<div class="row row-cols-1 row-cols-md-3 g-4">
-  <div th:each="movie : ${moviesGenre}">
-  <div class="col">
-    <div class="card h-100">
-      <img th:src="@{'/css/images/'+${movie.movie_image}}" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 th:text="${movie.movie_name}" class="card-title">Card title</h5>
-        <p  th:text="${movie.movie_info}" class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-        <a th:href="@{/getAllStreamingServicesForMovie(movieID=${movie.movie_id})}"><button type="button" class="btn btn-primary">Where to watch movie</button></a>
-      </div>
-      <div class="card-footer">
-        <small th:text="  |Date Of Release:  ${movie.date_of_release} |"  class="text-muted">Last updated 3 mins ago</small>
+  <!--
+
+  <div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Select Genre of movie
+    </button>
+    <ul class="dropdown-menu">
+      <li><a th:href="@{/viewByGenre(genre=${1})}">Action</a></li>
+      <li><a th:href="@{/viewByGenre(genre=${2})}">Comedy</a></li>
+      <li><a th:href="@{/viewByGenre(genre=${3})}">Science-Fiction</a></li>
+      <li><a th:href="@{/viewByGenre(genre=${4})}">Thriller</a></li>
+      <li><a th:href="@{/viewByGenre(genre=${5})}">Animation</a></li>
+    </ul>
+  </div>
+  <br>
+
+
+
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div th:each="movie : ${moviesGenre}">
+    <div class="col">
+      <div class="card h-100">
+        <img th:src="@{'/css/images/'+${movie.movie_image}}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 th:text="${movie.movie_name}" class="card-title">Card title</h5>
+          <p  th:text="${movie.movie_info}" class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+          <a th:href="@{/getAllStreamingServicesForMovie(movieID=${movie.movie_id})}"><button type="button" class="btn btn-primary">Where to watch movie</button></a>
+        </div>
+        <div class="card-footer">
+          <small th:text="  |Date Of Release:  ${movie.date_of_release} |"  class="text-muted">Last updated 3 mins ago</small>
+        </div>
       </div>
     </div>
+    </div>
   </div>
-  </div>
-</div>
 
--->
+  -->
 
   <!-- Testing -->
 
@@ -234,6 +284,10 @@
             <h3 th:text="${movie.getTitle()}"> Mountain</h3>
             <p th:text="${movie.getOverview()}" style="overflow: auto; scrollbar-width: none;" ></p>
             <a th:href="@{/movieTrailer(id=${movie.getId()})}">View Videos</a>
+            <a th:href="@{/writeReview(movieId=${movie.id}, movieTitle=${movie.title})}" class="btn btn-warning mt-2">
+              Write a Review
+            </a>
+
           </div>
         </div>
         </div>
