@@ -84,9 +84,11 @@ public class SubscriptionController {
 
             view =  "subscriptionFailed";
         } else {
+            // totalAmountOItems in basket
+            getTotalAmountOfItemsInCart(session,model);
             log.info("User {} purchased subscription", user.getUsername());
             toViewMoviesFromMovieDbApi(model);
-            view =  "subscriptionConfirmPayment";
+            view =  "subscriptionConfirmPayment2";
         }
 
         return view;
@@ -393,6 +395,8 @@ public class SubscriptionController {
 
             view =  "subscriptionFailed";
         } else {
+            // totalAmountOItems in basket
+            getTotalAmountOfItemsInCart(session,model);
             log.info("User {} purchased subscription", user.getUsername());
             view =  "subscriptionConfirmPayment";
         }
@@ -740,7 +744,8 @@ public class SubscriptionController {
             log.info("User {} didnt purchase subscription", user.getUsername());
             view =  "subscriptionFailed";
         } else {
-            model.addAttribute("orderSubDate", subscription.getSubscription_startDate());
+            // totalAmountOItems in basket
+            getTotalAmountOfItemsInCart(session,model);
             log.info("User {} purchased subscription", user.getUsername());
             view =  "subscriptionConfirmPayment";
         }
