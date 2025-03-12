@@ -206,6 +206,7 @@
     p, label, input, span{
 
       font-family: poppins;
+      font-size: 15px;
     }
 
 
@@ -269,6 +270,8 @@
           </button>
         </div>
       </form>
+
+      <div id="message" class="message" th:text="${messageLogOut}"style="font-family: poppins; font-weight: bold; font-size:15px; color: green; "></div>
 
       <p>Dont remember your password?
         <a href="/forgot_password" style="text-decoration: none;">

@@ -242,13 +242,8 @@ public class IndexController {
     }
 
     @GetMapping("/forgot_password")
-    public String forgotPasswordIndex(HttpSession session) {
-
-        if(session.getAttribute("loggedInUser") != null) {
+    public String forgotPasswordIndex() {
             return "forgot_password";
-        }
-
-        return "notValidUser";
     }
 
     @GetMapping("/review_form")

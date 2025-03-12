@@ -278,7 +278,7 @@ public class UserController {
      */
 
     @GetMapping("/logOut")
-    public String logOut(HttpSession session){
+    public String logOut(HttpSession session, Model model){
         if (session.getAttribute("loggedInUser") != null) {
             User u = (User) session.getAttribute("loggedInUser");
 
@@ -287,6 +287,9 @@ public class UserController {
                 session.invalidate();
                 log.info("User {} logged out of system", u.getUsername());
             }
+
+            String message = "You have logged out of the system "+ u.getUsername();
+            model.addAttribute("messageLogOut", message);
 
             return "user_index";
         }
