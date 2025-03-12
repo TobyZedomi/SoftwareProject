@@ -1,6 +1,7 @@
 package softwareProject.persistence;
 
 import lombok.extern.slf4j.Slf4j;
+import org.mindrot.jbcrypt.BCrypt;
 import softwareProject.business.BillingAddress;
 import softwareProject.business.Friends;
 import softwareProject.business.User;
@@ -63,7 +64,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             ps.setString(1, newUser.getUsername());
             ps.setString(2, newUser.getDisplayName());
             ps.setString(3, newUser.getEmail());
-            ps.setString(4, newUser.getPassword());
+            ps.setString(4, hashPassword(newUser.getPassword()));
             ps.setDate(5, Date.valueOf(newUser.getDateOfBirth()));
             ps.setBoolean(6, newUser.isAdmin());
             ps.setTimestamp(7, Timestamp.valueOf(newUser.getCreatedAt()));
@@ -320,30 +321,15 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
 
 
 
-    /**
-     * Hashing the password
-     * @param password is being searched to hash
-     * @return the hashed password
-     * @throws InvalidKeySpecException if something goes wrong with hashing password
-     * @throws NoSuchAlgorithmException if something goes wrong with hashing password
-     */
-    public String hashPassword(String password, String salt) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
-        char[]passwordChars = password.toCharArray();
-        byte [] saltBytes = "NotSoSecretSalt".getBytes();
-        int iterations = 65536;
-        int keySize = 256;
+    private static int workload = 12;
 
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
+    public static String hashPassword(String password_plaintext) {
+        String salt = BCrypt.gensalt(workload);
+        String hashed_password = BCrypt.hashpw(password_plaintext, salt);
 
-        PBEKeySpec spec = new PBEKeySpec(passwordChars,saltBytes,iterations,keySize);
 
-        SecretKey key = factory.generateSecret(spec);
-
-        String keyAsString = Base64.getEncoder().encodeToString(key.getEncoded());
-
-        return keyAsString;
-
+        return(hashed_password);
     }
 
 

@@ -30,7 +30,7 @@ class UserDaoImplMockTest {
 
         System.out.println("Mock test for adding a new User ");
 
-        User tester = new User("Harry", "harry123", "harry@gmail.com", "password", LocalDate.of(2002, 10, 10), false, LocalDateTime.of(2025,01,02,0,0,0));
+        User tester = new User("Harry", "harry123", "harry@gmail.com", "password", LocalDate.of(2002, 10, 10), false, LocalDateTime.of(2025,01,02,0,0,0), "DefaultUserImage.jpg");
 
         /// Create Mock Objects
 
@@ -69,7 +69,7 @@ class UserDaoImplMockTest {
 
         System.out.println("Mock Test to get Billing Address by id");
 
-        User expected = new User("admin", "adminUser123", "admin@gmail.com", "Admin123@", LocalDate.of(2003, 02, 16), true, LocalDateTime.of(2025,01,30,0,0,0));
+        User expected = new User("admin", "adminUser123", "admin@gmail.com", "Admin123@", LocalDate.of(2003, 02, 16), true, LocalDateTime.of(2025,01,30,0,0,0), "DefaultUserImage.jpg");
 
         /// Create Mock Objects
 
@@ -115,7 +115,7 @@ class UserDaoImplMockTest {
 
         System.out.println("Mock Test to get Billing Address by id");
 
-        User expected = new User("admin", "adminUser123", "admin@gmail.com", "Admin123@", LocalDate.of(2003, 02, 16), true, LocalDateTime.of(2025,01,30,0,0,0));
+        User expected = new User("admin", "adminUser123", "admin@gmail.com", "Admin123@", LocalDate.of(2003, 02, 16), true, LocalDateTime.of(2025,01,30,0,0,0), "DefaultUserImage.jpg");
 
         /// Create Mock Objects
 

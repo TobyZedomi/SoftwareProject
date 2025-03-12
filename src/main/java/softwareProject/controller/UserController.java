@@ -168,7 +168,7 @@ public class UserController {
         String image = "DefaultUserImage.jpg";
         UserDao userDao = new UserDaoImpl("database.properties");
 
-        User u = new User(username, displayName, email, hashPassword(password), dob, false, LocalDateTime.now(),image );
+        User u = new User(username, displayName, email, password, dob, false, LocalDateTime.now(),image );
         int added = userDao.registerUser(u);
         if(added == 1){
 
@@ -314,16 +314,6 @@ public class UserController {
 
     ////// bcrypt
 
-
-    private static int workload = 12;
-
-    public static String hashPassword(String password_plaintext) {
-        String salt = BCrypt.gensalt(workload);
-        String hashed_password = BCrypt.hashpw(password_plaintext, salt);
-
-
-        return(hashed_password);
-    }
 
     public static boolean checkPassword(String password_plaintext, String stored_hash) {
         boolean password_verified = false;

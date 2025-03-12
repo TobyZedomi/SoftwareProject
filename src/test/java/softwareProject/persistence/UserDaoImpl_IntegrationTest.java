@@ -28,7 +28,7 @@ class UserDaoImpl_IntegrationTest {
     @Test
     void registerUser() throws SQLException, InvalidKeySpecException, NoSuchAlgorithmException {
         System.out.println("Test to register a user");
-        User tester = new User("Harry", "harry123", "harry@gmail.com", "password", LocalDate.of(2002, 10, 10), false, LocalDateTime.of(2025,01,02,0,0,0));
+        User tester = new User("Harry", "harry123", "harry@gmail.com", "password", LocalDate.of(2002, 10, 10), false, LocalDateTime.of(2025,01,02,0,0,0), "DefaultUserImage.jpg");
 
         int correctResult = 1;
 
@@ -53,7 +53,7 @@ class UserDaoImpl_IntegrationTest {
     @Test
     void registerUserButUsernameAlreadyExist() throws SQLException{
         System.out.println("test for register but username already exist");
-        User tester = new User("Toby", "harry123", "harry@gmail.com", "passowrd", LocalDate.of(2002, 10, 10), false, LocalDateTime.of(2025,01,02,0,0,0));
+        User tester = new User("Toby", "harry123", "harry@gmail.com", "passowrd", LocalDate.of(2002, 10, 10), false, LocalDateTime.of(2025,01,02,0,0,0), "DefaultUserImage.jpg");
 
 
         Connection conn = connectionSource.getConnection();
@@ -72,7 +72,7 @@ class UserDaoImpl_IntegrationTest {
     void registerUserButEmailAlreadyExist() throws SQLException{
 
         System.out.println("Test for register but email already exist");
-        User tester = new User("Harry", "harry123", "toby@gmail.com", "passowrd", LocalDate.of(2002, 10, 10), false, LocalDateTime.of(2025,01,02,0,0,0));
+        User tester = new User("Harry", "harry123", "toby@gmail.com", "passowrd", LocalDate.of(2002, 10, 10), false, LocalDateTime.of(2025,01,02,0,0,0), "DefaultUserImage.jpg");
 
         Connection conn = connectionSource.getConnection();
         conn.setAutoCommit(false);
@@ -118,7 +118,7 @@ class UserDaoImpl_IntegrationTest {
     void login() throws SQLException {
         System.out.println("Test for login and if username and password is correct");
 
-        User expected = new User("admin", "adminUser123", "admin@gmail.com", "Admin123@", LocalDate.of(2003, 02, 16), true, LocalDateTime.of(2025,01,30,0,0,0));
+        User expected = new User("admin", "adminUser123", "admin@gmail.com", "$2a$12$x4EwpUD5VU.vJW1.xICz1OnEJqEMfdYx/ttl/Gi/JxljZAsguzqbi", LocalDate.of(2003, 02, 16), true, LocalDateTime.of(2025,01,30,0,0,0), "DefaultUserImage.jpg");
 
         Connection conn = connectionSource.getConnection();
         conn.setAutoCommit(false);
@@ -137,7 +137,7 @@ class UserDaoImpl_IntegrationTest {
     void loginIfUsernameDoesntExistButPasswordIsCorrect()throws SQLException{
 
         System.out.println("Test for login, if username doesnt exist but password is correct");
-        User expected = new User("Ronaldo", "andrewGamer123", "andrew@gmail.com", "passwordDone123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0));
+        User expected = new User("Ronaldo", "andrewGamer123", "andrew@gmail.com", "passwordDone123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0), "DefaultUserImage.jpg");
 
         Connection conn = connectionSource.getConnection();
         conn.setAutoCommit(false);
@@ -155,7 +155,7 @@ class UserDaoImpl_IntegrationTest {
     @Test
     void loginIfUsernameDoesExistButPasswordIsNotCorrect() throws SQLException{
         System.out.println("Test for login if username does exist but password is incorrect");
-        User expected = new User("Andrew", "andrewGamer123", "andrew@gmail.com", "ronaldo123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0));
+        User expected = new User("Andrew", "andrewGamer123", "andrew@gmail.com", "ronaldo123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0), "DefaultUserImage.jpg");
 
         Connection conn = connectionSource.getConnection();
         conn.setAutoCommit(false);
@@ -173,7 +173,7 @@ class UserDaoImpl_IntegrationTest {
     @Test
     void loginUsernameISNullButPasswordIsCorrect() throws SQLException{
         System.out.println("Test for if username is null but password is correct");
-        User expected = new User(null, "andrewGamer123", "andrew@gmail.com", "passwordDone123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0));
+        User expected = new User(null, "andrewGamer123", "andrew@gmail.com", "passwordDone123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0), "DefaultUserImage.jpg");
 
         Connection conn = connectionSource.getConnection();
         conn.setAutoCommit(false);
@@ -194,7 +194,7 @@ class UserDaoImpl_IntegrationTest {
 
         System.out.println("Test for login if username and password isn't correct");
 
-        User expected = new User("Luffy", "andrewGamer123", "andrew@gmail.com", "luffy123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0));
+        User expected = new User("Luffy", "andrewGamer123", "andrew@gmail.com", "luffy123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0), "DefaultUserImage.jpg");
 
         Connection conn = connectionSource.getConnection();
         conn.setAutoCommit(false);
@@ -215,7 +215,7 @@ class UserDaoImpl_IntegrationTest {
     void findUserByUsername() throws SQLException {
         System.out.println("test for find user by username");
 
-        User expected = new User("Andrew", "andrewGamer123", "andrew@gmail.com", "AgcGk+yZvOCWx6I30PDQlfW/62dOVXmuX7TdXxeNlK0=", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0));
+        User expected = new User("Andrew", "andrewGamer123", "andrew@gmail.com", "$2a$12$x4EwpUD5VU.vJW1.xICz1OnEJqEMfdYx/ttl/Gi/JxljZAsguzqbi", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0), "DefaultUserImage.jpg");
 
         Connection conn = connectionSource.getConnection();
         conn.setAutoCommit(false);
@@ -233,7 +233,7 @@ class UserDaoImpl_IntegrationTest {
     @Test
     void findUserByUsernameButThereIsNoMatch() throws SQLException {
         System.out.println("Test to find user by username but username doesnt exist");
-        User expected = new User("jojo", "andrewGamer123", "andrew@gmail.com", "passwordDone123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0));
+        User expected = new User("jojo", "andrewGamer123", "andrew@gmail.com", "passwordDone123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0), "DefaultUserImage.jpg");
 
 
         Connection conn = connectionSource.getConnection();
@@ -253,7 +253,7 @@ class UserDaoImpl_IntegrationTest {
     void findUserByUsernameButUserIsNull() throws SQLException{
         System.out.println("Test to find user by username but username is null");
 
-        User expected = new User(null, "andrewGamer123", "andrew@gmail.com", "passwordDone123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0));
+        User expected = new User(null, "andrewGamer123", "andrew@gmail.com", "passwordDone123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0), "DefaultUserImage.jpg");
 
 
         Connection conn = connectionSource.getConnection();
@@ -275,7 +275,7 @@ class UserDaoImpl_IntegrationTest {
     @Test
     void findUserByThereEmail() throws SQLException {
         System.out.println("Test to find user by there email");
-        User expected = new User("Andrew", "andrewGamer123", "andrew@gmail.com", "passwordDone123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0));
+        User expected = new User("Andrew", "andrewGamer123", "andrew@gmail.com", "passwordDone123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0), "DefaultUserImage.jpg");
 
         Connection conn = connectionSource.getConnection();
         conn.setAutoCommit(false);
@@ -293,7 +293,7 @@ class UserDaoImpl_IntegrationTest {
     @Test
     void findUserByEmailButEmailDoesNotExist() throws SQLException{
         System.out.println("Test to find user by email but email doesnt exist");
-        User expected = new User("Andrew", "andrewGamer123", "a456@gmail.com", "passwordDone123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0));
+        User expected = new User("Andrew", "andrewGamer123", "a456@gmail.com", "passwordDone123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0), "DefaultUserImage.jpg");
 
         Connection conn = connectionSource.getConnection();
         conn.setAutoCommit(false);
@@ -312,7 +312,7 @@ class UserDaoImpl_IntegrationTest {
     void findUserByEmailButEmailIsNull() throws SQLException{
         System.out.println("Test to find user by email but email is null");
 
-        User expected = new User("Andrew", "andrewGamer123", null, "passwordDone123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0));
+        User expected = new User("Andrew", "andrewGamer123", null, "passwordDone123@", LocalDate.of(2000, 12, 10), false, LocalDateTime.of(2025,01,30,0,0,0), "DefaultUserImage.jpg");
 
         Connection conn = connectionSource.getConnection();
         conn.setAutoCommit(false);
