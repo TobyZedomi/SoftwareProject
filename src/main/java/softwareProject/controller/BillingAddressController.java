@@ -1,5 +1,6 @@
 package softwareProject.controller;
 
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
@@ -12,6 +13,7 @@ import softwareProject.business.*;
 import softwareProject.persistence.*;
 import softwareProject.service.EmailSenderService;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -24,9 +26,9 @@ public class BillingAddressController {
     @Autowired
     private EmailSenderService senderService;
 
-    public void sendMail(String userEmail, String subject, String body ){
+    public void sendMail(String userEmail, String subject, Model model, HttpSession session ) throws MessagingException, IOException {
 
-        senderService.sendEmail(userEmail, subject, body);
+        senderService.sendEmailMovie(userEmail, subject, model, session);
     }
 
     @PostMapping("/addBillingAddress")
@@ -42,7 +44,7 @@ public class BillingAddressController {
             @RequestParam(name = "Month") String Month,
             @RequestParam(name = "Year") String Year,
             @RequestParam(name = "cvv") String cvv,
-            Model model, HttpSession session){
+            Model model, HttpSession session) throws MessagingException, IOException {
 
         User u = (User) session.getAttribute("loggedInUser");
 
@@ -327,18 +329,16 @@ public class BillingAddressController {
 
         addOrderItems(session);
 
+        // sendEmail
+
+        sendMail(u.getEmail(), "Purchased Digital Movies", model, session);
+
         //deleteCartItemByCartId
         deleteCartItemByCartId(session);
 
         // totalAmountInCartInNavBar
 
         getTotalAmountOfItemsInCart(session,model);
-
-        // sendEmail
-
-        //sendMail(u.getEmail(), "Purchased Digital Movies",  addOrderItemsOfWhatUserPurchasedToEmail(session));
-
-        sendMail(u.getEmail(), "Purchased Digital Movies",  "You have successfully purchased digital movies with us");
 
         return "confirmationPaymentPage";
 
@@ -372,7 +372,7 @@ public class BillingAddressController {
                                                          @RequestParam(name = "cardNumber") String cardNumber,
                                                          @RequestParam(name = "Month") String Month,
                                                          @RequestParam(name = "Year") String Year,
-                                                         @RequestParam(name = "cvv") String cvv, Model model, HttpSession session){
+                                                         @RequestParam(name = "cvv") String cvv, Model model, HttpSession session) throws MessagingException, IOException {
 
 
         User u = (User) session.getAttribute("loggedInUser");
@@ -681,6 +681,10 @@ public class BillingAddressController {
 
                 addOrderItems(session);
 
+                // send Email
+
+                sendMail(u.getEmail(), "Purchased Digital Movies", model, session);
+
                // delete cartItem byCartId
                 deleteCartItemByCartId(session);
 
@@ -688,11 +692,6 @@ public class BillingAddressController {
 
                 getTotalAmountOfItemsInCart(session,model);
 
-                // sendEmail
-
-                //sendMail(u.getEmail(), "Purchased Digital Movies",  addOrderItemsOfWhatUserPurchasedToEmail(session));
-
-                sendMail(u.getEmail(), "Purchased Digital Movies",  "You have successfully purchased digital movies with us");
 
                 return "confirmationPaymentPage";
 
@@ -845,10 +844,10 @@ public class BillingAddressController {
 
 
 
-
+/*
     /// add What User Purchased to the email
 
-    public String addOrderItemsOfWhatUserPurchasedToEmail(HttpSession session){
+    public String addOrderItemsOfWhatUserPurchasedToEmail(HttpSession session, Model model){
 
         User u = (User) session.getAttribute("loggedInUser");
 
@@ -866,12 +865,12 @@ public class BillingAddressController {
         ArrayList<MovieProduct> movies = new ArrayList<>();
 
 
-        String purchase = null;
+        String purchase;
 
-        OrderItem orderItem = null;
+        OrderItem orderItem;
 
 
-        double total = 0;
+        ArrayList<OrderItem> orderItems = new ArrayList<>();
 
         for (int i = 0; i < cartItems.size();i++) {
 
@@ -881,11 +880,6 @@ public class BillingAddressController {
 
             movies.add(movieProductDao.getMovieById(cartItems.get(i).getMovie_id()));
 
-            // getting orderId
-
-            // adding to orderItems
-            OrderItemDao orderItemDao = new OrderItemDaoImpl("database.properties");
-
             ShopOrderDao shopOrderDao = new ShopOrderDaoImpl("database.properties");
 
             ShopOrder shopOrder = shopOrderDao.getOrderWithTheHighestOrderIdByUsername(u.getUsername());
@@ -894,21 +888,48 @@ public class BillingAddressController {
 
              // create an arraylist of order items based on order items id above
 
-            // loop through that arraylist and add the names of the purchased movies into the body
+            orderItems.add(orderItem);
 
         }
 
+        System.out.println(orderItems);
+
         MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");;
 
-        MovieProduct movieProduct = movieProductDao.getMovieById(1);
+        double total = 0;
 
-        purchase = "You have purchased the movies: " +movieProduct.getMovie_name() + " with a total price of " + total;
+        ArrayList<String> movieNames = new ArrayList<>();
+        MovieProduct movieProduct;
+
+        ArrayList<MovieProduct> movieProductArrayList = new ArrayList<>();
+
+        for (int i = 0; i < orderItems.size();i++){
+
+            movieProduct = movieProductDao.getMovieById(orderItems.get(i).getMovie_id());
+
+            movieNames.add(movieProduct.getMovie_name());
+
+            movieProductArrayList.add(movieProduct);
+
+            total = total + movieProduct.getListPrice();
+        }
+
+
+        System.out.println(movieNames);
+
+        model.addAttribute("movieProductArrayList", movieProductArrayList);
+        model.addAttribute("total", total);
+
+
+        purchase = "You have purchased the movies: " + movieNames+ " with a total price of " + total ;
 
         System.out.println(purchase);
 
         return purchase;
 
     }
+
+ */
 
 
     // totalAmountInCartInNavBar

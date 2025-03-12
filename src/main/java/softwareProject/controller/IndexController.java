@@ -131,6 +131,8 @@ public class IndexController {
 
         if(session.getAttribute("loggedInUser") != null) {
 
+            getTotalAmountOfItemsInCart(session, model);
+
             List<MovieTest> movies = movieService.getMovies();
 
             // create new list to add the movies from the movie db into
