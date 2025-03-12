@@ -52,7 +52,6 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         // a number indicating how many things were changed/affected
         int rowsAffected = 0;
 
-
         Connection conn = super.getConnection();
 
         // TRY to prepare a statement from the connection
@@ -64,7 +63,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             ps.setString(1, newUser.getUsername());
             ps.setString(2, newUser.getDisplayName());
             ps.setString(3, newUser.getEmail());
-            ps.setString(4, hashPassword(newUser.getPassword()));
+            ps.setString(4, newUser.getPassword());
             ps.setDate(5, Date.valueOf(newUser.getDateOfBirth()));
             ps.setBoolean(6, newUser.isAdmin());
             ps.setTimestamp(7, Timestamp.valueOf(newUser.getCreatedAt()));
@@ -84,10 +83,6 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             System.out.println("SQL Exception occurred when attempting to prepare/execute SQL");
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
         }
 
         return rowsAffected;
@@ -118,7 +113,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             ps = con.prepareStatement(query);
             // Fill in the blanks, i.e. parameterize the query
             ps.setString(1, username);
-            ps.setString(2, hashPassword(password));
+            ps.setString(2, password);
             rs = ps.executeQuery();
 
 
@@ -133,11 +128,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             System.out.println("SQL Exception occurred when attempting to prepare SQL for execution");
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } finally {
+        }  finally {
             try {
                 if (rs != null) {
                     rs.close();
@@ -336,7 +327,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
      * @throws InvalidKeySpecException if something goes wrong with hashing password
      * @throws NoSuchAlgorithmException if something goes wrong with hashing password
      */
-    public String hashPassword(String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public String hashPassword(String password, String salt) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
         char[]passwordChars = password.toCharArray();
         byte [] saltBytes = "NotSoSecretSalt".getBytes();

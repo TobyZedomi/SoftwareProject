@@ -1,6 +1,7 @@
 package softwareProject.controller;
 
 
+import org.mindrot.jbcrypt.BCrypt;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -165,7 +167,8 @@ public class UserController {
         String view = "";
         String image = "DefaultUserImage.jpg";
         UserDao userDao = new UserDaoImpl("database.properties");
-        User u = new User(username, displayName, email, password, dob, false, LocalDateTime.now(),image);
+
+        User u = new User(username, displayName, email, hashPassword(password), dob, false, LocalDateTime.now(),image );
         int added = userDao.registerUser(u);
         if(added == 1){
 
@@ -216,7 +219,8 @@ public class UserController {
         }
 
         UserDao userDao = new UserDaoImpl("database.properties");
-        User user = userDao.login(username1, password1);
+
+        User user = userDao.findUserByUsername(username1);
 
 
         if(user == null){
@@ -226,16 +230,24 @@ public class UserController {
             return "loginFailed";
         }
 
-        session.setAttribute("loggedInUser", user);
-        // between this line get list of movies from movie db
-        // model .add attribute here for list of movies form movie db
-        mostPopularMoviesMovieDbApi(model);
-        log.info("User {} log into system", user.getUsername());
+        if (checkPassword(password1, user.getPassword()) == true && username1.equals(user.getUsername())) {
 
-        // totalAmountOItems in basket
-        getTotalAmountOfItemsInCart(session,model);
+            session.setAttribute("loggedInUser", user);
+            // between this line get list of movies from movie db
+            // model .add attribute here for list of movies form movie db
+            mostPopularMoviesMovieDbApi(model);
+            log.info("User {} log into system", user.getUsername());
 
-        return "loginSuccessful";
+            // totalAmountOItems in basket
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "loginSuccessful";
+        }
+
+        String message = "No such username/password combination, try again....";
+        model.addAttribute("message", message);
+        log.info("Login failed with username {}", username1);
+        return "loginFailed";
     }
 
     private void mostPopularMoviesMovieDbApi(Model model) {
@@ -279,38 +291,8 @@ public class UserController {
             return "user_index";
         }
 
-        return "error";
+        return "notValidUser";
     }
-
-
-    // hash password
-
-    /**
-     * Hashing the password
-     * @param password is being searched to hash
-     * @return the hashed password
-     * @throws InvalidKeySpecException if something goes wrong with hashing password
-     * @throws NoSuchAlgorithmException if something goes wrong with hashing password
-     */
-    public String hashPassword(String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
-
-        char[]passwordChars = password.toCharArray();
-        byte [] saltBytes = "NotSoSecretSalt".getBytes();
-        int iterations = 65536;
-        int keySize = 256;
-
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
-
-        PBEKeySpec spec = new PBEKeySpec(passwordChars,saltBytes,iterations,keySize);
-
-        SecretKey key = factory.generateSecret(spec);
-
-        String keyAsString = Base64.getEncoder().encodeToString(key.getEncoded());
-
-        return keyAsString;
-
-    }
-
 
     // totalAmount in Cart
 
@@ -328,6 +310,30 @@ public class UserController {
 
         int totalCartItems = cartItemDao.totalNumberOfCartItems(cart.getCart_id());
         model.addAttribute("totalCartItems", totalCartItems);
+    }
+
+    ////// bcrypt
+
+
+    private static int workload = 12;
+
+    public static String hashPassword(String password_plaintext) {
+        String salt = BCrypt.gensalt(workload);
+        String hashed_password = BCrypt.hashpw(password_plaintext, salt);
+
+
+        return(hashed_password);
+    }
+
+    public static boolean checkPassword(String password_plaintext, String stored_hash) {
+        boolean password_verified = false;
+
+        if(null == stored_hash || !stored_hash.startsWith("$2a$"))
+            throw new java.lang.IllegalArgumentException("Invalid hash provided for comparison");
+
+        password_verified = BCrypt.checkpw(password_plaintext, stored_hash);
+
+        return(password_verified);
     }
 
 
