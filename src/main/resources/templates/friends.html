@@ -8,11 +8,11 @@
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
     <style>
-        body{
+        body {
             margin: 0;
         }
 
-        #background{
+        #background {
             background-image: url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D.avif");
             height: 100vh;
             width: 100%;
@@ -29,61 +29,29 @@
 
 <div id="background"></div>
 
+<div th:replace="~{fragments/menu :: menu-bar}"></div>
 <div th:if="${#ctx.session.loggedInUser != null}">
-    <div th:replace="~{fragments/menu :: menu-bar}"></div>
-    <div th:if="${!allFriends.isEmpty() && allFriends != null}">
-    <h4>Search</h4>
-    <form method="get" action="/searchForYourFriends">
-        <div style="text-align: center;" class="form-floating mb-3">
-            <input type="text" class="form-control" id="friendUsername" name="friendUsername" placeholder="Enter Username" required>
-            <label for="friendUsername">Enter Username</label>
-        </div>
-        <input type="submit" value="Search" class="btn btn-primary">
-    </form>
 
-
-    <div th:each="f : ${friends}">
-        <div class="row d-flex justify-content-center">
-            <div class="col col-md-9 col-lg-7 col-xl-6">
-                <div class="card" style="border-radius: 15px;">
-                    <div class="card-body p-4">
-                        <div class="d-flex">
-                            <div class="flex-shrink-0">
-                                <img src="https://static.vecteezy.com/system/resources/previews/002/318/271/non_2x/user-profile-icon-free-vector.jpg"
-                                     alt="Generic placeholder image" class="img-fluid"
-                                     style="width: 180px; border-radius: 10px;">
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h5 class="mb-1" th:text="${f.getUsername()}">Username</h5>
-                                <div class="d-flex justify-content-start rounded-3 p-2 mb-2 bg-body-tertiary">
-                                    <div class="px-3">
-                                        <p class="small text-muted mb-1" th:text="${f.getDisplayName()}">Friends</p>
-                                        <p class="small text-muted mb-1" th:text="Friends +${total}"></p>
-                                        <form method="post" action="/deleteAFriend">
-                                            <input type="hidden" name="fromUsername" th:value="${f.getUsername()}">
-                                            <button type="submit" class="btn btn-danger">Remove</button>
-                                        </form>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div th:if="${allFriends == null || allFriends.size() != 0}">
+        <h4>Search</h4>
+        <form method="get" action="/searchForYourFriends">
+            <div style="text-align: center;" class="form-floating mb-3">
+                <input type="text" class="form-control" id="friendUsername" name="friendUsername"
+                       placeholder="Enter Username" required>
+                <label for="friendUsername">Enter Username</label>
             </div>
-        </div>
-</div>
-    </div>
+            <input type="submit" value="Search" class="btn btn-primary">
+        </form>
 
-        <h4>Friends</h4>
-        <div th:each="f : ${allFriends}">
+
+        <div th:each="f : ${friends}">
             <div class="row d-flex justify-content-center">
                 <div class="col col-md-9 col-lg-7 col-xl-6">
                     <div class="card" style="border-radius: 15px;">
                         <div class="card-body p-4">
                             <div class="d-flex">
                                 <div class="flex-shrink-0">
-                                    <img src="https://static.vecteezy.com/system/resources/previews/002/318/271/non_2x/user-profile-icon-free-vector.jpg"
+                                    <img th:src="@{'/css/images/'+${f.user_image}}"
                                          alt="Generic placeholder image" class="img-fluid"
                                          style="width: 180px; border-radius: 10px;">
                                 </div>
@@ -92,14 +60,14 @@
                                     <div class="d-flex justify-content-start rounded-3 p-2 mb-2 bg-body-tertiary">
                                         <div class="px-3">
                                             <p class="small text-muted mb-1" th:text="${f.getDisplayName()}">Friends</p>
-                                            <p class="small text-muted mb-1" th:text="${f.getEmail()}">Email</p>
-                                            <p class="small text-muted mb-1" th:text="${f.getCreatedAt()}">Created
-                                                at</p>
+                                            <p class="small text-muted mb-1" th:text="Friends +${total}"></p>
                                             <form method="post" action="/deleteAFriend">
-                                                <input type="hidden" name="friendUsername" id="friendUsername" th:value="${f.getUsername()}">
+                                                <input type="hidden" name="friendUsername" id="friendUsername"
+                                                       th:value="${f.getUsername()}">
                                                 <button type="submit" class="btn btn-danger">Remove</button>
                                             </form>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -108,14 +76,58 @@
                 </div>
             </div>
         </div>
-
-    <div th:if="${allFriends.isEmpty()}">
-        <p class="text-center">You currently have no friends</p>
     </div>
 
-<div th:if="${deleted}" class="alert alert-success" th:text="${deleted}"></div>
-<div th:if="${failedDelete}" class="alert alert-danger" th:text="${failedDelete}"></div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <h4>Friends</h4>
+    <div th:each="f : ${allFriends}">
+        <div class="row d-flex justify-content-center">
+            <div class="col col-md-9 col-lg-7 col-xl-6">
+                <div class="card" style="border-radius: 15px;">
+                    <div class="card-body p-4">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <img th:src="@{'/css/images/'+${f.user_image}}"
+                                     alt="Generic placeholder image" class="img-fluid"
+                                     style="width: 180px; border-radius: 10px;">
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5 class="mb-1" th:text="${f.getUsername()}">Username</h5>
+                                <div class="d-flex justify-content-start rounded-3 p-2 mb-2 bg-body-tertiary">
+                                    <div class="px-3">
+                                        <p class="small text-muted mb-1" th:text="${f.getDisplayName()}">Friends</p>
+                                        <p class="small text-muted mb-1" th:text="${f.getEmail()}">Email</p>
+                                        <p class="small text-muted mb-1" th:text="${f.getCreatedAt()}">Created
+                                            at</p>
+                                        <form method="post" action="/deleteAFriend">
+                                            <input type="hidden" name="friendUsername" id="friendUsername"
+                                                   th:value="${f.getUsername()}">
+                                            <button type="submit" class="btn btn-danger">Remove</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${allFriends == null || allFriends.size() == 0}">
+        <div class="alert alert-danger text-center" role="alert">
+            You currently have no friends
+        </div>
+    </div>
+
+    <div th:if="${friends == null || friends.size() == 0}">
+        <div class="alert alert-danger text-center" role="alert">
+            Couldn't find who you are searching for. Please try again.
+        </div>
+    </div>
+
+    <div th:if="${deleted}" class="alert alert-success" th:text="${deleted}"></div>
+    <div th:if="${failedDelete}" class="alert alert-danger" th:text="${failedDelete}"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </div>
 </body>
 </html>

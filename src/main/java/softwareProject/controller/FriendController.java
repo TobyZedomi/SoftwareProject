@@ -55,7 +55,7 @@ public class FriendController {
         ArrayList<User> details = new ArrayList<>();
 
         if(friends.isEmpty()){
-            model.addAttribute("Empty", "Sorry you have no friends with this username");
+            friends = new ArrayList<>();
         }
 
         for(int i = 0; i< friends.size();i++){

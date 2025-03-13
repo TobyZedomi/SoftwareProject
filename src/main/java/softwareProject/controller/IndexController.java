@@ -610,4 +610,9 @@ public class IndexController {
         model.addAttribute("totalCartItems", totalCartItems);
     }
 
+    @GetMapping("/userProfile")
+    public String userProfile(){
+        return "UserProfile";
+    }
+
 }
