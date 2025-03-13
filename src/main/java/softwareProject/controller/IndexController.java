@@ -175,6 +175,8 @@ public class IndexController {
 
         if(session.getAttribute("loggedInUser") != null) {
 
+            getTotalAmountOfItemsInCart(session, model);
+
             return "addFriends";
 
         }
@@ -611,8 +613,15 @@ public class IndexController {
     }
 
     @GetMapping("/userProfile")
-    public String userProfile(){
-        return "UserProfile";
+    public String userProfile(HttpSession session, Model model){
+        if(session.getAttribute("loggedInUser") != null) {
+
+            getTotalAmountOfItemsInCart(session, model);
+            return "UserProfile";
+
+        }
+
+        return "notValidUser";
     }
 
 }
