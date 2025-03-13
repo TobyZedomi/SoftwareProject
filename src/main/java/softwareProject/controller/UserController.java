@@ -382,14 +382,15 @@ public class UserController {
     }
 
     @PostMapping("/forgot-password")
-    public String forgotPassword(@RequestParam String email, Model model) throws MessagingException, IOException {
-         forgetPassword(email,model);
+    public String forgotPassword(@RequestParam String email, Model model, HttpSession session) throws MessagingException, IOException {
+         forgetPassword(email,model, session);
 
+         session.setAttribute("emailForUser", email);
          return "forgot_password";
     }
 
 
-    public void forgetPassword(String email, Model model) throws MessagingException, IOException {
+    public void forgetPassword(String email, Model model, HttpSession session) throws MessagingException, IOException {
 
         UserDao userDao = new UserDaoImpl("database.properties");
 
@@ -413,11 +414,12 @@ public class UserController {
     }
 
     @GetMapping("/set-password")
-    public String setPasswordR(@RequestParam(name="newPassword") String newPassword, Model model) throws MessagingException, InvalidKeySpecException, NoSuchAlgorithmException {
-        return setPassword( newPassword, model);
+    public String setPasswordR(@RequestParam(name="newPassword") String newPassword, Model model, HttpSession session) throws MessagingException, InvalidKeySpecException, NoSuchAlgorithmException {
+
+        return setPassword( newPassword, model,session);
     }
 
-    public String setPassword(String newPassword, Model model) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public String setPassword( String newPassword, Model model, HttpSession session) throws InvalidKeySpecException, NoSuchAlgorithmException {
         UserDao userDao = new UserDaoImpl("database.properties");
 
         Pattern passwordRegex = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{7,70}$");
@@ -437,7 +439,10 @@ public class UserController {
             return "reset_password";
         }
 
-        int complete = userDao.updatePassword("tobyzedo7@gmail.com",newPassword);
+
+        String emailUser = (String) session.getAttribute("emailForUser");
+
+        int complete = userDao.updatePassword(emailUser,newPassword);
 
         if (complete>0) {
             return "reset_success";
