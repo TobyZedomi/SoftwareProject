@@ -4,7 +4,10 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.concurrent.Flow;
+
+import softwareProject.business.BillingAddress;
 import softwareProject.business.Subscription;
+import softwareProject.business.SubscriptionPlan;
 
 public class SubscriptionDaoImpl extends MySQLDao implements SubscriptionDao {
 
@@ -81,46 +84,57 @@ public class SubscriptionDaoImpl extends MySQLDao implements SubscriptionDao {
      * @param username is the username being searched
      * @return the user subscription based on username if username doesn't match it will return null
      */
+
     @Override
     public Subscription getSubscriptionFromUsername(String username){
 
         Subscription subUser = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
 
 
-        // Get a connection using the superclass
-        Connection conn = super.getConnection();
-        // TRY to get a statement from the connection
-        // When you are parameterizing the query, remember that you need
-        // to use the ? notation (so you can fill in the blanks later)
-        try (PreparedStatement ps = conn.prepareStatement("SELECT * from subscription WHERE username = ?")) {
-            // TRY to execute the query
+            con = getConnection();
 
+            String query = "SELECT * from subscription WHERE username = ?";
+            ps = con.prepareStatement(query);
+            // Fill in the blanks, i.e. parameterize the query
             ps.setString(1, username);
-            try (ResultSet rs = ps.executeQuery()) {
-                // Extract the information from the result set
-                // Use extraction method to avoid code repetition!
+            rs = ps.executeQuery();
 
-                if (rs.next()) {
-                    subUser = mapRow(rs);
-                }
 
-            } catch (SQLException e) {
-                System.out.println("SQL Exception occurred when executing SQL or processing results.");
-                System.out.println("Error: " + e.getMessage());
-                e.printStackTrace();
+
+            if(rs.next()){
+
+                subUser = mapRow(rs);
             }
+
+
         } catch (SQLException e) {
             System.out.println("SQL Exception occurred when attempting to prepare SQL for execution");
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
-        }finally {
-            // Close the connection using the superclass method
-            super.freeConnection(conn);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occurred in the finally section of the method: " + e.getMessage());
+            }
         }
-
-
         return subUser;
     }
+
+
 
 
     // get all subscriptions
@@ -129,41 +143,49 @@ public class SubscriptionDaoImpl extends MySQLDao implements SubscriptionDao {
      * get all subscriptions in the database
      * @return an arraylist of all subscriptions
      */
-
     @Override
     public ArrayList<Subscription> getAllSubscriptions(){
 
         ArrayList<Subscription> subscriptions = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        Connection conn = super.getConnection();
+        try{
+            con = getConnection();
 
-        try(PreparedStatement ps = conn.prepareStatement("SELECT * from subscription")){
-            try(ResultSet rs = ps.executeQuery()){
-                while(rs.next()){
+            String query = "SELECT * from subscription";
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery();
 
-                    Subscription s = mapRow(rs);
-                    subscriptions.add(s);
-                }
-            }catch(SQLException e){
-                System.out.println(LocalDateTime.now() + ": An SQLException  occurred while running the query" +
-                        " or processing the result.");
-                System.out.println("Error: " + e.getMessage());
-                e.printStackTrace();
+            while(rs.next())
+            {
+                Subscription s = mapRow(rs);
+                subscriptions.add(s);
             }
         }catch(SQLException e){
             System.out.println(LocalDateTime.now() + ": An SQLException  occurred while preparing the SQL " +
                     "statement.");
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
-        }finally {
-            // Close the connection using the superclass method
-            super.freeConnection(conn);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the  method: " + e.getMessage());
+            }
         }
 
         return subscriptions;
     }
-
-
 
 
     /**
