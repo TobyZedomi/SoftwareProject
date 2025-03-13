@@ -24,6 +24,44 @@
             top: 0;
             z-index: -1;
         }
+
+        .center {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            margin-top: 150px;
+        }
+
+        .notBought{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 300px;
+            font-weight: bold;
+        }
+
+        h1{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            color: white;
+            font-weight: bold;
+            -webkit-text-stroke: 1px darkred;
+            font-family: poppins;
+        }
+
+        p, label, input, td, tr{
+
+            font-family: poppins;
+            font-size: 15px;
+            color: white;
+            font-weight: bold;
+        }
+
     </style>
 
 </head>
@@ -33,6 +71,11 @@
 
 <div th:replace="~{fragments/menu :: menu-bar}"></div>
 <div th:if="${#ctx.session.loggedInUser != null}">
+
+
+    <div>
+        <h1>Friends</h1>
+    </div>
 
     <div th:if="${allFriends == null || allFriends.size() != 0}">
         <h4>Search</h4>
@@ -80,7 +123,7 @@
         </div>
     </div>
 
-    <h4>Friends</h4>
+
     <div th:each="f : ${allFriends}">
         <div class="row d-flex justify-content-center">
             <div class="col col-md-9 col-lg-7 col-xl-6">
@@ -116,16 +159,20 @@
     </div>
 
     <div th:if="${allFriends == null || allFriends.size() == 0}">
-        <div class="alert alert-danger text-center" role="alert">
-            You currently have no friends
+
+
+        <p style="font-family: poppins; font-weight: bold; font-size: 15px; color: white" th:text="| ${#ctx.session.loggedInUser.getUsername()} , You currently have no added friends yet |" class="notBought" ></p>
+        <div class="center">
+            <a th:href="@{/addFriends}"><button type="button" class="btn btn-danger" title="Add Friends">Go here to add Friends</button></a>
         </div>
     </div>
 
+    <!--
     <div th:if="${friends == null || friends.size() == 0}">
         <div class="alert alert-danger text-center" role="alert">
             Couldn't find who you are searching for. Please try again.
         </div>
-    </div>
+    </div>-->
 
     <div th:if="${deleted}" class="alert alert-success" th:text="${deleted}"></div>
     <div th:if="${failedDelete}" class="alert alert-danger" th:text="${failedDelete}"></div>
