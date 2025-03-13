@@ -588,6 +588,12 @@ public class IndexController {
     }
 
 
+    @GetMapping("/reset_password")
+    public String resetPassword(HttpSession session, Model model) {
+
+            return "reset_password";
+    }
+
     public void getTotalAmountOfItemsInCart(HttpSession session, Model model) {
 
         /// get total number of items in cart for user

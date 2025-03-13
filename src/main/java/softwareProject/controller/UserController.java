@@ -413,7 +413,8 @@ public class UserController {
     }
 
     @GetMapping("/set-password")
-    public String setPasswordR(@RequestParam String email,@RequestBody String newPassword, Model model) throws MessagingException, InvalidKeySpecException, NoSuchAlgorithmException {
+    public String setPasswordR( @RequestParam(name="email") String email,
+                                @RequestParam(name="newPassword") String newPassword, Model model) throws MessagingException, InvalidKeySpecException, NoSuchAlgorithmException {
         return setPassword(email, newPassword, model);
     }
 
