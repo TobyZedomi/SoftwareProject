@@ -1,12 +1,15 @@
 package softwareProject.service;
 
 import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ import java.io.ObjectInput;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Objects;
+
 
 @Service
 public class EmailSenderService {
@@ -140,5 +144,20 @@ public class EmailSenderService {
             helper.addAttachment(movieImages.get(i), new File("C:\\Users\\tobyz\\IdeaProjects\\SoftwareProject\\src\\main\\resources\\static\\css\\images\\"+movieImages.get(i)));
 
         }
+    }
+
+    public void sendSetPasswordEmail(String email) throws MessagingException {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+        mimeMessageHelper.setFrom("screensafari321@gmail.com");
+        mimeMessageHelper.setTo(email);
+        mimeMessageHelper.setSubject("Set Password");
+        mimeMessageHelper.setText("""
+        <div>
+          <a href="http://localhost:8080/set-password?email=%s" target="_blank">click link to set password</a>
+        </div>
+        """.formatted(email), true);
+
+        mailSender.send(mimeMessage);
     }
 }

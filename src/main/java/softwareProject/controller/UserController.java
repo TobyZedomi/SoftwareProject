@@ -1,24 +1,28 @@
 package softwareProject.controller;
 
 
-import org.mindrot.jbcrypt.BCrypt;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import softwareProject.business.Cart;
 import softwareProject.business.MovieTest;
 import softwareProject.business.User;
 import softwareProject.persistence.*;
 import org.springframework.ui.Model;
+import softwareProject.service.EmailSenderService;
 import softwareProject.service.MovieService;
 
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import java.io.File;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -28,6 +32,8 @@ import java.util.Base64;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static softwareProject.persistence.UserDaoImpl.hashPassword;
 
 
 @Slf4j
@@ -219,8 +225,7 @@ public class UserController {
         }
 
         UserDao userDao = new UserDaoImpl("database.properties");
-
-        User user = userDao.findUserByUsername(username1);
+        User user = userDao.login(username1, password1);
 
 
         if(user == null){
@@ -314,6 +319,132 @@ public class UserController {
         int totalCartItems = cartItemDao.totalNumberOfCartItems(cart.getCart_id());
         model.addAttribute("totalCartItems", totalCartItems);
     }
+
+    @PostMapping("/UserProfile")
+    public String userProfile(HttpSession session, Model model){
+        User u = (User) session.getAttribute("loggedInUser");
+
+        model.addAttribute("User", u);
+        return "UserProfile";
+    }
+
+    @PostMapping("/updateUserImage")
+    public String updateUserImage(HttpSession session, @RequestParam("file") MultipartFile file, Model model) throws IOException {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+
+        String fileName = file.getOriginalFilename();
+        file.transferTo(new File("C:\\Users\\andre\\Documents\\Year3\\WebPatterns\\SoftwareProject\\src\\main\\resources\\static\\css\\images" + fileName));
+
+        UserDao userDao = new UserDaoImpl("database.properties");
+
+        int complete = userDao.updateUserImage(loggedInUser.getUsername(),fileName);
+
+        if(complete > 0){
+            model.addAttribute("imageSuccess","Image has been updated");
+            model.addAttribute("User", loggedInUser);
+            return "UserProfile";
+        }
+        else{
+            model.addAttribute("imageFailed", "Image failed to update");
+            model.addAttribute("User", loggedInUser);
+            return "UserProfile";
+        }
+    }
+
+    @PostMapping("/updateDisplayName")
+    public String updateDisplayName(HttpSession session, @RequestParam("name") String displayName, Model model){
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+
+        UserDao userDao = new UserDaoImpl("database.properties");
+
+        int complete = userDao.updateDisplayName(loggedInUser.getUsername(),displayName);
+
+        if(complete > 0){
+            model.addAttribute("displayNameSuccess","Display name has been updated: "+displayName);
+            model.addAttribute("User", loggedInUser);
+            return "UserProfile";
+        }
+        else{
+            model.addAttribute("displayNameFailed", "Display name failed to update");
+            model.addAttribute("User", loggedInUser);
+            return "UserProfile";
+        }
+
+    }
+
+    @PostMapping("/forgot-password")
+    public String forgotPassword(@RequestParam String email, Model model){
+        return forgetPassword(email,model);
+    }
+
+
+    public String forgetPassword(String email, Model model){
+
+        UserDao userDao = new UserDaoImpl("database.properties");
+
+        User user = userDao.findUserByThereEmail(email);
+
+        if(user == null){
+            model.addAttribute("noEmail","No user found with this email");
+            log.info("No user found with this email");
+            return "forgot_password";
+        }
+
+
+        EmailSenderService emailSenderService = new EmailSenderService();
+        try{
+            emailSenderService.sendSetPasswordEmail(email);
+            model.addAttribute("sent","Email has been sent please check your inbox.");
+            log.info("Email has been sent please check your inbox.");
+            return "forgot_password";
+        }catch(MessagingException e){
+            log.info(e.toString());
+            log.info("Failed to send message to email. Please try again.");
+            model.addAttribute("failSend","Failed to send message to email. Please try again.");
+            return "forgot_password";
+        }
+
+
+
+    }
+
+    @PostMapping("/set-password")
+    public String setPasswordR(@RequestParam String email,@RequestBody String newPassword, Model model) throws MessagingException, InvalidKeySpecException, NoSuchAlgorithmException {
+        return setPassword(email, newPassword, model);
+    }
+
+    public String setPassword(String email, String newPassword, Model model) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        UserDao userDao = new UserDaoImpl("database.properties");
+
+        Pattern passwordRegex = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{7,70}$");
+        Matcher match1 = passwordRegex.matcher(newPassword);
+        boolean matchfoundPassword = match1.find();
+
+        if (!matchfoundPassword){
+            model.addAttribute("incorrectPassword","Password must have at least 7 characters and maximum 70 characters, one uppercase letter, one lowercase letter and one number");
+            log.info("Password must have at least 7 characters and maximum 70 characters, one uppercase letter, one lowercase letter and one number");
+            return "reset_password";
+        }
+
+        if (newPassword.isBlank()){
+            model.addAttribute("Password2","Re-enter password is left blank.Please try again");
+
+            log.info("Confirm password was left blank");
+            return "reset_password";
+        }
+
+        // Hash the password before i update it
+        String hashedPassword = hashPassword(newPassword);
+
+        int complete = userDao.updatePassword(email,hashedPassword);
+
+        if (complete>0) {
+            return "reset_success";
+        }else{
+            return "reset_password";
+        }
+    }
+
 
     ////// bcrypt
 
