@@ -252,7 +252,6 @@ class CartItemDaoImplTestMockTest {
 
         int expected = 1;
 
-        // adding a new billingAddress
         CartItemDao cartItemDao = new CartItemDaoImpl(dbConn);
         int result = cartItemDao.deleteCartItemByCartIdAndMovieId(c1.getCart_id(), c1.getMovie_id());
 
