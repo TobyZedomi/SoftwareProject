@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import java.awt.*;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.*;
@@ -300,23 +301,43 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         return requests;
     }
 
-
     @Override
-    public boolean updatePassword(String email, String newPassword) {
-        String sql = "UPDATE users SET password = ? WHERE email = ?";
-        try (Connection conn = super.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+    public int updatePassword(String email,String password){
+        // DATABASE CODE
+        //
+        // Create variable to hold the result of the operation
+        // Remember, where you are NOT doing a select, you will only ever get
+        // a number indicating how many things were changed/affected
+        int rowsAffected = 0;
 
-            ps.setString(1, newPassword);
+
+        Connection conn = super.getConnection();
+
+        // TRY to prepare a statement from the connection
+        // When you are parameterizing the update, remember that you need
+        // to use the ? notation (so you can fill in the blanks later)
+        try(PreparedStatement ps = conn.prepareStatement("UPDATE users SET password = ? WHERE email = ?")) {
+            // Fill in the blanks, i.e. parameterize the update
+            ps.setString(1, password);
             ps.setString(2, email);
-            int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
-        }
-        catch (SQLException e)
-        {
+
+            // Execute the update and store how many rows were affected/changed
+            // when inserting, this number indicates if the row was
+            // added to the database (>0 means it was added)
+            rowsAffected = ps.executeUpdate();
+        }// Add an extra exception handling block for where there is already an entry
+        // with the primary key specified
+        catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println("Constraint Exception occurred: " + e.getMessage());
+            // Set the rowsAffected to -1, this can be used as a flag for the display section
+            rowsAffected = -1;
+        }catch(SQLException e){
+            System.out.println("SQL Exception occurred when attempting to prepare/execute SQL");
+            System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
-        return false;
+
+        return rowsAffected;
     }
 
 
@@ -330,6 +351,84 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
 
 
         return(hashed_password);
+    }
+
+    @Override
+    public int updateUserImage(String user,String image){
+        // DATABASE CODE
+        //
+        // Create variable to hold the result of the operation
+        // Remember, where you are NOT doing a select, you will only ever get
+        // a number indicating how many things were changed/affected
+        int rowsAffected = 0;
+
+
+        Connection conn = super.getConnection();
+
+        // TRY to prepare a statement from the connection
+        // When you are parameterizing the update, remember that you need
+        // to use the ? notation (so you can fill in the blanks later)
+        try(PreparedStatement ps = conn.prepareStatement("update users set user_image = ? where username = ?")) {
+            // Fill in the blanks, i.e. parameterize the update
+            ps.setString(1, image);
+            ps.setString(2, user);
+
+            // Execute the update and store how many rows were affected/changed
+            // when inserting, this number indicates if the row was
+            // added to the database (>0 means it was added)
+            rowsAffected = ps.executeUpdate();
+        }// Add an extra exception handling block for where there is already an entry
+        // with the primary key specified
+        catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println("Constraint Exception occurred: " + e.getMessage());
+            // Set the rowsAffected to -1, this can be used as a flag for the display section
+            rowsAffected = -1;
+        }catch(SQLException e){
+            System.out.println("SQL Exception occurred when attempting to prepare/execute SQL");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return rowsAffected;
+    }
+
+    @Override
+    public int updateDisplayName(String username,String displayName){
+        // DATABASE CODE
+        //
+        // Create variable to hold the result of the operation
+        // Remember, where you are NOT doing a select, you will only ever get
+        // a number indicating how many things were changed/affected
+        int rowsAffected = 0;
+
+
+        Connection conn = super.getConnection();
+
+        // TRY to prepare a statement from the connection
+        // When you are parameterizing the update, remember that you need
+        // to use the ? notation (so you can fill in the blanks later)
+        try(PreparedStatement ps = conn.prepareStatement("update users set displayName = ? where username = ?")) {
+            // Fill in the blanks, i.e. parameterize the update
+            ps.setString(1, displayName);
+            ps.setString(2, username);
+
+            // Execute the update and store how many rows were affected/changed
+            // when inserting, this number indicates if the row was
+            // added to the database (>0 means it was added)
+            rowsAffected = ps.executeUpdate();
+        }// Add an extra exception handling block for where there is already an entry
+        // with the primary key specified
+        catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println("Constraint Exception occurred: " + e.getMessage());
+            // Set the rowsAffected to -1, this can be used as a flag for the display section
+            rowsAffected = -1;
+        }catch(SQLException e){
+            System.out.println("SQL Exception occurred when attempting to prepare/execute SQL");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return rowsAffected;
     }
 
 

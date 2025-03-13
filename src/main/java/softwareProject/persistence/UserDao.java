@@ -16,7 +16,11 @@ public interface UserDao {
 
     public ArrayList<User> findUserByUsername2(String username);
 
-    boolean updatePassword(String email, String newPassword);
+    public int updatePassword(String email, String newPassword);
+
+    public int updateUserImage(String user,String image);
+
+    public int updateDisplayName(String username,String displayName);
 
 
 }
