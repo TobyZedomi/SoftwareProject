@@ -321,16 +321,6 @@ public class UserController {
         model.addAttribute("totalCartItems", totalCartItems);
     }
 
-    @PostMapping("/UserProfile")
-    public String userProfile(HttpSession session, Model model){
-        User u = (User) session.getAttribute("loggedInUser");
-
-        getTotalAmountOfItemsInCart(session, model);
-
-        model.addAttribute("User", u);
-        return "UserProfile";
-    }
-
     @PostMapping("/updateUserImage")
     public String updateUserImage(HttpSession session, @RequestParam("file") MultipartFile file, Model model) throws IOException {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
