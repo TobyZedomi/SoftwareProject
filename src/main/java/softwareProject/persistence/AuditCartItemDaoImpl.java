@@ -77,7 +77,7 @@ public class AuditCartItemDaoImpl extends MySQLDao implements AuditCartItemDao {
 
 
     /**
-     * Search through each row in the billingAddress
+     * Search through each row in the auditCartItems
      *
      * @param rs is the query for user to be searched
      * @return the user information

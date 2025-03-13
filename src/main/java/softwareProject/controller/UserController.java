@@ -372,43 +372,47 @@ public class UserController {
 
     }
 
+
+    @Autowired
+    private EmailSenderService senderService;
+
+    public void sendMail(String userEmail ) throws MessagingException, IOException {
+
+        senderService.sendSetPasswordEmail(userEmail);
+    }
+
     @PostMapping("/forgot-password")
-    public String forgotPassword(@RequestParam String email, Model model){
-        return forgetPassword(email,model);
+    public String forgotPassword(@RequestParam String email, Model model) throws MessagingException, IOException {
+         forgetPassword(email,model);
+
+         return "forgot_password";
     }
 
 
-    public String forgetPassword(String email, Model model){
+    public void forgetPassword(String email, Model model) throws MessagingException, IOException {
 
         UserDao userDao = new UserDaoImpl("database.properties");
+
+        String message;
 
         User user = userDao.findUserByThereEmail(email);
 
         if(user == null){
-            model.addAttribute("noEmail","No user found with this email");
+
+            message = "No user found with this email";
+            model.addAttribute("noEmail",message);
             log.info("No user found with this email");
-            return "forgot_password";
         }
 
 
-        EmailSenderService emailSenderService = new EmailSenderService();
-        try{
-            emailSenderService.sendSetPasswordEmail(email);
-            model.addAttribute("sent","Email has been sent please check your inbox.");
-            log.info("Email has been sent please check your inbox.");
-            return "forgot_password";
-        }catch(MessagingException e){
-            log.info(e.toString());
-            log.info("Failed to send message to email. Please try again.");
-            model.addAttribute("failSend","Failed to send message to email. Please try again.");
-            return "forgot_password";
-        }
-
+        message = "Password has been sent";
+        model.addAttribute("sentPassword", message);
+        sendMail(email);
 
 
     }
 
-    @PostMapping("/set-password")
+    @GetMapping("/set-password")
     public String setPasswordR(@RequestParam String email,@RequestBody String newPassword, Model model) throws MessagingException, InvalidKeySpecException, NoSuchAlgorithmException {
         return setPassword(email, newPassword, model);
     }
