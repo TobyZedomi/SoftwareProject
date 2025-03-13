@@ -2,6 +2,7 @@ package softwareProject.controller;
 
 
 import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
@@ -414,12 +415,11 @@ public class UserController {
     }
 
     @GetMapping("/set-password")
-    public String setPasswordR(@RequestParam(name="newPassword") String newPassword, Model model, HttpSession session) throws MessagingException, InvalidKeySpecException, NoSuchAlgorithmException {
-
-        return setPassword( newPassword, model,session);
+    public String setPasswordR(@RequestParam(name="newPassword") String newPassword,@RequestParam(name="newPassword2") String newPassword2, Model model, HttpSession session) throws MessagingException, InvalidKeySpecException, NoSuchAlgorithmException {
+        return setPassword( newPassword,newPassword2, model, session);
     }
 
-    public String setPassword( String newPassword, Model model, HttpSession session) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public String setPassword(String newPassword, String newPassword2, Model model, HttpSession session) throws InvalidKeySpecException, NoSuchAlgorithmException {
         UserDao userDao = new UserDaoImpl("database.properties");
 
         Pattern passwordRegex = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{7,70}$");
@@ -433,9 +433,21 @@ public class UserController {
         }
 
         if (newPassword.isBlank()){
-            model.addAttribute("Password2","Re-enter password is left blank.Please try again");
+            model.addAttribute("Password","Re-enter password is left blank.Please try again");
 
             log.info("Confirm password was left blank");
+            return "reset_password";
+        }
+
+        if (newPassword2.isBlank()){
+            model.addAttribute("Password","Re-enter password two is left blank.Please try again");
+            log.info("Confirm password was left blank");
+            return "reset_password";
+        }
+
+        if (!newPassword.equals(newPassword2)){
+            model.addAttribute("noMatch","Passwords dont' match");
+            log.info("Passwords dont match");
             return "reset_password";
         }
 
