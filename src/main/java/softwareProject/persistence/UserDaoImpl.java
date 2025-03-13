@@ -318,7 +318,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         // to use the ? notation (so you can fill in the blanks later)
         try(PreparedStatement ps = conn.prepareStatement("UPDATE users SET password = ? WHERE email = ?")) {
             // Fill in the blanks, i.e. parameterize the update
-            ps.setString(1, password);
+            ps.setString(1, hashPassword(password));
             ps.setString(2, email);
 
             // Execute the update and store how many rows were affected/changed

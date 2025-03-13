@@ -225,7 +225,7 @@ public class UserController {
         }
 
         UserDao userDao = new UserDaoImpl("database.properties");
-        User user = userDao.login(username1, password1);
+        User user = userDao.findUserByUsername(username1);
 
 
         if(user == null){
@@ -413,12 +413,11 @@ public class UserController {
     }
 
     @GetMapping("/set-password")
-    public String setPasswordR( @RequestParam(name="email") String email,
-                                @RequestParam(name="newPassword") String newPassword, Model model) throws MessagingException, InvalidKeySpecException, NoSuchAlgorithmException {
-        return setPassword(email, newPassword, model);
+    public String setPasswordR(@RequestParam(name="newPassword") String newPassword, Model model) throws MessagingException, InvalidKeySpecException, NoSuchAlgorithmException {
+        return setPassword( newPassword, model);
     }
 
-    public String setPassword(String email, String newPassword, Model model) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public String setPassword(String newPassword, Model model) throws InvalidKeySpecException, NoSuchAlgorithmException {
         UserDao userDao = new UserDaoImpl("database.properties");
 
         Pattern passwordRegex = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{7,70}$");
@@ -438,10 +437,7 @@ public class UserController {
             return "reset_password";
         }
 
-        // Hash the password before i update it
-        String hashedPassword = hashPassword(newPassword);
-
-        int complete = userDao.updatePassword(email,hashedPassword);
+        int complete = userDao.updatePassword("tobyzedo7@gmail.com",newPassword);
 
         if (complete>0) {
             return "reset_success";
