@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import softwareProject.business.Cart;
-import softwareProject.business.Movie;
-import softwareProject.business.MovieProduct;
-import softwareProject.business.User;
+import softwareProject.business.*;
 import softwareProject.persistence.*;
 
 import java.io.File;
@@ -21,6 +18,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -200,6 +198,40 @@ public class MovieProductController {
 
         return "adminPanel_index";
     }
+
+
+    @GetMapping("/viewMovieProductBySearch")
+    public String viewMovieProductBySearch(HttpSession session, Model model, @RequestParam(name = "query") String query){
+
+
+
+        // totalAmountOItems in basket
+        getTotalAmountOfItemsInCart(session,model);
+
+
+        MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+        ArrayList<MovieProduct> movieBySearch = movieProductDao.searchForMovieProductBYMovieName(query);
+
+
+        if (movieBySearch.isEmpty()){
+            String message = query + " Doesnt Exist, search again";
+            model.addAttribute("messageSearch", message);
+
+
+            return "movieProductSearch";
+        }
+
+        model.addAttribute("movieBySearch", movieBySearch);
+
+        session.setAttribute("query", query);
+
+        model.addAttribute("query", query);
+
+
+        return "movieProductSearch";
+    }
+
 
     private static void getAllMovieProducts(Model model, MovieProductDao movieProductDao) {
         List<MovieProduct> movieProducts = movieProductDao.getAllMovieProducts();

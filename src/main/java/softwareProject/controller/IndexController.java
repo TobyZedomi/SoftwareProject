@@ -624,4 +624,17 @@ public class IndexController {
         return "notValidUser";
     }
 
+    @GetMapping("/movieProductSearch")
+    public String movieProductBySearch(HttpSession session, Model model){
+        if(session.getAttribute("loggedInUser") != null) {
+
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "movieProductSearch";
+
+        }
+
+        return "notValidUser";
+    }
+
 }

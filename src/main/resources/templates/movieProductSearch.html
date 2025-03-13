@@ -56,7 +56,7 @@
             margin: auto;
             background-color: black;
             padding: 1em;
-           /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
+            /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
             font-family: Arial, Helvetica, sans-serif;
             transition: transform .5s;
             border-radius: 25px;
@@ -197,37 +197,43 @@
 <div id="message" class="message" th:text="${message}"></div>
 
 
+
 <form class="d-flex" role="search" method="get" action="/viewMovieProductBySearch">
     <input class="form-control me-2" type="search" placeholder="Enter movie name here" aria-label="Search" id="query" name="query" style="width:250px; margin-left: 1350px">
     <button class="btn btn-danger" type="submit">Search</button>
 </form>
 
 
+
 <div class="wrapper">
-<div th:each="movieProduct : ${movieProducts}">
-    <div class="product-card">
-        <div class="container">
-        <img th:src="@{'/css/images/'+${movieProduct.movie_image}}" alt="" class="image">
-            <div class="middle">
-                <p th:text="${movieProduct.getMovie_info()}" class="text"></p>
+    <div th:each="movieProduct : ${movieBySearch}">
+        <div class="product-card">
+            <div class="container">
+                <img th:src="@{'/css/images/'+${movieProduct.movie_image}}" alt="" class="image">
+                <div class="middle">
+                    <p th:text="${movieProduct.getMovie_info()}" class="text"></p>
+                </div>
             </div>
-        </div>
-        <h4 th:text="${movieProduct.movie_name}"></h4>
-        <div>
-            <span th:text="|£${movieProduct.listPrice} |" style="font-weight: bold; color: white"></span>
-            <button title="Add To Cart"><a th:href="@{/addCartItem(movieId=${movieProduct.getMovie_id()})}"><i class="fa fa-shopping-cart"></i></a></button>
+            <h4 th:text="${movieProduct.movie_name}"></h4>
+            <div>
+                <span th:text="|£${movieProduct.listPrice} |" style="font-weight: bold; color: white"></span>
+                <button title="Add To Cart"><a th:href="@{/addCartItemMovieProductSearch(movieId=${movieProduct.getMovie_id()})}"><i class="fa fa-shopping-cart"></i></a></button>
+            </div>
         </div>
     </div>
 </div>
-</div>
 
-
+<a th:href="@{/store_index}"><button type="button" class="btn btn-danger" title="Store" style="margin-left: 1500px; margin-bottom: 50px">Go back to store</button></a>
 
 
 <div class="center">
-    <p th:text="${messageSearch}" style="color: red; font-family: poppins; font-weight: bold;"></p>
+    <p th:text="${messageSearch}" style="color: red; font-family: poppins; font-weight: bold; font-size: 30px;"></p>
 
 </div>
+
+
+
+
 
 </body>
 </html>
