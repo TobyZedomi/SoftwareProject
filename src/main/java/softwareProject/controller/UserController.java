@@ -325,6 +325,8 @@ public class UserController {
     public String userProfile(HttpSession session, Model model){
         User u = (User) session.getAttribute("loggedInUser");
 
+        getTotalAmountOfItemsInCart(session, model);
+
         model.addAttribute("User", u);
         return "UserProfile";
     }
@@ -332,6 +334,8 @@ public class UserController {
     @PostMapping("/updateUserImage")
     public String updateUserImage(HttpSession session, @RequestParam("file") MultipartFile file, Model model) throws IOException {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
+
+        getTotalAmountOfItemsInCart(session, model);
 
         String fileName = file.getOriginalFilename();
         file.transferTo(new File("C:\\Users\\andre\\Documents\\Year3\\WebPatterns\\SoftwareProject\\src\\main\\resources\\static\\css\\images" + fileName));
@@ -341,11 +345,16 @@ public class UserController {
         int complete = userDao.updateUserImage(loggedInUser.getUsername(),fileName);
 
         if(complete > 0){
+
+            getTotalAmountOfItemsInCart(session, model);
+
             model.addAttribute("imageSuccess","Image has been updated");
             model.addAttribute("User", loggedInUser);
             return "UserProfile";
         }
         else{
+            getTotalAmountOfItemsInCart(session, model);
+
             model.addAttribute("imageFailed", "Image failed to update");
             model.addAttribute("User", loggedInUser);
             return "UserProfile";
@@ -358,14 +367,20 @@ public class UserController {
 
         UserDao userDao = new UserDaoImpl("database.properties");
 
+        getTotalAmountOfItemsInCart(session, model);
+
         int complete = userDao.updateDisplayName(loggedInUser.getUsername(),displayName);
 
         if(complete > 0){
+
+            getTotalAmountOfItemsInCart(session, model);
             model.addAttribute("displayNameSuccess","Display name has been updated: "+displayName);
             model.addAttribute("User", loggedInUser);
             return "UserProfile";
         }
         else{
+
+            getTotalAmountOfItemsInCart(session, model);
             model.addAttribute("displayNameFailed", "Display name failed to update");
             model.addAttribute("User", loggedInUser);
             return "UserProfile";
