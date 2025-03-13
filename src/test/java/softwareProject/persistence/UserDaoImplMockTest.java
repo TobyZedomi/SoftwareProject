@@ -4,10 +4,7 @@ import org.junit.jupiter.api.Test;
 import softwareProject.business.BillingAddress;
 import softwareProject.business.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -41,7 +38,7 @@ class UserDaoImplMockTest {
 
         // Filling mock objects with appropriately dummy data
         when(dbConn.prepareStatement("insert into users values(?, ?, ?, ?, ?, ?, " +
-                "?)")).thenReturn(ps);
+                "?,?)")).thenReturn(ps);
 
         // fill in data
 
@@ -67,8 +64,6 @@ class UserDaoImplMockTest {
         System.out.println("Mock test for login");
 
 
-        System.out.println("Mock Test to get Billing Address by id");
-
         User expected = new User("admin", "adminUser123", "admin@gmail.com", "Admin123@", LocalDate.of(2003, 02, 16), true, LocalDateTime.of(2025,01,30,0,0,0), "DefaultUserImage.jpg");
 
         /// Create Mock Objects
@@ -88,9 +83,10 @@ class UserDaoImplMockTest {
         when(rs.getString("displayName")).thenReturn(expected.getDisplayName());
         when(rs.getString("email")).thenReturn(expected.getEmail());
         when(rs.getString("password")).thenReturn(expected.getPassword());
-        when(rs.getDate("dateOfBirth").toLocalDate()).thenReturn(expected.getDateOfBirth());
+        when(rs.getDate("dateOfBirth")).thenReturn(Date.valueOf(expected.getDateOfBirth()));
         when(rs.getBoolean("isAdmin")).thenReturn(expected.isAdmin());
-        when(rs.getTimestamp("createdAt").toLocalDateTime()).thenReturn(expected.getCreatedAt());
+        when(rs.getTimestamp("createdAt")).thenReturn(Timestamp.valueOf(expected.getCreatedAt()));
+        when(rs.getString("user_image")).thenReturn(expected.getUser_image());
 
         // Supply the DAO with the mock connection, which has been filled with all
         // required mock information for the query to run
@@ -134,9 +130,9 @@ class UserDaoImplMockTest {
         when(rs.getString("displayName")).thenReturn(expected.getDisplayName());
         when(rs.getString("email")).thenReturn(expected.getEmail());
         when(rs.getString("password")).thenReturn(expected.getPassword());
-        when(rs.getDate("dateOfBirth").toLocalDate()).thenReturn(expected.getDateOfBirth());
+        when(rs.getDate("dateOfBirth")).thenReturn(Date.valueOf(expected.getDateOfBirth()));
         when(rs.getBoolean("isAdmin")).thenReturn(expected.isAdmin());
-        when(rs.getTimestamp("createdAt").toLocalDateTime()).thenReturn(expected.getCreatedAt());
+        when(rs.getTimestamp("createdAt")).thenReturn(Timestamp.valueOf(expected.getCreatedAt()));
 
         // Supply the DAO with the mock connection, which has been filled with all
         // required mock information for the query to run

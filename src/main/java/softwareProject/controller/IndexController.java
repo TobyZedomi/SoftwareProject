@@ -184,6 +184,8 @@ public class IndexController {
 
         if(session.getAttribute("loggedInUser") != null) {
 
+            getTotalAmountOfItemsInCart(session, model);
+
             User loggedInUser = (User) session.getAttribute("loggedInUser");
             FriendDao friendDao = new FriendDaoImpl("database.properties");
             UserDao userDao = new UserDaoImpl("database.properties");
@@ -225,6 +227,8 @@ public class IndexController {
 
         if(session.getAttribute("loggedInUser") != null) {
 
+            getTotalAmountOfItemsInCart(session, model);
+
             User loggedInUser = (User) session.getAttribute("loggedInUser");
 
             FriendDao friendDao = new FriendDaoImpl("database.properties");
@@ -249,9 +253,10 @@ public class IndexController {
     }
 
     @GetMapping("/review_form")
-    public String reviewIndex(HttpSession session) {
+    public String reviewIndex(HttpSession session, Model model) {
 
         if(session.getAttribute("loggedInUser") != null) {
+            getTotalAmountOfItemsInCart(session, model);
             return "review_form";
         }
 
@@ -404,9 +409,10 @@ public class IndexController {
 
 
     @GetMapping("/confirmationPaymentPage")
-    public String confirmationPaymentPage(HttpSession session) {
+    public String confirmationPaymentPage(HttpSession session, Model model) {
 
         if(session.getAttribute("loggedInUser") != null) {
+            getTotalAmountOfItemsInCart(session, model);
             return "confirmationPaymentPage";
         }
 
@@ -568,8 +574,10 @@ public class IndexController {
 
 
     @GetMapping("/subscriptionConfirmPayment")
-    public String subscriptionConfirmPayment(HttpSession session) {
+    public String subscriptionConfirmPayment(HttpSession session, Model model) {
         if(session.getAttribute("loggedInUser") != null) {
+
+            getTotalAmountOfItemsInCart(session, model);
             return "subscriptionConfirmPayment";
         }
 

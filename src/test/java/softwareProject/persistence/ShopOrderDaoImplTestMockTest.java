@@ -4,10 +4,7 @@ import org.junit.jupiter.api.Test;
 import softwareProject.business.CartItem;
 import softwareProject.business.ShopOrder;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -79,7 +76,7 @@ class ShopOrderDaoImplTestMockTest {
         when(rs.getInt("order_id")).thenReturn(s1.getOrder_id(), s2.getOrder_id(), s3.getOrder_id());
         when(rs.getString("username")).thenReturn(s1.getUsername(), s2.getUsername(), s3.getUsername());
         when(rs.getInt("billing_address_id")).thenReturn(s1.getBilling_address_id(), s2.getBilling_address_id(), s3.getBilling_address_id());
-        when(rs.getTimestamp("order_date").toLocalDateTime()).thenReturn(s1.getOrder_date(), s2.getOrder_date(), s3.getOrder_date());
+        when(rs.getTimestamp("order_date")).thenReturn(Timestamp.valueOf(s1.getOrder_date()), Timestamp.valueOf(s2.getOrder_date()), Timestamp.valueOf(s3.getOrder_date()));
         when(rs.getString("orderStatus")).thenReturn(s1.getOrder_status(), s2.getOrder_status(), s3.getOrder_status());
 
         ShopOrderDao shopOrderDao = new ShopOrderDaoImpl(dbConn);
@@ -115,12 +112,12 @@ class ShopOrderDaoImplTestMockTest {
         when(dbConn.prepareStatement("SELECT * from shop_order WHERE username = ?")).thenReturn(ps);
         when(ps.executeQuery()).thenReturn(rs);
         // Want 3 results in the resultset, so need true to be returned 3 times
-        when(rs.next()).thenReturn(true, false);
+        when(rs.next()).thenReturn(true, true, true, false);
         // Fill in the resultset
         when(rs.getInt("order_id")).thenReturn(s1.getOrder_id(), s2.getOrder_id(), s3.getOrder_id());
         when(rs.getString("username")).thenReturn(s1.getUsername(), s2.getUsername(), s3.getUsername());
         when(rs.getInt("billing_address_id")).thenReturn(s1.getBilling_address_id(), s2.getBilling_address_id(), s3.getBilling_address_id());
-        when(rs.getTimestamp("order_date").toLocalDateTime()).thenReturn(s1.getOrder_date(), s2.getOrder_date(), s3.getOrder_date());
+        when(rs.getTimestamp("order_date")).thenReturn(Timestamp.valueOf(s1.getOrder_date()), Timestamp.valueOf(s2.getOrder_date()), Timestamp.valueOf(s3.getOrder_date()));
         when(rs.getString("orderStatus")).thenReturn(s1.getOrder_status(), s2.getOrder_status(), s3.getOrder_status());
 
         ShopOrderDao shopOrderDao = new ShopOrderDaoImpl(dbConn);
@@ -154,7 +151,7 @@ class ShopOrderDaoImplTestMockTest {
         when(rs.getInt("order_id")).thenReturn(s1.getOrder_id());
         when(rs.getString("username")).thenReturn(s1.getUsername());
         when(rs.getInt("billing_address_id")).thenReturn(s1.getBilling_address_id());
-        when(rs.getTimestamp("order_date").toLocalDateTime()).thenReturn(s1.getOrder_date());
+        when(rs.getTimestamp("order_date")).thenReturn(Timestamp.valueOf(s1.getOrder_date()));
         when(rs.getString("orderStatus")).thenReturn(s1.getOrder_status());
 
         ShopOrderDao shopOrderDao = new ShopOrderDaoImpl(dbConn);

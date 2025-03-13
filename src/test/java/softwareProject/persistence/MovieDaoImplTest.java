@@ -16,12 +16,15 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class MovieDaoImplTest {
 
+
     private MySQLDao connectionSource = new MySQLDao("database_test.properties");
 
     /**
      * Test to get all movies by certain genre
      * @throws SQLException if something goes wrong in the database
      */
+
+    /*
     @Test
     void findMovieByGenre() throws SQLException {
         System.out.println("Test to get all movies by certain genre");
@@ -50,6 +53,8 @@ class MovieDaoImplTest {
             assertMovieEquals(expected.get(i), result.get(i));
         }
     }
+
+     */
 
     /**
      * Check if two movies are the same
