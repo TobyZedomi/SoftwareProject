@@ -24,6 +24,9 @@ public interface MovieProductDao {
     public int updateMovieProductPriceByMovieId(double price, int movieId);
 
 
+    public ArrayList<MovieProduct> searchForMovieProductBYMovieName(String movieName);
+
+
 }
 
 

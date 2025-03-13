@@ -1,6 +1,7 @@
 package softwareProject.persistence;
 
 import softwareProject.business.BillingAddress;
+import softwareProject.business.CartItem;
 import softwareProject.business.Movie;
 import softwareProject.business.MovieProduct;
 
@@ -361,6 +362,54 @@ public class MovieProductDaoImpl extends MySQLDao implements MovieProductDao {
         }
 
         return rowsAffected;
+    }
+
+
+// search for Movie Product
+    @Override
+    public ArrayList<MovieProduct> searchForMovieProductBYMovieName(String movieName){
+
+        ArrayList<MovieProduct> movieProducts = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+
+        try{
+
+            con = getConnection();
+
+            String query = "SELECT * FROM movieProduct WHERE movie_name LIKE '%' ? '%'";
+            ps = con.prepareStatement(query);
+            // Fill in the blanks, i.e. parameterize the query
+            ps.setString(1, movieName);
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                MovieProduct m = mapRow(rs);
+                movieProducts.add(m);
+
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception occurred when attempting to prepare SQL for execution" + e.getMessage());
+        }finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the getProductByCode() method: " + e.getMessage());
+            }
+        }
+        return movieProducts;
     }
 
     /**
