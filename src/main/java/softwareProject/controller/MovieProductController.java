@@ -40,7 +40,7 @@ public class MovieProductController {
 
 
         LocalDate releaseDate = LocalDate.parse(date_of_release);
-        Time length = Time.valueOf("00:00:00");
+        Time length = Time.valueOf("02:30:00");
         double listPrice2 = Double.parseDouble(listPrice);
 
         //upload image
