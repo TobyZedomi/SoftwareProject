@@ -29,6 +29,12 @@ public class ShopOrderDaoImpl extends MySQLDao implements ShopOrderDao{
 
     /// add to shopOrder
 
+    /**
+     * Add a shop order
+     * @param shopOrder is the shop order being added
+     * @return 1 added and 0 if not added
+     */
+
     @Override
     public int addShopOrder(ShopOrder shopOrder){
         // DATABASE CODE
@@ -75,6 +81,12 @@ public class ShopOrderDaoImpl extends MySQLDao implements ShopOrderDao{
 
 
 // get top order with the highest order Id by Username
+
+    /**
+     * Get the shop order with the highest order id based on the username
+     * @param username is the username being searched
+     * @return the shop order based on the username
+     */
     @Override
     public ShopOrder getOrderWithTheHighestOrderIdByUsername(String username){
 
@@ -124,6 +136,11 @@ public class ShopOrderDaoImpl extends MySQLDao implements ShopOrderDao{
 
     // get all shop orders by username
 
+    /**
+     * Get all shop orders based on the username
+     * @param username is the username being searched
+     * @return the list of shop orders by username
+     */
     @Override
     public ArrayList<ShopOrder> getAllShopOrdersByUsername(String username){
 

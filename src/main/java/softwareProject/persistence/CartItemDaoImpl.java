@@ -31,6 +31,12 @@ public class CartItemDaoImpl extends MySQLDao implements CartItemDao{
 
     // add to cartItem
 
+    /**
+     * Add cart item
+     * @param cartItem is the cart item being added
+     * @return 1 if added and 0 if not added
+     */
+
     @Override
     public int addCartItem(CartItem cartItem){
         // DATABASE CODE
@@ -72,6 +78,12 @@ public class CartItemDaoImpl extends MySQLDao implements CartItemDao{
 
 
     // get all cart items by cart id
+
+    /**
+     * Get all cart items by cart id
+     * @param cartId is the cart id being searched
+     * @return cart item based on the cart id
+     */
 
     @Override
     public ArrayList<CartItem> getAllCartItemsByCartId(int cartId){
@@ -122,6 +134,13 @@ public class CartItemDaoImpl extends MySQLDao implements CartItemDao{
 
     // delete cartItem with particular cart_id and movie_id
 
+    /**
+     * Delete cart item by cart id and movie id
+     * @param cartId is the cart id being searched
+     * @param movieId is the movie id being searched
+     * @return 1 if deleted and 0 if not deleted
+     */
+
     @Override
     public int deleteCartItemByCartIdAndMovieId(int cartId, int movieId){
         int rowsAffected = 0;
@@ -162,6 +181,11 @@ public class CartItemDaoImpl extends MySQLDao implements CartItemDao{
 
     // count the total number of cartItems
 
+    /**
+     * Get total number of cart items based on cart id
+     * @param cartId is the cart id being searched
+     * @return the number of cart items based on cart id
+     */
     @Override
     public int totalNumberOfCartItems(int cartId){
 
@@ -207,6 +231,12 @@ public class CartItemDaoImpl extends MySQLDao implements CartItemDao{
 
     // delete cartItem by cartId
 
+    /**
+     * Delete cart item based on the cart id
+     * @param cartId is the cart id being searched
+     * @return 1 if deleted and 0 if not deleted
+     */
+
     @Override
     public int deleteCartItemByCartId(int cartId){
         int rowsAffected = 0;
@@ -246,6 +276,13 @@ public class CartItemDaoImpl extends MySQLDao implements CartItemDao{
 
 
     // getCartItems By cartId and movieId
+
+    /**
+     * Get cart items based on cart id and movie id
+     * @param cartId is the cart id being searched
+     * @param movieId is the movie idd being searched
+     * @return cart items based on cart id and movie id
+     */
 
     @Override
     public CartItem getCartItemByIdAndMovieId(int cartId, int movieId){

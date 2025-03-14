@@ -30,6 +30,12 @@ public class BillingAddressDaoImpl extends MySQLDao implements BillingAddressDao
 
     /// add to billingAddress
 
+    /**
+     * Adding a new billing address
+     * @param billingAddress is the billing address being added
+     * @return 1 if added and 0 if not added
+     */
+
 
     @Override
     public int addBillingAddress(BillingAddress billingAddress){
@@ -80,6 +86,11 @@ public class BillingAddressDaoImpl extends MySQLDao implements BillingAddressDao
 
     // get all billingAddress
 
+    /**
+     * Get all billing addresses
+     * @return all billing addresses
+     */
+
     @Override
     public ArrayList<BillingAddress> getAllBillingAddress(){
 
@@ -126,6 +137,12 @@ public class BillingAddressDaoImpl extends MySQLDao implements BillingAddressDao
 
     // getBillingAddressByUsername
 
+
+    /**
+     * Get billing address based on username
+     * @param username is teh username being searched
+     * @return the billing address
+     */
 
     @Override
     public BillingAddress getBillingAddressByUsername(String username){
@@ -177,6 +194,12 @@ public class BillingAddressDaoImpl extends MySQLDao implements BillingAddressDao
     }
 
     // get BillingAddressById
+
+    /**
+     * Get billing address by billing address id
+     * @param id is the id being searched
+     * @return the billing address found
+     */
 
     @Override
     public BillingAddress getBillingAddressById(int id){
@@ -230,6 +253,13 @@ public class BillingAddressDaoImpl extends MySQLDao implements BillingAddressDao
 
     // update fullname
 
+    /**
+     * Update billing address fullName based on billing address id
+     * @param fullName is the fullanme being updated to
+     * @param billingId is the billing address id being searched
+     * @return 1 if updated and 0 if nothing changed
+     */
+
     @Override
     public int updateBillingAddressFullName(String fullName, int billingId)
     {
@@ -267,7 +297,12 @@ public class BillingAddressDaoImpl extends MySQLDao implements BillingAddressDao
         return rowsAffected;
     }
 
-
+    /**
+     * Update billing address email based on billing address id
+     * @param email is the email being updated to
+     * @param billingId is the billing address id searched
+     * @return 1 if updated and 0 if nothing updated
+     */
     @Override
     public int updateBillingAddressEmail(String email, int billingId)
     {
@@ -305,7 +340,12 @@ public class BillingAddressDaoImpl extends MySQLDao implements BillingAddressDao
         return rowsAffected;
     }
 
-
+    /**
+     * Update billing address address based on billing address id
+     * @param address is the address being updated to
+     * @param billingId is the billing address id being searched
+     * @return 1 if updated and 0 if not updated
+     */
     @Override
     public int updateAddressForBillingAddress(String address, int billingId)
     {
@@ -343,6 +383,13 @@ public class BillingAddressDaoImpl extends MySQLDao implements BillingAddressDao
         return rowsAffected;
     }
 
+
+    /**
+     * Update billing address city based on the billing address id
+     * @param city is the city being updated
+     * @param billingId is the billing address being updated
+     * @return 1 if updated and 0 if not updated
+     */
 
     @Override
     public int updateBillingAddressCity(String city, int billingId)
@@ -382,6 +429,13 @@ public class BillingAddressDaoImpl extends MySQLDao implements BillingAddressDao
     }
 
 
+    /**
+     * Update billing address county based on the billing address id
+     * @param county is county being updated
+     * @param billingId is teh billing address id being searched
+     * @return 1 if updated and 0 if not updated
+     */
+
     @Override
     public int updateBillingAddressCounty(String county, int billingId)
     {
@@ -419,7 +473,12 @@ public class BillingAddressDaoImpl extends MySQLDao implements BillingAddressDao
         return rowsAffected;
     }
 
-
+    /**
+     * Update billing address postcode based on the id
+     * @param postCode is the postcode being updated
+     * @param billingId the billing id being searched
+     * @return
+     */
     @Override
     public int updateBillingAddressPostCode(String postCode, int billingId)
     {

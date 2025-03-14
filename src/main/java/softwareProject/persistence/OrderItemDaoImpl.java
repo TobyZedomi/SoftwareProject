@@ -29,6 +29,12 @@ public class OrderItemDaoImpl extends MySQLDao implements OrderItemDao{
 
     // add an orderItem
 
+    /**
+     * Add a order item
+     * @param orderItem is the order item being added
+     * @return 1if added and 0 if not added
+     */
+
     @Override
     public int addOrderItem(OrderItem orderItem){
         // DATABASE CODE
@@ -73,6 +79,11 @@ public class OrderItemDaoImpl extends MySQLDao implements OrderItemDao{
 
 
     // get all order items
+
+    /**
+     * Get all order items
+     * @return an arraylist of all the order items
+     */
 
     @Override
     public ArrayList<OrderItem> getAllOrderItems(){
@@ -119,6 +130,12 @@ public class OrderItemDaoImpl extends MySQLDao implements OrderItemDao{
 
 
     // get order item by id
+
+    /**
+     * Get order item by the id
+     * @param id is the id being searched
+     * @return the order item based on the id
+     */
     @Override
     public OrderItem getOrderItemById(int id){
 

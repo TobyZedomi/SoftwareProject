@@ -26,6 +26,11 @@ public class CartDaoImpl extends MySQLDao implements CartDao{
     }
 
 
+    /**
+     * Adda  new cart
+     * @param cart is the acrt being added
+     * @return 1 if added and 0 if not added
+     */
     @Override
     public int addCart(Cart cart){
         // DATABASE CODE
@@ -67,8 +72,11 @@ public class CartDaoImpl extends MySQLDao implements CartDao{
         return rowsAffected;
     }
 
-
-@Override
+    /**
+     * Get all cart items
+     * @return all cart items
+     */
+    @Override
     public ArrayList<Cart> getAllCarts(){
 
         ArrayList<Cart> carts = new ArrayList<>();
@@ -116,6 +124,11 @@ public class CartDaoImpl extends MySQLDao implements CartDao{
 
 // GET cartId by username
 
+    /**
+     * Get cart by username
+     * @param username is the username being searched
+     * @return cart by username
+     */
 
     @Override
     public Cart getCartByUsername(String username){
@@ -161,6 +174,12 @@ public class CartDaoImpl extends MySQLDao implements CartDao{
         return cart;
     }
 
+
+    /**
+     * Get cart by cart id
+     * @param id is the id for the cart being searched
+     * @return Cart based on the id
+     */
 
     @Override
     public Cart getCartById(int id){

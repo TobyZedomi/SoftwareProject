@@ -32,6 +32,11 @@ public class AuditCartItemDaoImpl extends MySQLDao implements AuditCartItemDao {
 
     // arraylist of all movie ids and count by how they appear in descending order
 
+    /**
+     * Get a list of the movie id and the count of the number of times it appears in the audit cart items table
+     * @return arrraylist of  audit cart items
+     */
+
     @Override
     public ArrayList<AuditCartItem2> getMovieIdsInDescOrderOfCount() {
 
@@ -97,7 +102,12 @@ public class AuditCartItemDaoImpl extends MySQLDao implements AuditCartItemDao {
         return a;
     }
 
-
+    /**
+     * Search through each audit cart items
+     * @param rs is the result set of the audit cart items
+     * @return
+     * @throws SQLException
+     */
     private AuditCartItem2 mapRow2(ResultSet rs) throws SQLException {
 
         AuditCartItem2 a = new AuditCartItem2(
