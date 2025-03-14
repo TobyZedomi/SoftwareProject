@@ -28,6 +28,12 @@ public class FriendDaoImpl extends MySQLDao implements FriendDao{
         super();
     }
 
+    /**
+     * Insert into the friend table, but they will not be friends until the friend request is accepted.
+     * @param user the logged-in user
+     * @param friend the user you are sending friend request to.
+     * @return -1 if not complete, 1 if completed.
+     */
     @Override
     public int insertIntoFriend(String user,String friend){
         // DATABASE CODE
@@ -66,6 +72,13 @@ public class FriendDaoImpl extends MySQLDao implements FriendDao{
 
         return rowsAffected;
     }
+
+    /**
+     * Updates the friend table by changing the request to true as they are now friends.
+     * @param user the logged-in user
+     * @param friend the user you received the friend request from.
+     * @return -1 if not complete, 1 if completed.
+     */
     @Override
     public int acceptRequest(String user,String friend){
         // DATABASE CODE
@@ -104,6 +117,12 @@ public class FriendDaoImpl extends MySQLDao implements FriendDao{
 
         return rowsAffected;
     }
+    /**
+     * Deletes from the friend table as the request is declined.
+     * @param user the logged-in user
+     * @param friend the user you received the friend request from.
+     * @return -1 if not complete, 1 if completed.
+     */
     @Override
     public int declineRequest(String user,String friend){
         // DATABASE CODE
@@ -143,6 +162,12 @@ public class FriendDaoImpl extends MySQLDao implements FriendDao{
         return rowsAffected;
     }
 
+    /**
+     * Gets all the friends requests you have received by selecting all from friends where you are friend2(the receiver of the request) and
+     * request is false;
+     * @param user the logged-in user
+     * @return Arraylist of friends
+     */
     @Override
     public ArrayList<Friends> getAllRequests(String user){
 
@@ -183,6 +208,12 @@ public class FriendDaoImpl extends MySQLDao implements FriendDao{
         }
         return requests;
     }
+    /**
+     * Gets all the friends requests you have received by using a count selecting all from friends where you are friend2(the receiver of the request) and
+     * request is false;
+     * @param user the logged-in user
+     * @return number of friends(int)
+     */
     @Override
     public int getNumberOfFriends(String user){
 
@@ -210,6 +241,13 @@ public class FriendDaoImpl extends MySQLDao implements FriendDao{
 
         return 0;
     }
+
+    /**
+     * This is used to check if you are friends with this user already. The user itself will never come into any interaction with this.
+     * @param user logged-in user
+     * @param friend the friend we are looking for.
+     * @return boolean true if the user is found. false if it is not.
+     */
     @Override
     public boolean getAFriend(String user, String friend){
         // DATABASE CODE
@@ -253,6 +291,12 @@ public class FriendDaoImpl extends MySQLDao implements FriendDao{
 
         return complete;
     }
+
+    /**
+     * This will get a list of your friends
+     * @param user logged-in user
+     * @return Arraylist of friends
+     */
     @Override
     public ArrayList<Friends> getAllFriends(String user){
 
@@ -295,6 +339,13 @@ public class FriendDaoImpl extends MySQLDao implements FriendDao{
         return requests;
     }
 
+    /**
+     * Be able to search for friends. You will be able to put in a letter or a few, and it will show you multiple users
+     * related to this letter or letters. To do this we used %;
+     * @param user the logged-in user
+     * @param friend the friend we are searching for.
+     * @return Arraylist of friends
+     */
     @Override
     public ArrayList<Friends> searchForFriends(String user,String friend){
 
@@ -338,6 +389,13 @@ public class FriendDaoImpl extends MySQLDao implements FriendDao{
         }
         return requests;
     }
+
+    /**
+     * Deletes a friend from the friend table.
+     * @param user logged-in user
+     * @param friend the friend we are removing
+     * @return -1 if not complete, 1 if complete
+     */
     @Override
     public int deleteAFriend(String user,String friend){
         // DATABASE CODE
