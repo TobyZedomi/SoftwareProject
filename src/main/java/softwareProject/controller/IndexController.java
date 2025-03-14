@@ -716,11 +716,15 @@ public class IndexController {
         model.addAttribute("totalCartItems", totalCartItems);
     }
 
-    @GetMapping("/userProfile")
+    @GetMapping("/UserProfile")
     public String userProfile(HttpSession session, Model model){
         if(session.getAttribute("loggedInUser") != null) {
 
             getTotalAmountOfItemsInCart(session, model);
+
+            User u = (User) session.getAttribute("loggedInUser");
+            model.addAttribute("User", u);
+
             return "UserProfile";
 
         }
