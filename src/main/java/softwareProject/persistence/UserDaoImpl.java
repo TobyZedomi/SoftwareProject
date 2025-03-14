@@ -301,6 +301,12 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         return requests;
     }
 
+    /**
+     * Will updated password linked with email
+     * @param email the email of user
+     * @param password the new bcrypt password
+     * @return -1 if not complete, 1 if complete
+     */
     @Override
     public int updatePassword(String email,String password){
         // DATABASE CODE
@@ -353,6 +359,12 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         return(hashed_password);
     }
 
+    /**
+     * Updates the user imaged based on the logged-in users username
+     * @param user the logged-in user
+     * @param image the new imagine
+     * @return -1 if not complete, 1 if complete
+     */
     @Override
     public int updateUserImage(String user,String image){
         // DATABASE CODE
@@ -392,6 +404,12 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         return rowsAffected;
     }
 
+    /**
+     * Updates the display name based on the logged-in users username
+     * @param username the logged-in user
+     * @param displayName the new display name
+     * @return -1 if not complete, 1 if complete
+     */
     @Override
     public int updateDisplayName(String username,String displayName){
         // DATABASE CODE
