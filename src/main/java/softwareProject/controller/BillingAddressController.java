@@ -2,6 +2,7 @@ package softwareProject.controller;
 
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.EventListener;
@@ -20,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Controller
+@Slf4j
 public class BillingAddressController {
 
 
@@ -371,6 +373,9 @@ public class BillingAddressController {
             // totalAmountInCartInNavBar
 
             getTotalAmountOfItemsInCart(session, model);
+
+            log.info(" User {} has successfully purchased movie products with us ", u.getUsername());
+
 
             return "confirmationPaymentPage";
         }
@@ -768,6 +773,8 @@ public class BillingAddressController {
                     // totalAmountInCartInNavBar
 
                     getTotalAmountOfItemsInCart(session, model);
+
+                    log.info(" User {} has successfully purchased movie products with us ", u.getUsername());
 
 
                     return "confirmationPaymentPage";
