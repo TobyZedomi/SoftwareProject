@@ -32,6 +32,13 @@ public class EmailSenderService {
     @Autowired
     private JavaMailSender mailSender;
 
+
+    /**
+     * This is sending an email
+     * @param toEmail is the email its being sent to
+     * @param subject what the email is about
+     * @param body information of what the email holds
+     */
     public void sendEmail(String toEmail, String subject, String body){
 
         SimpleMailMessage message = new SimpleMailMessage();
@@ -47,6 +54,15 @@ public class EmailSenderService {
     }
 
 
+    /**
+     * Sending email to user after they make a purchase of a movie
+     * @param toEmail the email its being sent
+     * @param subject is what the email is about
+     * @param model holds the attributes for the view
+     * @param session holds the users logged in details
+     * @throws MessagingException if somethinmg goes wrong sending an email
+     * @throws IOException something goes wrong with the file
+     */
     public void sendEmailMovie(String toEmail, String subject, Model model, HttpSession session) throws MessagingException, IOException {
 
         MimeMessage messageMime = mailSender.createMimeMessage();
@@ -64,6 +80,13 @@ public class EmailSenderService {
         System.out.println("Mail sent successfully...");
     }
 
+
+    /**
+     * Sening the email body and image to the user after they make a movie product purchase
+     * @param session holds the logged in users details
+     * @param helper is the email being sent
+     * @throws MessagingException if there is a problem with sending the email
+     */
     private static void sendingEmailBodyAndMovieImageToUser(HttpSession session, MimeMessageHelper helper) throws MessagingException {
         User u = (User) session.getAttribute("loggedInUser");
 
@@ -146,6 +169,12 @@ public class EmailSenderService {
         }
     }
 
+
+    /**
+     * Sending email for forget password
+     * @param email is email that its being sent
+     * @throws MessagingException if there something wrong with sending the email
+     */
     public void sendSetPasswordEmail(String email) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
