@@ -387,6 +387,70 @@ class MovieProductDaoImplTest_IntegrationTest {
 
 
     /**
+     * Search for movie product based on entering movie name
+     * @throws SQLException if something goes wrong in the database
+     */
+    @Test
+    void searchForMovieProductBYMovieName() throws SQLException {
+
+
+        System.out.println("Search for movie product based on movie name");
+
+        Connection conn = connectionSource.getConnection();
+        conn.setAutoCommit(false);
+        MovieProductDao movieProductDao = new MovieProductDaoImpl(conn);
+
+
+        MovieProduct m1 = new MovieProduct(9, "Limitless", LocalDate.of(2002, 03,25), Time.valueOf("01:45:00"), "Eddie Morra doesnt have a bright future as he loses his job but he discovers an untested drug that improves his decisions", "limitless.jpg", 15.99);
+
+        ArrayList<MovieProduct> expectedResults = new ArrayList<>();
+        expectedResults.add(m1);
+
+        String query = "ss";
+
+        ArrayList<MovieProduct> result = movieProductDao.searchForMovieProductBYMovieName(query);
+
+        assertEquals(expectedResults, result);
+
+        // checking the size is the same
+
+        int size = expectedResults.size();
+
+        assertEquals(size, result.size());
+
+    }
+
+
+    /**
+     * Search for movie product based on entering movie name but no result
+     * @throws SQLException if something goes wrong in the database
+     */
+    @Test
+    void searchForMovieProductBYMovieNameButNoResultBasedOnEnteredValue() throws SQLException {
+
+
+        System.out.println("Search for movie product based on movie name but no result based on movie name entered ");
+
+        Connection conn = connectionSource.getConnection();
+        conn.setAutoCommit(false);
+        MovieProductDao movieProductDao = new MovieProductDaoImpl(conn);
+
+
+        MovieProduct m1 = new MovieProduct(9, "Limitless", LocalDate.of(2002, 03,25), Time.valueOf("01:45:00"), "Eddie Morra doesnt have a bright future as he loses his job but he discovers an untested drug that improves his decisions", "limitless.jpg", 15.99);
+
+        ArrayList<MovieProduct> expectedResults = new ArrayList<>();
+        expectedResults.add(m1);
+
+        String query = "ssgfvdv";
+
+        ArrayList<MovieProduct> result = movieProductDao.searchForMovieProductBYMovieName(query);
+
+        assertNotEquals(expectedResults, result);
+
+    }
+
+
+    /**
      * Get all Movie products
      * @return arraylist of all movie products
      */
