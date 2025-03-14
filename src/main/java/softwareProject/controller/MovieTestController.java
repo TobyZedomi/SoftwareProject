@@ -56,21 +56,27 @@ public class MovieTestController {
     @GetMapping("/movieTrailer")
     public String getMovieTrailer(Model model, @RequestParam(name = "id") String id, HttpSession session){
 
-    int movieId = Integer.parseInt(id);
+        if(session.getAttribute("loggedInUser") != null) {
 
-    // totalAmountOItems in basket
-    getTotalAmountOfItemsInCart(session,model);
+            int movieId = Integer.parseInt(id);
+
+            // totalAmountOItems in basket
+            getTotalAmountOfItemsInCart(session, model);
 
 
-    List<MovieTrailer> trailers = movieService.getTrailer(movieId);
+            List<MovieTrailer> trailers = movieService.getTrailer(movieId);
 
-    if (trailers.isEmpty()){
+            if (trailers.isEmpty()) {
 
-        return "noVideo";
-    }
-    model.addAttribute("trailers", trailers);
+                return "noVideo";
+            }
+            model.addAttribute("trailers", trailers);
 
-    return "videos";
+            return "videos";
+
+        }
+
+        return "notValidUser";
 }
 
 
@@ -85,34 +91,40 @@ public class MovieTestController {
     @GetMapping("/viewMovieByGenre")
     public String viewMovieGenre(HttpSession session, Model model, @RequestParam(name = "id") int id){
 
-        String genre_id = Integer.toString(id);
+        if(session.getAttribute("loggedInUser") != null) {
 
-        // totalAmountOItems in basket
-        getTotalAmountOfItemsInCart(session,model);
+            String genre_id = Integer.toString(id);
+
+            // totalAmountOItems in basket
+            getTotalAmountOfItemsInCart(session, model);
 
 
-        List<GenreTest> genres = movieService.getGenres();
-        model.addAttribute("genres", genres);
+            List<GenreTest> genres = movieService.getGenres();
+            model.addAttribute("genres", genres);
 
-        List<MovieTest> movieByGenres = movieService.getMoviesByGenre(genre_id);
+            List<MovieTest> movieByGenres = movieService.getMoviesByGenre(genre_id);
 
-        List<MovieTest> newMovie = new ArrayList<>();
+            List<MovieTest> newMovie = new ArrayList<>();
 
-        for (int i = 0; i < movieByGenres.size() -2;i++) {
+            for (int i = 0; i < movieByGenres.size() - 2; i++) {
 
-            if (movieByGenres.get(i).getBackdrop_path() != null) {
-                newMovie.add(movieByGenres.get(i));
-                model.addAttribute("movieByGenres", newMovie);
+                if (movieByGenres.get(i).getBackdrop_path() != null) {
+                    newMovie.add(movieByGenres.get(i));
+                    model.addAttribute("movieByGenres", newMovie);
+                }
             }
+
+            GenreDao genreDao = new GenreDaoImpl("database.properties");
+
+            GenreTest genre = genreDao.getGenreById(id);
+
+            model.addAttribute("genreName", genre.getName());
+
+            return "movie_index";
+
         }
 
-        GenreDao genreDao = new GenreDaoImpl("database.properties");
-
-        GenreTest genre = genreDao.getGenreById(id);
-
-        model.addAttribute("genreName", genre.getName());
-
-        return "movie_index";
+        return "notValidUser";
     }
 
 
@@ -127,26 +139,31 @@ public class MovieTestController {
     public String viewMovieBySearch(HttpSession session, Model model, @RequestParam(name = "query") String query){
 
 
+        if(session.getAttribute("loggedInUser") != null) {
 
-        // totalAmountOItems in basket
-        getTotalAmountOfItemsInCart(session,model);
+            // totalAmountOItems in basket
+            getTotalAmountOfItemsInCart(session, model);
 
-        List<MovieTest> movieBySearch = movieService.getMoviesBySearch(query);
+            List<MovieTest> movieBySearch = movieService.getMoviesBySearch(query);
 
-        List<MovieTest> newMovieBySearch = new ArrayList<>();
+            List<MovieTest> newMovieBySearch = new ArrayList<>();
 
-        for (int i = 0; i < movieBySearch.size() -2;i++){
+            for (int i = 0; i < movieBySearch.size() - 2; i++) {
 
-            if (movieBySearch.get(i).getBackdrop_path() != null) {
-                newMovieBySearch.add(movieBySearch.get(i));
-                model.addAttribute("movieBySearch", newMovieBySearch);
+                if (movieBySearch.get(i).getBackdrop_path() != null) {
+                    newMovieBySearch.add(movieBySearch.get(i));
+                    model.addAttribute("movieBySearch", newMovieBySearch);
+                }
             }
+
+            model.addAttribute("query", query);
+
+
+            return "search_index";
+
         }
 
-        model.addAttribute("query", query);
-
-
-        return "search_index";
+        return "notValidUser";
     }
 
 
