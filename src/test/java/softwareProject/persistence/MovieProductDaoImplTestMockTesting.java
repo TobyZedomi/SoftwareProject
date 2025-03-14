@@ -351,6 +351,53 @@ class MovieProductDaoImplTestMockTesting {
     }
 
 
+    /**
+     * Search for movie product based on entering movie name
+     * @throws SQLException if something goes wrong in the database
+     */
+    @Test
+    void searchForMovieProductBYMovieName() throws SQLException {
+
+
+        System.out.println("Mock testing to get all Movie Products");
+
+        MovieProduct m1 = new MovieProduct(1, "Limitless", LocalDate.of(2002, 2,21), Time.valueOf("02:07:00"), "Peter Parker is very unhappy with life as he loses his job, Mary Jane and powers but must manage to save New York from the evil Doctor Octopus", "spiderman-2.jpg", 10.99);
+
+        ArrayList<MovieProduct> expectedResults = new ArrayList<>();
+        expectedResults.add(m1);
+
+        String query = "ss";
+
+
+        // Create mock objects
+        Connection dbConn = mock(Connection.class);
+        PreparedStatement ps = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+
+
+        // Fill mock objects with appropriatel dummy data
+        when(dbConn.prepareStatement("SELECT * FROM movieProduct WHERE movie_name LIKE '%' ? '%'")).thenReturn(ps);
+        when(ps.executeQuery()).thenReturn(rs);
+
+        // Want 3 results in the resultset, so need true to be returned 3 times
+        when(rs.next()).thenReturn(true,  false);
+
+
+        when(rs.getInt("movie_id")).thenReturn(m1.getMovie_id());
+        when(rs.getString("movie_name")).thenReturn(m1.getMovie_name());
+        when(rs.getDate("date_of_release")).thenReturn(Date.valueOf(m1.getDate_of_release()));
+        when(rs.getTime("movie_length")).thenReturn(m1.getMovie_length());
+        when(rs.getString("movie_info")).thenReturn(m1.getMovie_info());
+        when(rs.getString("movie_image")).thenReturn(m1.getMovie_image());
+        when(rs.getDouble("listPrice")).thenReturn(m1.getListPrice());
+
+        MovieProductDao movieProductDao = new MovieProductDaoImpl(dbConn);
+        ArrayList<MovieProduct> result = movieProductDao.searchForMovieProductBYMovieName(query);
+
+        assertEquals(expectedResults, result);
+
+    }
+
 
 
 }

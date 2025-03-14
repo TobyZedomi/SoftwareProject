@@ -69,6 +69,11 @@ public class GenreDaoImpl extends MySQLDao implements GenreDao{
 
     // genre name by id
 
+    /**
+     * Get genre based on the id
+     * @param id is teh id being searched
+     * @return the genre based on the genre id
+     */
     @Override
     public GenreTest getGenreById(int id) {
 

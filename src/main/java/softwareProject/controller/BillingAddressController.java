@@ -2,6 +2,7 @@ package softwareProject.controller;
 
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.EventListener;
@@ -20,16 +21,48 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Controller
+@Slf4j
 public class BillingAddressController {
 
 
     @Autowired
     private EmailSenderService senderService;
 
+    /**
+     * Sending an email to users personal emai
+     * @param userEmail is the users email that's its being sent to
+     * @param subject is what the email is about
+     * @param model holds attributes for the view
+     * @param session is used to retrieve the users logged in details
+     * @throws MessagingException if something goes wrong with sending a message
+     * @throws IOException when file is nowhere to be found
+     */
     public void sendMail(String userEmail, String subject, Model model, HttpSession session ) throws MessagingException, IOException {
 
         senderService.sendEmailMovie(userEmail, subject, model, session);
     }
+
+    /**
+     * The user enters there billing address and credit card information to make a purchase of a movie product on the website.
+     * Once the purchase is made they are sent an email, there cart is cleared back to 0, there billing address is added to the database,
+     * the purchase they made is added to the shop order and order items table
+     * @param fullName is the fullName being entered by the user
+     * @param email is the email being entered by the user
+     * @param address is the address being entered by the user
+     * @param city is the city being entered by the user
+     * @param county is the county being entered by the user
+     * @param postcode is the postcode being entered by the user
+     * @param cardName is the cardName being entered by the user
+     * @param cardNumber is the cardNumber being entered by the user
+     * @param Month is the Month being entered by the user
+     * @param Year is the year being entered by the user
+     * @param cvv is the cvv being entered by the user
+     * @param model holds attributes for the view
+     * @param session holds the users logged in information
+     * @return the payment confirmation page if everything is a success and if not a logged-in user it will return the notValidUser page
+     * @throws MessagingException if something goes wrong with sending a message
+     * @throws IOException when file is nowhere to be found
+     */
 
     @PostMapping("/addBillingAddress")
     public String addBillingAddress(
@@ -46,303 +79,326 @@ public class BillingAddressController {
             @RequestParam(name = "cvv") String cvv,
             Model model, HttpSession session) throws MessagingException, IOException {
 
-        User u = (User) session.getAttribute("loggedInUser");
+        if(session.getAttribute("loggedInUser") != null) {
 
-        // validation for billingAddress
+            User u = (User) session.getAttribute("loggedInUser");
 
-        if (fullName.isBlank()){
-            // message for error
-            String message1 = "Full Name was left blank";
-            model.addAttribute("message1",message1);
+            // validation for billingAddress
 
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
+            if (fullName.isBlank()) {
+                // message for error
+                String message1 = "Full Name was left blank";
+                model.addAttribute("message1", message1);
 
-            // method for total cart amount
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
+
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
+
+                return "checkout_index";
+            }
+
+            Pattern fullNameRegex = Pattern.compile("^[a-zA-Z]{3,25}.*[\\s\\.]*$");
+            Matcher match12 = fullNameRegex.matcher(fullName);
+            boolean matchfoundFullName = match12.find();
+
+            if (!matchfoundFullName) {
+
+                System.out.println("Full Name must be between 3-25 characters, letters only");
+                // message for error
+                String message1 = "Full Name must be between 3-25 characters, letters only";
+                model.addAttribute("message1", message1);
+
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+                // method to get Cart information with movies and pricing
+
+                cartInformation(session, model);
+
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
+
+                return "checkout_index";
+            }
+
+            if (email.isBlank()) {
+                // message for error
+                String messageEmail = "Email was left blank";
+                model.addAttribute("messageEmail", messageEmail);
+
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);            // method to get Cart information with movies and pricing
+                cartInformation(session, model);
+
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
+
+                return "checkout_index";
+            }
+
+            if (address.isBlank()) {
+
+                System.out.println("You must choose an address");
+                // message for error
+                String message2 = "Address was left blank";
+                model.addAttribute("message2", message2);
+                // method to get Cart information with movies and pricing
+
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+                cartInformation(session, model);
+
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
+
+                return "checkout_index";
+            }
+
+            if (city.isBlank()) {
+
+                System.out.println("You must choose a city");
+                // message for error
+                String message3 = "City was left blank";
+                model.addAttribute("message3", message3);
+
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
+
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
+
+                return "checkout_index";
+            }
+
+            if (county.isBlank()) {
+
+                System.out.println("You must choose a county");
+                // message for error
+                String message4 = "County was left blank";
+                model.addAttribute("message4", message4);
+
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
+
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
+
+                return "checkout_index";
+            }
+
+            if (postcode.isBlank()) {
+
+                System.out.println("You must choose a postcode");
+                // message for error
+                String message5 = "Postcode was left blank";
+                model.addAttribute("message5", message5);
+
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
+
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
+
+                return "checkout_index";
+            }
+
+            // validation for cardDetails
+
+            if (cardName.isBlank()) {
+                System.out.println("Card Name was left blank");
+                // message for error
+                String message6 = "Card Name was left blank";
+                model.addAttribute("message6", message6);
+
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
+
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
+            }
+
+            Pattern cardNameRegex = Pattern.compile("^[a-zA-Z]{3,25}.*[\\s\\.]*$");
+            Matcher match11 = cardNameRegex.matcher(cardName);
+            boolean matchfoundCardName = match11.find();
+
+            if (!matchfoundCardName) {
+
+                System.out.println("Card Name must be between 3-25 characters, letters only");
+                // message for error
+                String message6 = "Card Name must be between 3-25 characters, letters only";
+                model.addAttribute("message6", message6);
+
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
+
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
+
+                return "checkout_index";
+            }
+
+
+            if (cardNumber.isBlank()) {
+                System.out.println("Card Number was left blank");
+                // message for error
+                String message7 = "Card Number was left blank";
+                model.addAttribute("message7", message7);
+
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
+
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
+
+                return "checkout_index";
+            }
+
+            Pattern cardNumberRegex = Pattern.compile("^(?:4[0-9]{12}(?:[0-9]{3})?)$");
+            Matcher match = cardNumberRegex.matcher(cardNumber);
+            boolean matchfoundCardNumber = match.find();
+
+            if (!matchfoundCardNumber) {
+
+                System.out.println("Card Number must be a valid Visa credit card number");
+                // message for error
+                String message7 = "Card Number must be a valid Visa credit card number";
+                model.addAttribute("message7", message7);
+
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
+
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
+
+                return "checkout_index";
+            }
+
+
+            if (Month.isBlank()) {
+
+                System.out.println("You must choose a month");
+                // message for error
+                String message8 = "Month was left blank";
+                model.addAttribute("message8", message8);
+
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
+
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
+
+                return "checkout_index";
+            }
+
+            if (Year.isBlank()) {
+
+                System.out.println("You must choose a year");
+                // message for error
+                String message9 = "Year was left blank";
+                model.addAttribute("message9", message9);
+
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
+
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
+
+                return "checkout_index";
+            }
+
+
+            Pattern cvvNumberRegex = Pattern.compile("^[0-9]{3,4}$");
+            Matcher match1 = cvvNumberRegex.matcher(cvv);
+            boolean matchfoundCvvNumber = match1.find();
+
+            if (!matchfoundCvvNumber) {
+
+                System.out.println("Cvv number must be 3 or 4 numbers long");
+                // message for error
+                String message10 = "Cvv number must be 3 or 4 numbers long";
+                model.addAttribute("message10", message10);
+
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
+
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
+                return "checkout_index";
+            }
+
+
+            // user to be added if billing User doesn't exist in billingAddress table
+
+            BillingAddressDao billingAddressDao = new BillingAddressDaoImpl("database.properties");
+
+            // update email
+
+            BillingAddress billingUser = new BillingAddress(0, u.getUsername(), fullName, email, address, city, county, postcode);
+            billingAddressDao.addBillingAddress(billingUser);
+
+
+            /// add to shop order for user using addShopOrder method
+            addShopOrder(model, session);
+
+            /// add orderItems
+
+            addOrderItems(session);
+
+            // sendEmail
+
+            sendMail(u.getEmail(), "Purchased Digital Movies", model, session);
+
+            //deleteCartItemByCartId
+            deleteCartItemByCartId(session);
+
+            // totalAmountInCartInNavBar
+
             getTotalAmountOfItemsInCart(session, model);
 
-            return "checkout_index";
+            log.info(" User {} has successfully purchased movie products with us ", u.getUsername());
+
+
+            return "confirmationPaymentPage";
         }
 
-        Pattern fullNameRegex = Pattern.compile("^[a-zA-Z]{3,25}.*[\\s\\.]*$");
-        Matcher match12 = fullNameRegex.matcher(fullName);
-        boolean matchfoundFullName = match12.find();
-
-        if (!matchfoundFullName){
-
-            System.out.println("Full Name must be between 3-25 characters, letters only");
-            // message for error
-            String message1 = "Full Name must be between 3-25 characters, letters only";
-            model.addAttribute("message1",message1);
-
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
-
-            // method to get Cart information with movies and pricing
-
-            cartInformation(session,model);
-
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
-
-            return "checkout_index";
-        }
-
-        if (email.isBlank()){
-            // message for error
-            String messageEmail = "Email was left blank";
-            model.addAttribute("messageEmail",messageEmail);
-
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
-
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
-
-            return "checkout_index";
-        }
-
-        if (address.isBlank()){
-
-            System.out.println("You must choose an address");
-            // message for error
-            String message2 = "Address was left blank";
-            model.addAttribute("message2",message2);
-            // method to get Cart information with movies and pricing
-
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
-
-            cartInformation(session,model);
-
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
-
-            return "checkout_index";
-        }
-
-        if (city.isBlank()){
-
-            System.out.println("You must choose a city");
-            // message for error
-            String message3 = "City was left blank";
-            model.addAttribute("message3",message3);
-
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
-
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
-
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
-
-            return "checkout_index";
-        }
-
-        if (county.isBlank()){
-
-            System.out.println("You must choose a county");
-            // message for error
-            String message4 = "County was left blank";
-            model.addAttribute("message4",message4);
-
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
-
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
-
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
-
-            return "checkout_index";
-        }
-
-        if (postcode.isBlank()){
-
-            System.out.println("You must choose a postcode");
-            // message for error
-            String message5 = "Postcode was left blank";
-            model.addAttribute("message5",message5);
-
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
-
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
-
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
-
-            return "checkout_index";
-        }
-
-        // validation for cardDetails
-
-        if (cardName.isBlank()){
-            System.out.println("Card Name was left blank");
-            // message for error
-            String message6 = "Card Name was left blank";
-            model.addAttribute("message6",message6);
-
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
-
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
-        }
-
-        Pattern cardNameRegex = Pattern.compile("^[a-zA-Z]{3,25}.*[\\s\\.]*$");
-        Matcher match11 = cardNameRegex.matcher(cardName);
-        boolean matchfoundCardName = match11.find();
-
-        if (!matchfoundCardName){
-
-            System.out.println("Card Name must be between 3-25 characters, letters only");
-            // message for error
-            String message6 = "Card Name must be between 3-25 characters, letters only";
-            model.addAttribute("message6",message6);
-
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
-
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
-
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
-
-            return "checkout_index";
-        }
-
-
-        if (cardNumber.isBlank()){
-            System.out.println("Card Number was left blank");
-            // message for error
-            String message7 = "Card Number was left blank";
-            model.addAttribute("message7",message7);
-
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
-
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
-
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
-
-            return "checkout_index";
-        }
-
-        Pattern cardNumberRegex = Pattern.compile("^(?:4[0-9]{12}(?:[0-9]{3})?)$");
-        Matcher match = cardNumberRegex.matcher(cardNumber);
-        boolean matchfoundCardNumber = match.find();
-
-        if (!matchfoundCardNumber){
-
-            System.out.println("Card Number must be a valid Visa credit card number");
-            // message for error
-            String message7 = "Card Number must be a valid Visa credit card number";
-            model.addAttribute("message7",message7);
-
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
-
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
-
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
-
-            return "checkout_index";
-        }
-
-
-        if (Month.isBlank()){
-
-            System.out.println("You must choose a month");
-            // message for error
-            String message8 = "Month was left blank";
-            model.addAttribute("message8",message8);
-
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
-
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
-
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
-
-            return "checkout_index";
-        }
-
-        if (Year.isBlank()){
-
-            System.out.println("You must choose a year");
-            // message for error
-            String message9 = "Year was left blank";
-            model.addAttribute("message9",message9);
-
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
-
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
-
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
-
-            return "checkout_index";
-        }
-
-
-        Pattern cvvNumberRegex = Pattern.compile("^[0-9]{3,4}$");
-        Matcher match1 = cvvNumberRegex.matcher(cvv);
-        boolean matchfoundCvvNumber = match1.find();
-
-        if (!matchfoundCvvNumber){
-
-            System.out.println("Cvv number must be 3 or 4 numbers long");
-            // message for error
-            String message10 = "Cvv number must be 3 or 4 numbers long";
-            model.addAttribute("message10",message10);
-
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
-
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
-
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
-            return "checkout_index";
-        }
-
-
-
-        // user to be added if billing User doesn't exist in billingAddress table
-
-        BillingAddressDao billingAddressDao = new BillingAddressDaoImpl("database.properties");
-
-        // update email
-
-        BillingAddress billingUser = new BillingAddress(0, u.getUsername(),fullName, email, address, city, county, postcode);
-        billingAddressDao.addBillingAddress(billingUser);
-
-
-        /// add to shop order for user using addShopOrder method
-        addShopOrder(model, session);
-
-        /// add orderItems
-
-        addOrderItems(session);
-
-        // sendEmail
-
-        sendMail(u.getEmail(), "Purchased Digital Movies", model, session);
-
-        //deleteCartItemByCartId
-        deleteCartItemByCartId(session);
-
-        // totalAmountInCartInNavBar
-
-        getTotalAmountOfItemsInCart(session,model);
-
-        return "confirmationPaymentPage";
+        return "notValidUser";
 
     }
+
+    /**
+     * Hiolding the users data for the billing address nd credit card information
+     * @param fullName is the fullName being entered by the user
+     * @param email is the email being entered by the user
+     * @param address is the address being entered by the user
+     * @param city is the city being entered by the user
+     * @param county is the county being entered by the user
+     * @param postcode is the postcode being entered by the user
+     * @param cardName is the cardName being entered by the user
+     * @param cardNumber is the cardNumber being entered by the user
+     * @param Month is the Month being entered by the user
+     * @param Year is the year being entered by the user
+     * @param cvv is the cvv being entered by the user
+     * @param model holds teh data for the view on the checkout_index page
+     */
 
     private static void modelValidationBillingAddress(String fullName,String email, String address, String city, String county, String postcode, String cardName, String cardNumber, String Month, String Year, String cvv, Model model) {
         model.addAttribute("fullName", fullName);
@@ -361,6 +417,31 @@ public class BillingAddressController {
 
     ///////////////////////////////// billingAddressIfUserExist
 
+
+    /**
+     * If the billing address already exist it will redirect the user to this method instead and there billing address information will automatically update in the database if they decide to change any values,
+     * so they aren't actually making a new billing address from scratch.
+     * The user enters there billing address and credit card information to make a purchase of a movie product on the website.
+     * Once the purchase is made they are sent an email, there cart is cleared back to 0, there billing address is added to the database,
+     * the purchase they made is added to the shop order and order items table
+     * @param fullName is the fullName being entered by the user
+     * @param email is the email being entered by the user
+     * @param address is the address being entered by the user
+     * @param city is the city being entered by the user
+     * @param county is the county being entered by the user
+     * @param postcode is the postcode being entered by the user
+     * @param cardName is the cardName being entered by the user
+     * @param cardNumber is the cardNumber being entered by the user
+     * @param Month is the Month being entered by the user
+     * @param Year is the year being entered by the user
+     * @param cvv is the cvv being entered by the user
+     * @param model holds attributes for the view
+     * @param session holds the users logged in information
+     * @return the payment confirmation page if everything is a success and return notValidUser page if user isnt valid
+     * @throws MessagingException if something goes wrong with sending a message
+     * @throws IOException when file is nowhere to be found
+     */
+
     @PostMapping("/billingAddressUserBillAlreadyExist")
     public String billingAddressUserBillAlreadyExist(    @RequestParam(name="fullName") String fullName,
                                                          @RequestParam(name = "email") String email,
@@ -375,332 +456,337 @@ public class BillingAddressController {
                                                          @RequestParam(name = "cvv") String cvv, Model model, HttpSession session) throws MessagingException, IOException {
 
 
-        User u = (User) session.getAttribute("loggedInUser");
+        if(session.getAttribute("loggedInUser") != null) {
 
-        // validation for billingAddress
+            User u = (User) session.getAttribute("loggedInUser");
 
-        if (fullName.isBlank()){
-            // message for error
-            String message1 = "Full Name was left blank";
-            model.addAttribute("message1",message1);
+            // validation for billingAddress
 
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+            if (fullName.isBlank()) {
+                // message for error
+                String message1 = "Full Name was left blank";
+                model.addAttribute("message1", message1);
 
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
 
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
 
-            return "checkout_index";
-        }
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
 
-        Pattern fullNameRegex = Pattern.compile("^[a-zA-Z]{3,25}.*[\\s\\.]*$");
-        Matcher match12 = fullNameRegex.matcher(fullName);
-        boolean matchfoundFullName = match12.find();
+                return "checkout_index";
+            }
 
-        if (!matchfoundFullName){
+            Pattern fullNameRegex = Pattern.compile("^[a-zA-Z]{3,25}.*[\\s\\.]*$");
+            Matcher match12 = fullNameRegex.matcher(fullName);
+            boolean matchfoundFullName = match12.find();
 
-            System.out.println("Full Name must be between 3-25 characters, letters only");
-            // message for error
-            String message1 = "Full Name must be between 3-25 characters, letters only";
-            model.addAttribute("message1",message1);
+            if (!matchfoundFullName) {
 
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+                System.out.println("Full Name must be between 3-25 characters, letters only");
+                // message for error
+                String message1 = "Full Name must be between 3-25 characters, letters only";
+                model.addAttribute("message1", message1);
 
-            // method to get Cart information with movies and pricing
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
 
-            cartInformation(session,model);
+                // method to get Cart information with movies and pricing
 
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
+                cartInformation(session, model);
 
-            return "checkout_index";
-        }
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
 
-        if (email.isBlank()){
-            // message for error
-            String messageEmail = "Email was left blank";
-            model.addAttribute("messageEmail",messageEmail);
+                return "checkout_index";
+            }
 
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+            if (email.isBlank()) {
+                // message for error
+                String messageEmail = "Email was left blank";
+                model.addAttribute("messageEmail", messageEmail);
 
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
 
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
 
-            return "checkout_index";
-        }
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
 
-        if (address.isBlank()){
+                return "checkout_index";
+            }
 
-            System.out.println("You must choose an address");
-            // message for error
-            String message2 = "Address was left blank";
-            model.addAttribute("message2",message2);
-            // method to get Cart information with movies and pricing
+            if (address.isBlank()) {
 
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+                System.out.println("You must choose an address");
+                // message for error
+                String message2 = "Address was left blank";
+                model.addAttribute("message2", message2);
+                // method to get Cart information with movies and pricing
 
-            cartInformation(session,model);
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
 
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
+                cartInformation(session, model);
 
-            return "checkout_index";
-        }
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
 
-        if (city.isBlank()){
+                return "checkout_index";
+            }
 
-            System.out.println("You must choose a city");
-            // message for error
-            String message3 = "City was left blank";
-            model.addAttribute("message3",message3);
+            if (city.isBlank()) {
 
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+                System.out.println("You must choose a city");
+                // message for error
+                String message3 = "City was left blank";
+                model.addAttribute("message3", message3);
 
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
 
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
 
-            return "checkout_index";
-        }
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
 
-        if (county.isBlank()){
+                return "checkout_index";
+            }
 
-            System.out.println("You must choose a county");
-            // message for error
-            String message4 = "County was left blank";
-            model.addAttribute("message4",message4);
+            if (county.isBlank()) {
 
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+                System.out.println("You must choose a county");
+                // message for error
+                String message4 = "County was left blank";
+                model.addAttribute("message4", message4);
 
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
 
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
 
-            return "checkout_index";
-        }
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
 
-        if (postcode.isBlank()){
+                return "checkout_index";
+            }
 
-            System.out.println("You must choose a postcode");
-            // message for error
-            String message5 = "Postcode was left blank";
-            model.addAttribute("message5",message5);
+            if (postcode.isBlank()) {
 
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+                System.out.println("You must choose a postcode");
+                // message for error
+                String message5 = "Postcode was left blank";
+                model.addAttribute("message5", message5);
 
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
 
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
 
-            return "checkout_index";
-        }
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
 
-        // validation for cardDetails
+                return "checkout_index";
+            }
 
-        if (cardName.isBlank()){
-            System.out.println("Card Name was left blank");
-            // message for error
-            String message6 = "Card Name was left blank";
-            model.addAttribute("message6",message6);
+            // validation for cardDetails
 
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+            if (cardName.isBlank()) {
+                System.out.println("Card Name was left blank");
+                // message for error
+                String message6 = "Card Name was left blank";
+                model.addAttribute("message6", message6);
 
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
 
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
-        }
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
 
-        Pattern cardNameRegex = Pattern.compile("^[a-zA-Z]{3,25}.*[\\s\\.]*$");
-        Matcher match11 = cardNameRegex.matcher(cardName);
-        boolean matchfoundCardName = match11.find();
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
+            }
 
-        if (!matchfoundCardName){
+            Pattern cardNameRegex = Pattern.compile("^[a-zA-Z]{3,25}.*[\\s\\.]*$");
+            Matcher match11 = cardNameRegex.matcher(cardName);
+            boolean matchfoundCardName = match11.find();
 
-            System.out.println("Card Name must be between 3-25 characters, letters only");
-            // message for error
-            String message6 = "Card Name must be between 3-25 characters, letters only";
-            model.addAttribute("message6",message6);
+            if (!matchfoundCardName) {
 
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+                System.out.println("Card Name must be between 3-25 characters, letters only");
+                // message for error
+                String message6 = "Card Name must be between 3-25 characters, letters only";
+                model.addAttribute("message6", message6);
 
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
 
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
 
-            return "checkout_index";
-        }
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
 
+                return "checkout_index";
+            }
 
-        if (cardNumber.isBlank()){
-            System.out.println("Card Number was left blank");
-            // message for error
-            String message7 = "Card Number was left blank";
-            model.addAttribute("message7",message7);
 
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+            if (cardNumber.isBlank()) {
+                System.out.println("Card Number was left blank");
+                // message for error
+                String message7 = "Card Number was left blank";
+                model.addAttribute("message7", message7);
 
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
 
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
 
-            return "checkout_index";
-        }
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
 
-        Pattern cardNumberRegex = Pattern.compile("^(?:4[0-9]{12}(?:[0-9]{3})?)$");
-        Matcher match = cardNumberRegex.matcher(cardNumber);
-        boolean matchfoundCardNumber = match.find();
+                return "checkout_index";
+            }
 
-        if (!matchfoundCardNumber){
+            Pattern cardNumberRegex = Pattern.compile("^(?:4[0-9]{12}(?:[0-9]{3})?)$");
+            Matcher match = cardNumberRegex.matcher(cardNumber);
+            boolean matchfoundCardNumber = match.find();
 
-            System.out.println("Card Number must be a valid Visa credit card number");
-            // message for error
-            String message7 = "Card Number must be a valid Visa credit card number";
-            model.addAttribute("message7",message7);
+            if (!matchfoundCardNumber) {
 
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+                System.out.println("Card Number must be a valid Visa credit card number");
+                // message for error
+                String message7 = "Card Number must be a valid Visa credit card number";
+                model.addAttribute("message7", message7);
 
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
 
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
 
-            return "checkout_index";
-        }
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
 
+                return "checkout_index";
+            }
 
-        if (Month.isBlank()){
 
-            System.out.println("You must choose a month");
-            // message for error
-            String message8 = "Month was left blank";
-            model.addAttribute("message8",message8);
+            if (Month.isBlank()) {
 
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+                System.out.println("You must choose a month");
+                // message for error
+                String message8 = "Month was left blank";
+                model.addAttribute("message8", message8);
 
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
 
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
 
-            return "checkout_index";
-        }
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
 
-        if (Year.isBlank()){
+                return "checkout_index";
+            }
 
-            System.out.println("You must choose a year");
-            // message for error
-            String message9 = "Year was left blank";
-            model.addAttribute("message9",message9);
+            if (Year.isBlank()) {
 
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+                System.out.println("You must choose a year");
+                // message for error
+                String message9 = "Year was left blank";
+                model.addAttribute("message9", message9);
 
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
 
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
 
-            return "checkout_index";
-        }
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
 
+                return "checkout_index";
+            }
 
-        Pattern cvvNumberRegex = Pattern.compile("^[0-9]{3,4}$");
-        Matcher match1 = cvvNumberRegex.matcher(cvv);
-        boolean matchfoundCvvNumber = match1.find();
 
-        if (!matchfoundCvvNumber){
+            Pattern cvvNumberRegex = Pattern.compile("^[0-9]{3,4}$");
+            Matcher match1 = cvvNumberRegex.matcher(cvv);
+            boolean matchfoundCvvNumber = match1.find();
 
-            System.out.println("Cvv number must be 3 or 4 numbers long");
-            // message for error
-            String message10 = "Cvv number must be 3 or 4 numbers long";
-            model.addAttribute("message10",message10);
+            if (!matchfoundCvvNumber) {
 
-            modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
+                System.out.println("Cvv number must be 3 or 4 numbers long");
+                // message for error
+                String message10 = "Cvv number must be 3 or 4 numbers long";
+                model.addAttribute("message10", message10);
 
-            // method to get Cart information with movies and pricing
-            cartInformation(session,model);
+                modelValidationBillingAddress(fullName, email, address, city, county, postcode, cardName, cardNumber, Month, Year, cvv, model);
 
-            // method for total cart amount
-            getTotalAmountOfItemsInCart(session, model);
-            return "checkout_index";
-        }
+                // method to get Cart information with movies and pricing
+                cartInformation(session, model);
 
+                // method for total cart amount
+                getTotalAmountOfItemsInCart(session, model);
+                return "checkout_index";
+            }
 
 
-        BillingAddressDao billingAddressDao = new BillingAddressDaoImpl("database.properties");
+            BillingAddressDao billingAddressDao = new BillingAddressDaoImpl("database.properties");
 
 
-        // get all billingAddress to see if user already created a billing address
+            // get all billingAddress to see if user already created a billing address
 
-        ArrayList<BillingAddress> billingAddresses = billingAddressDao.getAllBillingAddress();
+            ArrayList<BillingAddress> billingAddresses = billingAddressDao.getAllBillingAddress();
 
-        for (int i = 0; i < billingAddresses.size();i++){
+            for (int i = 0; i < billingAddresses.size(); i++) {
 
 
-            if (billingAddresses.get(i).getUsername().equals(u.getUsername())) {
+                if (billingAddresses.get(i).getUsername().equals(u.getUsername())) {
 
 
-                // get billing address by username
+                    // get billing address by username
 
-                BillingAddress billingAddressByUsername = billingAddressDao.getBillingAddressByUsername(u.getUsername());
-                model.addAttribute("billingAddressByUsername", billingAddressByUsername);
-                session.setAttribute("billingAddressUser", billingAddressByUsername);
+                    BillingAddress billingAddressByUsername = billingAddressDao.getBillingAddressByUsername(u.getUsername());
+                    model.addAttribute("billingAddressByUsername", billingAddressByUsername);
+                    session.setAttribute("billingAddressUser", billingAddressByUsername);
 
-                // update billingAddress details
+                    // update billingAddress details
 
-                billingAddressDao.updateBillingAddressFullName(fullName, billingAddressByUsername.getBilling_address_id());
-                billingAddressDao.updateBillingAddressEmail(email, billingAddressByUsername.getBilling_address_id());
-                billingAddressDao.updateAddressForBillingAddress(address, billingAddressByUsername.getBilling_address_id());
-                billingAddressDao.updateBillingAddressCity(city, billingAddressByUsername.getBilling_address_id());
-                billingAddressDao.updateBillingAddressCounty(county, billingAddressByUsername.getBilling_address_id());
-                billingAddressDao.updateBillingAddressPostCode(postcode, billingAddressByUsername.getBilling_address_id());
+                    billingAddressDao.updateBillingAddressFullName(fullName, billingAddressByUsername.getBilling_address_id());
+                    billingAddressDao.updateBillingAddressEmail(email, billingAddressByUsername.getBilling_address_id());
+                    billingAddressDao.updateAddressForBillingAddress(address, billingAddressByUsername.getBilling_address_id());
+                    billingAddressDao.updateBillingAddressCity(city, billingAddressByUsername.getBilling_address_id());
+                    billingAddressDao.updateBillingAddressCounty(county, billingAddressByUsername.getBilling_address_id());
+                    billingAddressDao.updateBillingAddressPostCode(postcode, billingAddressByUsername.getBilling_address_id());
 
-                /// add to shop order for user using addShopOrder method
-               addShopOrder(model, session);
+                    /// add to shop order for user using addShopOrder method
+                    addShopOrder(model, session);
 
-               /// add orderItems
+                    /// add orderItems
 
-                addOrderItems(session);
+                    addOrderItems(session);
 
-                // send Email
+                    // send Email
 
-                sendMail(u.getEmail(), "Purchased Digital Movies", model, session);
+                    sendMail(u.getEmail(), "Purchased Digital Movies", model, session);
 
-               // delete cartItem byCartId
-                deleteCartItemByCartId(session);
+                    // delete cartItem byCartId
+                    deleteCartItemByCartId(session);
 
-                // totalAmountInCartInNavBar
+                    // totalAmountInCartInNavBar
 
-                getTotalAmountOfItemsInCart(session,model);
+                    getTotalAmountOfItemsInCart(session, model);
 
+                    log.info(" User {} has successfully purchased movie products with us ", u.getUsername());
 
-                return "confirmationPaymentPage";
+
+                    return "confirmationPaymentPage";
+
+                }
 
             }
 
         }
 
 
-        return "error";
+        return "notValidUser";
 
     }
 
@@ -708,6 +794,13 @@ public class BillingAddressController {
 
 
     // method to get total price for users items bought
+
+    /**
+     * Getting the total price of the users products bought
+     * @param model holds attributes for the view
+     * @param session is used to retrieve the users logged in details
+     * @return the total price of the users products bought
+     */
 
     public double totalPrice(Model model, HttpSession session){
 
@@ -747,6 +840,11 @@ public class BillingAddressController {
 
     /// add shop order to order table
 
+    /**
+     * Adding the users orders to the shop order table
+     * @param model holds attributes for the view
+     * @param session is used to retrieve the users logged in details
+     */
     public void addShopOrder(Model model, HttpSession session){
 
         User u = (User) session.getAttribute("loggedInUser");
@@ -782,6 +880,10 @@ public class BillingAddressController {
 
     // deleteCartByCartItem
 
+    /**
+     * Deleting teh users cart items by the the cart id
+     * @param session is used to retrieve the users logged in details
+     */
     public void deleteCartItemByCartId(HttpSession session){
 
         User u = (User) session.getAttribute("loggedInUser");
@@ -798,6 +900,10 @@ public class BillingAddressController {
 
     /// add Order Items
 
+    /**
+     * Adds what the user bought to the order items table
+     * @param session is used to retrieve the users logged in details
+     */
     public void addOrderItems(HttpSession session){
 
         User u = (User) session.getAttribute("loggedInUser");
@@ -934,6 +1040,12 @@ public class BillingAddressController {
 
     // totalAmountInCartInNavBar
 
+    /**
+     * Getting the total amount of items for the users cart
+     * @param model holds attributes for the view
+     * @param session is used to retrieve the users logged in details
+     */
+
     public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
 
         /// get total number of items in cart for user
@@ -953,6 +1065,12 @@ public class BillingAddressController {
 
 
     // method to get Cart information with movies and pricing
+
+    /**
+     * Holds the users cart information with the pricing
+     * @param model holds attributes for the view
+     * @param session is used to retrieve the users logged in details
+     */
 
     public void cartInformation(HttpSession session,Model model){
 

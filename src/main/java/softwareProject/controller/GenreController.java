@@ -1,5 +1,6 @@
 package softwareProject.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 
@@ -16,6 +17,7 @@ import softwareProject.persistence.GenreDaoImpl;
 import softwareProject.service.MovieService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -37,38 +39,57 @@ public class GenreController {
      */
 
 
+    /**
+     * View the genre from the movie db api
+     * @param model holds the attributes for the view
+     * @return the movie index page
+     */
 
     @GetMapping("/viewGenre")
-    public String viewGenre(Model model){
+    public String viewGenre(Model model, HttpSession session){
+
+        if(session.getAttribute("loggedInUser") != null) {
 
 
-        List<GenreTest> genres = movieService.getGenres();
-        model.addAttribute("genres", genres);
+            List<GenreTest> genres = movieService.getGenres();
+            model.addAttribute("genres", genres);
 
-        return "movie_index";
+            return "movie_index";
+
+        }
+
+        return "notValidUser";
     }
 
 // view genre by id
 
+    /**
+     * Get the name of teh genre from the movie db api based on its ID
+     * @param model holds the attributes for the view
+     * @param id is the genre id being entered
+     * @return the movie index page
+     */
     @GetMapping("/getGenreName")
-    public String genreName(Model model, @RequestParam(name = "id") String id){
+    public String genreName(Model model, HttpSession session, @RequestParam(name = "id") String id){
 
+        if(session.getAttribute("loggedInUser") != null) {
+            int genre_id = Integer.parseInt(id);
 
-        int genre_id = Integer.parseInt(id);
+            List<GenreTest> genres = movieService.getGenres();
+            model.addAttribute("genres", genres);
 
-        List<GenreTest> genres = movieService.getGenres();
-        model.addAttribute("genres", genres);
+            for (int i = 0; i < genres.size(); i++) {
 
-        for (int i = 0; i < genres.size();i++){
+                if (genres.get(i).getId() == genre_id) {
 
-            if (genres.get(i).getId() == genre_id ){
-
-                model.addAttribute("genreName", genres.get(i).getName());
-                return "movie_index";
+                    model.addAttribute("genreName", genres.get(i).getName());
+                    return "movie_index";
+                }
             }
+
         }
 
-        return "error";
+        return "notValidUser";
     }
 
 }

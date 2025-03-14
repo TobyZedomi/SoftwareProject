@@ -48,6 +48,21 @@ public class UserController {
 
     // register
 
+    /**
+     *
+     * @param username is the usernae being enetered
+     * @param displayName is teh display name being enetered
+     * @param email is the email being enetered
+     * @param password is the password being enetered
+     * @param password2 is the password being entered to be confirmed
+     * @param dateOfBirth is the date of birth being enetered
+     * @param model holds the attributes f or the view
+     * @param session holds the logged-in users sessions
+     * @return page to purchase subscription if successfully but if validation is wrong it will stay on the registration page
+     * @throws InvalidKeySpecException
+     * @throws NoSuchAlgorithmException
+     */
+
     @PostMapping("registerUser")
     public String registerUser(
             @RequestParam(name="username") String username,
@@ -471,7 +486,12 @@ public class UserController {
 
     ////// bcrypt
 
-
+    /**
+     * Check if password entered by user matches the hashed password
+     * @param password_plaintext is the password being checked against the stored hash
+     * @param stored_hash is the stored hash password being checked against the plaintext
+     * @return true if a match and false if not a match
+     */
     public static boolean checkPassword(String password_plaintext, String stored_hash) {
         boolean password_verified = false;
 

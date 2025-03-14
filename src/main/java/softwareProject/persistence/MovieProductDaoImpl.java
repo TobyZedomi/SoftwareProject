@@ -30,6 +30,10 @@ public class MovieProductDaoImpl extends MySQLDao implements MovieProductDao {
     }
 
 
+    /**
+     * Get all movie products
+     * @return an arraylist of movie products
+     */
     @Override
     public ArrayList<MovieProduct> getAllMovieProducts() {
         ArrayList<MovieProduct> movieProducts = new ArrayList<>();
@@ -76,6 +80,11 @@ public class MovieProductDaoImpl extends MySQLDao implements MovieProductDao {
     }
 
 
+    /**
+     * Get movie product based on the id
+     * @param movieId is the movie id being searched
+     * @return the movie product based on the id
+     */
     @Override
     public MovieProduct getMovieById(int movieId) {
 
@@ -124,6 +133,11 @@ public class MovieProductDaoImpl extends MySQLDao implements MovieProductDao {
 
     // add Movie Product
 
+    /**
+     * Add a movie product
+     * @param movieProduct is the movie product being added
+     * @return 1 if added and 0 if not added
+     */
     @Override
     public int addMovieProduct(MovieProduct movieProduct){
         // DATABASE CODE
@@ -170,6 +184,11 @@ public class MovieProductDaoImpl extends MySQLDao implements MovieProductDao {
     }
 
 
+    /**
+     * Delete movie product by movie id
+     * @param movieId is the movie id being searched
+     * @return 1if deleted and 0 if not deleted
+     */
 
     @Override
     public int deleteMovieProductByMovieId(int movieId){
@@ -211,6 +230,12 @@ public class MovieProductDaoImpl extends MySQLDao implements MovieProductDao {
 
     // update movie name
 
+    /**
+     * Update movie product name based on movie id
+     * @param movieName is the movie name being updated
+     * @param movieId is the id being searched
+     * @return 1 if updated and 0 if not updated
+     */
     @Override
     public int updateMovieProductNameByMovieId(String movieName, int movieId)
     {
@@ -249,6 +274,12 @@ public class MovieProductDaoImpl extends MySQLDao implements MovieProductDao {
     }
 
 
+    /**
+     * Update movie product date of release based on movie id
+     * @param dateOfRelease is the date of release being updated
+     * @param movieId is the id being searched
+     * @return 1 if updated and 0 if not updated
+     */
 
     @Override
     public int updateMovieProductDateOfReleaseByMovieId(LocalDate dateOfRelease, int movieId)
@@ -288,6 +319,13 @@ public class MovieProductDaoImpl extends MySQLDao implements MovieProductDao {
     }
 
 
+    /**
+     * Update movie product info based on the movie id
+     * @param movieInfo is the movie info being updated
+     * @param movieId id the id being searched
+     * @return 1 if updated and 0 if not updated
+     */
+
 
     @Override
     public int updateMovieProductInfoByMovieId(String movieInfo, int movieId)
@@ -326,7 +364,12 @@ public class MovieProductDaoImpl extends MySQLDao implements MovieProductDao {
         return rowsAffected;
     }
 
-
+    /**
+     * Update movie product price based on the movie id
+     * @param listPrice is the list price being updated
+     * @param movieId is the movie id being searched
+     * @return 1 if updated and 0 if not updated
+     */
     @Override
     public int updateMovieProductPriceByMovieId(double listPrice, int movieId)
     {
@@ -366,6 +409,12 @@ public class MovieProductDaoImpl extends MySQLDao implements MovieProductDao {
 
 
 // search for Movie Product
+
+    /**
+     * Get movie product based the movie name being searched
+     * @param movieName is the movie name being searched
+     * @return a list of movies based on the search
+     */
     @Override
     public ArrayList<MovieProduct> searchForMovieProductBYMovieName(String movieName){
 

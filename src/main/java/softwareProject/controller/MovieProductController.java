@@ -26,6 +26,19 @@ import java.util.List;
 public class MovieProductController {
 
 
+    /**
+     * The admin being able to add a new movie product to the store
+     * @param movie_name is the name of the movie product to be added
+     * @param date_of_release is the date of release of teh movie product to be added
+     * @param movie_info is the movie information for the movie product to be added
+     * @param listPrice is the listPrice of the movie product to be added
+     * @param file is the file for the picture
+     * @param redirectAttributes
+     * @param session holds the logged-in users information
+     * @param model holds information for the view
+     * @return the admin panel page
+     * @throws IOException when file is nowhere to be found
+     */
 
     @PostMapping("/addMovieProduct")
     public String addMovieProduct( @RequestParam(name = "movie_name") String movie_name,
@@ -80,7 +93,13 @@ public class MovieProductController {
     }
 
 
-
+    /**
+     * Admin being able to delete a movie product from the store
+     * @param session holds the logged-in users information
+     * @param movieId is the mocvie being deleted
+     * @param model hold the attributes for the view
+     * @return
+     */
 
     @GetMapping("/deleteMovieProduct")
     public String deleteMovieProduct(HttpSession session,
@@ -122,6 +141,13 @@ public class MovieProductController {
     }
 
 
+    /**
+     * Getting the movie product by the movie id to updated
+     * @param session holds the logged-in users information
+     * @param movieId is the movie product being searched for
+     * @param model holds the attributes for the view
+     * @return adminUpdate page
+     */
     @GetMapping("/getMovieProductById")
     public String getMovieProductById(HttpSession session,
                                      @RequestParam(name = "movieId") String movieId, Model model) {
@@ -143,6 +169,17 @@ public class MovieProductController {
     }
 
 
+    /**
+     * Admin can update the movie product in the store
+     * @param movie_id is the movie id to be updated
+     * @param movie_name is the movie name to be updated
+     * @param date_of_release is the date of release to be updated
+     * @param movie_info is teh movi einformation to be updated
+     * @param listPrice is the lsit price to be updated
+     * @param session holds the logged-in users information
+     * @param model holds attributes for the view
+     * @return the admin panel index page
+     */
     @PostMapping("updateMovieProduct")
     public String updateMovieProduct(@RequestParam(name = "movie_id") String movie_id,
                                      @RequestParam(name = "movie_name") String movie_name,
@@ -200,6 +237,13 @@ public class MovieProductController {
     }
 
 
+    /**
+     * Getting movie products based on the name being searched
+     * @param session holds the logged-in users information
+     * @param model holds attributes for the view
+     * @param query is what is being searched
+     * @return movieProductSearch page
+     */
     @GetMapping("/viewMovieProductBySearch")
     public String viewMovieProductBySearch(HttpSession session, Model model, @RequestParam(name = "query") String query){
 
@@ -232,13 +276,21 @@ public class MovieProductController {
         return "movieProductSearch";
     }
 
-
+    /**
+     * Get all the movie products for the store
+     * @param model holds the attributes for the view
+     * @param movieProductDao holds all teh movie products
+     */
     private static void getAllMovieProducts(Model model, MovieProductDao movieProductDao) {
         List<MovieProduct> movieProducts = movieProductDao.getAllMovieProducts();
         model.addAttribute("movieProducts", movieProducts);
     }
 
-
+    /**
+     * Getting the total amount of items in the cart for logged in user
+     * @param session holds the logged-in users information
+     * @param model holds attributes for the view
+     */
 
     public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
 

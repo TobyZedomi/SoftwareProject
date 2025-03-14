@@ -19,6 +19,14 @@ import java.util.ArrayList;
 @Controller
 public class SubscriptionPlanController {
 
+    /**
+     * Choosing subscription plan
+     * @param session holds the logged in users details
+     * @param subscriptionPlanId is the subscription plan being picked
+     * @param model holds the attributes for the view
+     * @return
+     */
+
     @GetMapping("SubPlanStandard")
     public String addSubscriptionForUser(HttpSession session,
                                         @RequestParam(name = "subscriptionPlanId") String subscriptionPlanId,
@@ -37,6 +45,14 @@ public class SubscriptionPlanController {
 
     }
 
+
+    /**
+     * Choosing susbcription plan if they skipped it upon registration. If they already have s a subscription they will be notified of this
+     * @param session holds the logged in users details
+     * @param subscriptionPlanId is the subscription plan to be picked
+     * @param model holds the attributes for the view
+     * @return subscription index if already purchased but go to checkout page for subscription if they choose to purchase subscription
+     */
 
     @GetMapping("SubPlanStandardPart2")
     public String addSubscriptionForUserPart2(HttpSession session,
@@ -81,6 +97,12 @@ public class SubscriptionPlanController {
 
     }
 
+
+    /**
+     * Gets the total amount of items in the cart
+     * @param session holds the logged in users details
+     * @param model holds the attributes for the view
+     */
 
     // total amount of items in cart
     public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
