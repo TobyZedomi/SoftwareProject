@@ -45,7 +45,15 @@ public class MovieTestController {
 
      */
 
-@GetMapping("/movieTrailer")
+
+    /**
+     * Getting movie videos based on the movie id entered
+     * @param model holds the attributes for the view
+     * @param id is teh movie id being searched
+     * @param session holds the logged in users details
+     * @return videos page if te videos exist and noVideo page if there are no videos for that movie
+     */
+    @GetMapping("/movieTrailer")
     public String getMovieTrailer(Model model, @RequestParam(name = "id") String id, HttpSession session){
 
     int movieId = Integer.parseInt(id);
@@ -65,6 +73,14 @@ public class MovieTestController {
     return "videos";
 }
 
+
+    /**
+     * View movies by the genre id
+     * @param session holds the users logged information
+     * @param model holds the information for the view
+     * @param id is the genre id being searched
+     * @return
+     */
 
     @GetMapping("/viewMovieByGenre")
     public String viewMovieGenre(HttpSession session, Model model, @RequestParam(name = "id") int id){
@@ -100,7 +116,13 @@ public class MovieTestController {
     }
 
 
-
+    /**
+     * View movies by what is searched in the search bar
+     * @param session holds the users logged information
+     * @param model holds the information for the view
+     * @param query is the movie being searched
+     * @return the search index page
+     */
     @GetMapping("/viewMovieBySearch")
     public String viewMovieBySearch(HttpSession session, Model model, @RequestParam(name = "query") String query){
 
@@ -128,9 +150,11 @@ public class MovieTestController {
     }
 
 
-
-
-
+    /**
+     * Get the total amount of cart items in the cart for the user
+     * @param session holds the users logged information
+     * @param model holds the information for the view
+     */
 
     // total amount of items in cart
     public void getTotalAmountOfItemsInCart(HttpSession session,Model model){

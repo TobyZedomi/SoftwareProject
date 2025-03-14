@@ -37,6 +37,11 @@ public class GenreController {
      */
 
 
+    /**
+     * View the genre from the movie db api
+     * @param model holds the attributes for the view
+     * @return the movie index page
+     */
 
     @GetMapping("/viewGenre")
     public String viewGenre(Model model){
@@ -50,6 +55,12 @@ public class GenreController {
 
 // view genre by id
 
+    /**
+     * Get the name of teh genre from the movie db api based on its ID
+     * @param model holds the attributes for the view
+     * @param id is the genre id being entered
+     * @return the movie index page
+     */
     @GetMapping("/getGenreName")
     public String genreName(Model model, @RequestParam(name = "id") String id){
 

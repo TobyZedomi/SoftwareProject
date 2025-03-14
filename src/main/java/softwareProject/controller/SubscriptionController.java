@@ -29,16 +29,33 @@ public class SubscriptionController {
     @Autowired
     private EmailSenderService senderService;
 
+    /**
+     * Sends email top the user for there subscription purchased
+     * @param userEmail is the users email that its being sent to
+     * @param subject is the subject of what the email is about
+     * @param body is what is in the email body
+     */
     public void sendMail(String userEmail, String subject, String body ){
 
         senderService.sendEmail(userEmail, subject, body);
     }
 
     /**
-     * Adds a yearly subscription for the user when new user is registered
-     * @param session is the users details being held when registration is complete
-     * @param model stores data
-     * @return index page to go to the home page of the system if purchased subscription was a success or goes to the subscriptionFailed page if not a success
+     * User being able to purchase a subscription based on the subscription plan they chose upon registration. User will be sent email confirmation of purchase
+     * @param session holds the logged in users details
+     * @param fullName is the fullName being entered by the user
+     * @param email is the email being entered by the user
+     * @param address is the address being entered by the user
+     * @param city is the city being entered by the user
+     * @param county is the county being entered by the user
+     * @param postcode is the postcode being entered by the user
+     * @param cardName is the cardName being entered by the user
+     * @param cardNumber is the cardNumber being entered by the user
+     * @param Month is the Month being entered by the user
+     * @param Year is the year being entered by the user
+     * @param cvv is the cvv being entered by the user
+     * @param model holds the attributes for the view
+     * @return purchase subscription page if validation is wrong but if subscription is a success return the confirmation page
      */
     @PostMapping("addSubscriptionForUser")
     public String addSubscriptionForUser(HttpSession session,
@@ -107,6 +124,23 @@ public class SubscriptionController {
         return view;
     }
 
+
+    /**
+     * Validation for the subscription
+     * @param fullName is the fullName being entered by the user
+     * @param email is the email being entered by the user
+     * @param address is the address being entered by the user
+     * @param city is the city being entered by the user
+     * @param county is the county being entered by the user
+     * @param postcode is the postcode being entered by the user
+     * @param cardName is the cardName being entered by the user
+     * @param cardNumber is the cardNumber being entered by the user
+     * @param Month is the Month being entered by the user
+     * @param Year is the year being entered by the user
+     * @param cvv is the cvv being entered by the user
+     * @param model the attributes for the view
+     * @return purchase Subscription is validation is incorrect
+     */
     private static String validationForAddSubscription(String fullName, String email, String address, String city, String county, String postcode, String cardName, String cardNumber, String Month, String Year, String cvv, Model model) {
         // validation for billingAddress
 
@@ -310,6 +344,11 @@ public class SubscriptionController {
         return null;
     }
 
+
+    /**
+     * To view the most popular movies for after the user registers
+     * @param model holds the attributes for the view
+     */
     private void toViewMoviesFromMovieDbApi(Model model) {
         List<MovieTest> movies = movieService.getMovies();
         model.addAttribute("movies", movies);
@@ -328,6 +367,22 @@ public class SubscriptionController {
         model.addAttribute("cvv", cvv);
     }
 
+
+    /**
+     * Model attribute names for the billing address
+     * @param fullName is the fullName being entered by the user
+     * @param email is the email being entered by the user
+     * @param address is the address being entered by the user
+     * @param city is the city being entered by the user
+     * @param county is the county being entered by the user
+     * @param postcode is the postcode being entered by the user
+     * @param cardName is the cardName being entered by the user
+     * @param cardNumber is the cardNumber being entered by the user
+     * @param Month is the Month being entered by the user
+     * @param Year is the year being entered by the user
+     * @param cvv is the cvv being entered by the user
+     * @param model holds the attributes for the view
+     */
     private static void modelValidationBillingAddress(String fullName,String email, String address, String city, String county, String postcode, String cardName, String cardNumber, String Month, String Year, String cvv, Model model) {
         model.addAttribute("fullName", fullName);
         model.addAttribute("email", email);
@@ -346,10 +401,21 @@ public class SubscriptionController {
 /// subscription for if user registered but doesn't have a subscription
 
     /**
-     * Adds a yearly subscription for the user when new user is registered
-     * @param session is the users details being held when registration is complete
-     * @param model stores data
-     * @return index page to go to the home page of the system if purchased subscription was a success or goes to the subscriptionFailed page if not a success
+     * User can purchase subscription if they decided to skip it upon registration. User will be sent email confirmation of purchase
+     * @param session holds the logged in users details
+     * @param fullName is the fullName being entered by the user
+     * @param email is the email being entered by the user
+     * @param address is the address being entered by the user
+     * @param city is the city being entered by the user
+     * @param county is the county being entered by the user
+     * @param postcode is the postcode being entered by the user
+     * @param cardName is the cardName being entered by the user
+     * @param cardNumber is the cardNumber being entered by the user
+     * @param Month is the Month being entered by the user
+     * @param Year is the year being entered by the user
+     * @param cvv is the cvv being entered by the user
+     * @param model holds the attributes for the view
+     * @return confirmation page once subscription is purchased
      */
     @PostMapping("addSubscriptionForUserPart2")
     public String addSubscriptionForUserPart2(HttpSession session,
@@ -675,10 +741,22 @@ public class SubscriptionController {
 
 
     /**
-     * Adds a yearly subscription for the user when new user is registered
-     * @param session is the users details being held when registration is complete
-     * @param model stores data
-     * @return index page to go to the home page of the system if purchased subscription was a success or goes to the subscriptionFailed page if not a success
+     * If user already has a billing address with us they use this method that automatically updates there billing address
+     * if they enter anything different. User will be sent confirmation email once subscription is purchased
+     * @param session holds the logged in users details
+     * @param fullName is the fullName being entered by the user
+     * @param email is the email being entered by the user
+     * @param address is the address being entered by the user
+     * @param city is the city being entered by the user
+     * @param county is the county being entered by the user
+     * @param postcode is the postcode being entered by the user
+     * @param cardName is the cardName being entered by the user
+     * @param cardNumber is the cardNumber being entered by the user
+     * @param Month is the Month being entered by the user
+     * @param Year is the year being entered by the user
+     * @param cvv is the cvv being entered by the user
+     * @param model holds the attributes for the view
+     * @return confirmation page once purchased
      */
     @PostMapping("addSubscriptionForUserPart2IfBillingExist")
     public String addSubscriptionForUserPart2IfBillingExist(HttpSession session,
@@ -783,6 +861,12 @@ public class SubscriptionController {
 
 
     // total amount of items in cart
+
+    /**
+     * Gets the total amount of items in the users cart
+     * @param session holds the logged in users details
+     * @param model holds the attributes for the view
+     */
     public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
 
         /// get total number of items in cart for user

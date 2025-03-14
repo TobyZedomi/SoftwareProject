@@ -26,10 +26,41 @@ public class BillingAddressController {
     @Autowired
     private EmailSenderService senderService;
 
+    /**
+     * Sending an email to users personal emai
+     * @param userEmail is the users email that's its being sent to
+     * @param subject is what the email is about
+     * @param model holds attributes for the view
+     * @param session is used to retrieve the users logged in details
+     * @throws MessagingException if something goes wrong with sending a message
+     * @throws IOException when file is nowhere to be found
+     */
     public void sendMail(String userEmail, String subject, Model model, HttpSession session ) throws MessagingException, IOException {
 
         senderService.sendEmailMovie(userEmail, subject, model, session);
     }
+
+    /**
+     * The user enters there billing address and credit card information to make a purchase of a movie product on the website.
+     * Once the purchase is made they are sent an email, there cart is cleared back to 0, there billing address is added to the database,
+     * the purchase they made is added to the shop order and order items table
+     * @param fullName is the fullName being entered by the user
+     * @param email is the email being entered by the user
+     * @param address is the address being entered by the user
+     * @param city is the city being entered by the user
+     * @param county is the county being entered by the user
+     * @param postcode is the postcode being entered by the user
+     * @param cardName is the cardName being entered by the user
+     * @param cardNumber is the cardNumber being entered by the user
+     * @param Month is the Month being entered by the user
+     * @param Year is the year being entered by the user
+     * @param cvv is the cvv being entered by the user
+     * @param model holds attributes for the view
+     * @param session holds the users logged in information
+     * @return the payment confirmation page if everything is a success
+     * @throws MessagingException if something goes wrong with sending a message
+     * @throws IOException when file is nowhere to be found
+     */
 
     @PostMapping("/addBillingAddress")
     public String addBillingAddress(
@@ -344,6 +375,22 @@ public class BillingAddressController {
 
     }
 
+    /**
+     * Hiolding the users data for the billing address nd credit card information
+     * @param fullName is the fullName being entered by the user
+     * @param email is the email being entered by the user
+     * @param address is the address being entered by the user
+     * @param city is the city being entered by the user
+     * @param county is the county being entered by the user
+     * @param postcode is the postcode being entered by the user
+     * @param cardName is the cardName being entered by the user
+     * @param cardNumber is the cardNumber being entered by the user
+     * @param Month is the Month being entered by the user
+     * @param Year is the year being entered by the user
+     * @param cvv is the cvv being entered by the user
+     * @param model holds teh data for the view on the checkout_index page
+     */
+
     private static void modelValidationBillingAddress(String fullName,String email, String address, String city, String county, String postcode, String cardName, String cardNumber, String Month, String Year, String cvv, Model model) {
         model.addAttribute("fullName", fullName);
         model.addAttribute("email", email);
@@ -360,6 +407,31 @@ public class BillingAddressController {
 
 
     ///////////////////////////////// billingAddressIfUserExist
+
+
+    /**
+     * If the billing address already exist it will redirect the user to this method instead and there billing address information will automatically update in the database if they decide to change any values,
+     * so they aren't actually making a new billing address from scratch.
+     * The user enters there billing address and credit card information to make a purchase of a movie product on the website.
+     * Once the purchase is made they are sent an email, there cart is cleared back to 0, there billing address is added to the database,
+     * the purchase they made is added to the shop order and order items table
+     * @param fullName is the fullName being entered by the user
+     * @param email is the email being entered by the user
+     * @param address is the address being entered by the user
+     * @param city is the city being entered by the user
+     * @param county is the county being entered by the user
+     * @param postcode is the postcode being entered by the user
+     * @param cardName is the cardName being entered by the user
+     * @param cardNumber is the cardNumber being entered by the user
+     * @param Month is the Month being entered by the user
+     * @param Year is the year being entered by the user
+     * @param cvv is the cvv being entered by the user
+     * @param model holds attributes for the view
+     * @param session holds the users logged in information
+     * @return the payment confirmation page if everything is a success
+     * @throws MessagingException if something goes wrong with sending a message
+     * @throws IOException when file is nowhere to be found
+     */
 
     @PostMapping("/billingAddressUserBillAlreadyExist")
     public String billingAddressUserBillAlreadyExist(    @RequestParam(name="fullName") String fullName,
@@ -709,6 +781,13 @@ public class BillingAddressController {
 
     // method to get total price for users items bought
 
+    /**
+     * Getting the total price of the users products bought
+     * @param model holds attributes for the view
+     * @param session is used to retrieve the users logged in details
+     * @return the total price of the users products bought
+     */
+
     public double totalPrice(Model model, HttpSession session){
 
         User u = (User) session.getAttribute("loggedInUser");
@@ -747,6 +826,11 @@ public class BillingAddressController {
 
     /// add shop order to order table
 
+    /**
+     * Adding the users orders to the shop order table
+     * @param model holds attributes for the view
+     * @param session is used to retrieve the users logged in details
+     */
     public void addShopOrder(Model model, HttpSession session){
 
         User u = (User) session.getAttribute("loggedInUser");
@@ -782,6 +866,10 @@ public class BillingAddressController {
 
     // deleteCartByCartItem
 
+    /**
+     * Deleting teh users cart items by the the cart id
+     * @param session is used to retrieve the users logged in details
+     */
     public void deleteCartItemByCartId(HttpSession session){
 
         User u = (User) session.getAttribute("loggedInUser");
@@ -798,6 +886,10 @@ public class BillingAddressController {
 
     /// add Order Items
 
+    /**
+     * Adds what the user bought to the order items table
+     * @param session is used to retrieve the users logged in details
+     */
     public void addOrderItems(HttpSession session){
 
         User u = (User) session.getAttribute("loggedInUser");
@@ -934,6 +1026,12 @@ public class BillingAddressController {
 
     // totalAmountInCartInNavBar
 
+    /**
+     * Getting the total amount of items for the users cart
+     * @param model holds attributes for the view
+     * @param session is used to retrieve the users logged in details
+     */
+
     public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
 
         /// get total number of items in cart for user
@@ -953,6 +1051,12 @@ public class BillingAddressController {
 
 
     // method to get Cart information with movies and pricing
+
+    /**
+     * Holds the users cart information with the pricing
+     * @param model holds attributes for the view
+     * @param session is used to retrieve the users logged in details
+     */
 
     public void cartInformation(HttpSession session,Model model){
 

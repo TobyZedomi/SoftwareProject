@@ -19,6 +19,13 @@ public class CartItemController {
 
     // add CartItem
 
+    /**
+     * Adding movie product to the cart and it wont be added if already added to the cart and if they have already purchased the movie before
+     * @param session holds the logged-in users information
+     * @param movieId is the movie product being added to the cart
+     * @param model holds the attributes for the view
+     * @return the store index page if the movie product us added to cart, not added to cart because its already in the cart, not added to cart because they have already purchased the movie before
+     */
 
     @GetMapping("/addCartItem")
     public String processRequest(HttpSession session,
@@ -128,6 +135,13 @@ public class CartItemController {
 
     // delete Cart Item
 
+    /**
+     * Delete the movie product from the users cart
+     * @param session is the logged-in users details
+     * @param movieId is the movie product being deleted
+     * @param model holds the attributes for the view
+     * @return cart index page once deleted
+     */
     @GetMapping("/deleteCartItem")
     public String deleteCartItem(HttpSession session,
                                  @RequestParam(name = "movieId") String movieId, Model model) {
@@ -194,6 +208,13 @@ public class CartItemController {
 
     /// MOVIE PRODUCT SEARCH
 
+    /**
+     * Adding movie product to the cart that the users searches for with the search bar and it won't be added if already added to the cart and if they have already purchased the movie before
+     * @param session holds the logged-in users information and the information for the query the users enetres
+     * @param movieId is the movie product being added to the cart
+     * @param model holds the attributes for the view
+     * @return the movieProductSearch page if the movie product us added to cart, not added to cart because its already in the cart, not added to cart because they have already purchased the movie before
+     */
 
     @GetMapping("/addCartItemMovieProductSearch")
     public String movieProductSearch(HttpSession session,
@@ -313,6 +334,12 @@ public class CartItemController {
 
     // cart count
 
+    /**
+     * Getting the total amount of cart items that the user has
+     * @param session holds teh logged in users details
+     * @param model holds the attributes for the view
+     * @return cart index page
+     */
 
     @GetMapping("/totalNumberOfCartItems")
     public String deleteCartItem(HttpSession session,
@@ -335,6 +362,12 @@ public class CartItemController {
 
 
     // total amount of items in cart
+
+    /**
+     * Getting the total amount of items in the cart
+     * @param session holds the users logged in details
+     * @param model holds the attributed fo the view
+     */
     public void getTotalAmountOfItemsInCart(HttpSession session, Model model) {
 
         /// get total number of items in cart for user
