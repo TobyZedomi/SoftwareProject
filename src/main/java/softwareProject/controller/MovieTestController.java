@@ -72,6 +72,9 @@ public class MovieTestController {
             }
             model.addAttribute("trailers", trailers);
 
+            MovieDbByMovieId  movieDbByMovieId = movieService.getMoviesByMovieId(movieId);
+            model.addAttribute("movieName", movieDbByMovieId.getTitle());
+
             return "videos";
 
         }

@@ -114,4 +114,16 @@ public class MovieService {
         return response.getBody().getResults();
     }
 
+    // get movie by movie id
+
+
+    public MovieDbByMovieId getMoviesByMovieId(int movieId){
+
+        ResponseEntity<MovieDbByMovieId> response = restTemplate.getForEntity("https://api.themoviedb.org/3/movie/"+movieId+"?"+"&api_key="+API_KEY, MovieDbByMovieId.class);
+
+
+        return response.getBody();
+    }
+
+
 }
