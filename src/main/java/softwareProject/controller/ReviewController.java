@@ -23,6 +23,7 @@ public class ReviewController {
                                  Model model) {
         model.addAttribute("movieId", movieId);
         model.addAttribute("movieTitle", movieTitle);
+        log.info("Going to the review form for movie: {}", movieTitle);
         return "write_review";
     }
 
@@ -31,19 +32,37 @@ public class ReviewController {
                                @RequestParam("movieId") int movieId,
                                @RequestParam("movieTitle") String movieTitle,
                                @RequestParam("content") String content,
-                               @RequestParam("rating") int rating) {
+                               @RequestParam("rating") int rating,
+                               Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (loggedInUser == null) {
-            return "redirect:/login";
+            log.info("User not logged in. Redirecting to login page.");
+            return "login";
         }
 
         String username = loggedInUser.getUsername();
 
-        Review review = new Review(username, movieId, movieTitle, content, rating, LocalDateTime.now());
+        // Validation
+        if (content.isBlank()) {
+            String message = "Review content cannot be empty.";
+            model.addAttribute("message", message);
+            log.info("Validation failed: {}", message);
+            return "write_review";
+        }
 
+        if (rating < 1 || rating > 5) {
+            String message = "Rating must be between 1 and 5.";
+            model.addAttribute("message", message);
+            log.info("Validation failed: {}", message);
+            return "write_review";
+        }
+
+          Review review = new Review(username, movieId, movieTitle, content, rating, LocalDateTime.now());
 
         ReviewDao reviewDao = new ReviewDaoImpl();
-        reviewDao.saveReview(review);
+         int result = reviewDao.saveReview(review);
+
+        log.info("User '{}' attempted to submit a review for '{}'. Result: {}", username, movieTitle, result > 0 ? "Success" : "Failed");
 
         return "redirect:/reviews";
     }
@@ -54,58 +73,56 @@ public class ReviewController {
                                @RequestParam("content") String content,
                                @RequestParam("rating") int rating,
                                Model model) {
-
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (loggedInUser == null) {
-            return "redirect:/login";
+            log.info("User not logged in. Redirecting to login page.");
+            return "login";
         }
 
         String username = loggedInUser.getUsername();
-        Review review = new Review(username, movieId, "", content, rating, LocalDateTime.now());
 
+        // Validation
+        if (content.isBlank()) {
+            String message = "Review content cannot be empty.";
+            model.addAttribute("message", message);
+            log.info("Validation failed:" + message);
+            return "write_review";
+        }
+
+        if (rating < 1 || rating > 5) {
+            String message = "Rating must be between 1 and 5.";
+            model.addAttribute("message", message);
+            log.info("Validation failed: " + message);
+            return "write_review";
+        }
 
         ReviewDao reviewDao = new ReviewDaoImpl();
-        int rowsAffected = reviewDao.updateReview(review);
+        Review review = new Review(username, movieId, "", content, rating, LocalDateTime.now());
 
+        int result = reviewDao.updateReview(review);
+        log.info("User " + username + " attempted to update review for movie ID " + movieId + ". Result: " + (result > 0 ? "Success" : "Failed"));
 
-        if (rowsAffected > 0) {
-            return "redirect:/reviews";
-        } else if (rowsAffected == -1) {
-            model.addAttribute("error", "Update failed due to a database constraint.");
-            return "error";
-        } else {
-            model.addAttribute("error", "No review was updated. Please try again.");
-            return "error";
-        }
+        return "redirect:/reviews";
     }
-
 
     @PostMapping("/deleteReview")
     public String deleteReview(HttpSession session,
                                @RequestParam("movieId") int movieId,
                                Model model) {
-
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (loggedInUser == null) {
-            return "redirect:/login";
+            log.info("User not logged in. Redirecting to login page.");
+            return "/login";
         }
 
         String username = loggedInUser.getUsername();
-
-
         ReviewDao reviewDao = new ReviewDaoImpl();
-        int rowsAffected = reviewDao.deleteReview(username, movieId);
+        int result = reviewDao.deleteReview(username, movieId);
+
+        log.info("User " + username + " attempted to delete review for movie ID " + movieId + ". Result: " + (result > 0 ? "Success" : "Failed"));
 
 
-        if (rowsAffected > 0) {
-            return "redirect:/reviews";
-        } else if (rowsAffected == -1) {
-            model.addAttribute("error", "Cannot delete review because of a database constraint.");
-            return "errorPage";
-        } else {
-            model.addAttribute("error", "Review deletion failed.");
-            return "errorPage";
-        }
+        return "redirect:/reviews";
     }
 
 
@@ -113,15 +130,16 @@ public class ReviewController {
     public String userReviews(HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (loggedInUser == null) {
-            return "redirect:/login";
+            return "/login";
         }
 
         String username = loggedInUser.getUsername();
 
 
         ReviewDao reviewDao = new ReviewDaoImpl();
-        List<Review> reviews = reviewDao.getReviewsByUser(username);
+        List<Review> reviews = reviewDao.getReviewsByUsername(username);
         model.addAttribute("reviews", reviews);
+        log.info("User " + username + " viewed their reviews. Total reviews: " + reviews.size());
 
         return "user_reviews";
     }
@@ -133,6 +151,7 @@ public class ReviewController {
         List<Review> reviews = reviewDao.getAllReviews();
         model.addAttribute("reviews", reviews);
 
+        log.info("Displaying all reviews. Total reviews: " + reviews.size());
         return "reviews";
     }
 }
