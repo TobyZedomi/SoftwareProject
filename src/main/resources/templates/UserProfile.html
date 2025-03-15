@@ -28,6 +28,41 @@
         #displayName {
             width: 50%;
         }
+        .btn-danger, .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .card {
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+            width: 100%;
+            outline-style: solid;
+            outline-color: darkred;
+        }
+
+        .card-body {
+            padding: 20px;
+            color:white;
+        }
+
+        .card img {
+            width: 180px;
+            border-radius: 10px;
+        }
     </style>
 
 </head>
@@ -54,10 +89,10 @@
                                 <div class="flex-grow-1 ms-3">
                                     <h3 class="mb-0" th:text="${User.getUsername()}">Username</h3>
                                     <p class="small text-muted" th:text="${User.getEmail()}">Email</p>
-
+                                    <p class="small text-muted mb-1" th:text="Friends +${total}"></p>
                                     <label for="file" class="form-label">Update Profile Image</label>
                                     <input type="file" id="file" name="file" class="form-control mb-2" required>
-                                    <button type="submit" class="btn btn-dark">Upload Image</button>
+                                    <button type="submit" class="btn btn-danger">Upload Image</button>
                                 </div>
                             </div>
                         </form>
@@ -66,7 +101,7 @@
                             <label for="displayName" class="form-label">Update Display Name</label>
                             <input type="text" id="displayName" name="name" class="form-control mb-2"
                                    th:value="${User.getDisplayName()}" required>
-                            <button type="submit"  class="btn btn-dark">Update Name</button>
+                            <button type="submit"  class="btn btn-danger">Update Name</button>
                         </form>
 
                     </div>
