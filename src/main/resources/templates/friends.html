@@ -61,6 +61,74 @@
             color: white;
             font-weight: bold;
         }
+        .alert {
+            width:40%;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .btn-danger, .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .card {
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+            width: 100%;
+            outline-style: solid;
+            outline-color: darkred;
+        }
+
+        .card-body {
+            padding: 20px;
+            color:white;
+        }
+
+        .card img {
+            width: 180px;
+            border-radius: 10px;
+        }
+        .search-form {
+            width: 50%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .form-floating {
+            width: 100%;
+        }
+        .form-floating label {
+            text-align: left;
+        }
+        h4{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            color: white;
+            font-weight: bold;
+            -webkit-text-stroke: 1px darkred;
+            font-family: poppins;
+        }
 
     </style>
 
@@ -79,13 +147,13 @@
 
     <div th:if="${allFriends == null || allFriends.size() != 0}">
         <h4>Search</h4>
-        <form method="get" action="/searchForYourFriends">
-            <div style="text-align: center;" class="form-floating mb-3">
+        <form method="get" action="/searchForYourFriends" class="search-form">
+            <div style="text-align: center; " class="form-floating mb-3">
                 <input type="text" class="form-control" id="friendUsername" name="friendUsername"
                        placeholder="Enter Username" required>
                 <label for="friendUsername">Enter Username</label>
             </div>
-            <input type="submit" value="Search" class="btn btn-primary">
+            <input type="submit" value="Search" class="btn btn-danger">
         </form>
 
 
@@ -141,6 +209,7 @@
                                     <div class="px-3">
                                         <p class="small text-muted mb-1" th:text="${f.getDisplayName()}">Friends</p>
                                         <p class="small text-muted mb-1" th:text="${f.getEmail()}">Email</p>
+                                        <p class="small text-muted mb-1" th:text="Friends +${total}"></p>
                                         <p class="small text-muted mb-1" th:text="${f.getCreatedAt()}">Created
                                             at</p>
                                         <form method="post" action="/deleteAFriend">
