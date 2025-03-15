@@ -164,7 +164,7 @@ public class EmailSenderService {
 
         for (int i = 0; i < movieImages.size();i++){
 
-            helper.addAttachment(movieImages.get(i), new File("C:\\Users\\tobyz\\IdeaProjects\\SoftwareProject\\src\\main\\resources\\static\\css\\images\\"+movieImages.get(i)));
+        //    helper.addAttachment(movieImages.get(i), new File("C:\\Users\\tobyz\\IdeaProjects\\SoftwareProject\\src\\main\\resources\\static\\css\\images\\"+movieImages.get(i)));
 
         }
     }
