@@ -18,36 +18,41 @@ public class RatingController {
 
     @GetMapping("/highestRated")
     public String highestRatedMovies(HttpSession session, Model model) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
 
-        if (session.getAttribute("loggedInUser") != null) {
-            User u = (User) session.getAttribute("loggedInUser");
-
+        if (loggedInUser != null) {
+            log.info("User" +loggedInUser.getUsername() + "is viewing the highest-rated movies.");
 
             RatingDao ratingDao = new RatingDaoImpl();
             List<Rating> highestRated = ratingDao.getHighestRatedMovies();
+
+            log.info("Got" +highestRated.size() + "highest-rated movies from the database.");
 
             model.addAttribute("ratings", highestRated);
             return "highest_rated_movies";
         }
 
+        log.info("You do not have access to see highest-rated movies. Redirecting to login.");
         return "redirect:/login";
     }
 
     @GetMapping("/lowestRated")
     public String lowestRatedMovies(HttpSession session, Model model) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
 
-        if (session.getAttribute("loggedInUser") != null) {
-            User u = (User) session.getAttribute("loggedInUser");
-
+        if (loggedInUser != null) {
+            log.info("User '{}' is viewing the lowest-rated movies.", loggedInUser.getUsername());
 
             RatingDao ratingDao = new RatingDaoImpl();
             List<Rating> lowestRated = ratingDao.getLowestRatedMovies();
+
+            log.info("The user got  {} lowest-rated movies from the database.", lowestRated.size());
 
             model.addAttribute("ratings", lowestRated);
             return "lowest_rated_movies";
         }
 
-
+        log.info("You do not have access to see lowest-rated movies. Redirecting to login.");
         return "redirect:/login";
     }
 }
