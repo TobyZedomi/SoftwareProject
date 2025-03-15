@@ -12,9 +12,10 @@
             font-family: Arial, sans-serif;
             background-color: black;
             color: white;
+            font-size: 15px;
         }
 
-        /* Background Image */
+
         #background {
             background-image: url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D.avif");
             height: 100%;
@@ -27,7 +28,7 @@
             z-index: -1;
         }
 
-        /* Main Container */
+
         .container {
             position: relative;
             z-index: 1;
@@ -40,16 +41,19 @@
             margin-top: 30px;
         }
 
-        /* Section Title */
-        h2 {
-            text-align: center;
-            color: red;
+
+        h1 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            color: white;
             font-weight: bold;
-            text-shadow: 2px 2px 10px rgba(255, 0, 0, 0.8);
-            margin-bottom: 20px;
+            -webkit-text-stroke: 1px darkred;
+            font-family: poppins;
         }
 
-        /* Card Styling */
+
         .rating-card {
             border: 1px solid red;
             padding: 20px;
@@ -65,35 +69,34 @@
             box-shadow: 0 4px 15px rgba(255, 0, 0, 1);
         }
 
-        /* Movie Title in Card */
+
         .rating-card h3 {
             color: white;
             font-size: 22px;
             margin-bottom: 10px;
         }
 
-        /* Movie Rating Details */
+
         .rating-card p {
-            font-size: 16px;
+            font-size: 15px;
             color: white;
             margin-bottom: 5px;
         }
 
-        /* Buttons */
         .btn-container {
-            text-align: center;
+            display: flex;
+            justify-content: center;
             margin-top: 20px;
+            text-align: center;
         }
 
-        .btn-container a {
-            color: white;
-            background-color: red;
-            border: 2px solid white;
-            padding: 10px 15px;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s, box-shadow 0.3s;
+
+
+        .btn-container a:hover {
+            background-color: darkred;
+            box-shadow: 0 0 10px red;
         }
+
 
         .btn-container a:hover {
             background-color: darkred;
@@ -107,7 +110,7 @@
 <body>
 <div id="background"></div>
 <div class="container">
-    <h2>My Reviews</h2>
+    <h1>My Reviews</h1>
 
     <div th:each="review : ${reviews}" class="review-card">
         <h3 th:text="${review.movieTitle}"></h3>
@@ -119,7 +122,8 @@
             <input type="hidden" name="movieId" th:value="${review.movieId}">
             <textarea name="content" class="form-control" rows="2" required th:text="${review.content}"></textarea>
             <input type="number" name="rating" class="form-control mt-2" min="1" max="5" required th:value="${review.rating}">
-            <button type="submit" class="btn btn-warning btn-sm mt-2">Update Review</button>
+            <button type="submit" class="btn btn-danger btn-sm mt-2">Update Review</button>
+
         </form>
 
         <form action="/deleteReview" method="post" class="mt-2">
@@ -129,7 +133,8 @@
     </div>
 
     <div class="btn-container">
-        <a href="/index" class="btn btn-secondary">Back to Home</a>
+        <a href="/index" class="btn btn-danger btn-sm">Back to Home</a>
+
     </div>
 </div>
 
