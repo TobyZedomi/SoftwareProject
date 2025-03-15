@@ -70,6 +70,20 @@ public class NotificationsController {
         return "notifications";
     }
 
+    public void getNumberOfNotifications(HttpSession session, Model model){
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+
+        FriendDao friendDao = new FriendDaoImpl("database.properties");
+
+        ArrayList<Friends> result = friendDao.getAllRequests(loggedInUser.getUsername());
+
+        if (result == null) {
+            result = new ArrayList<>();
+        }
+
+        model.addAttribute("totalNotifications", result.size());
+    }
+
 
 
 }
