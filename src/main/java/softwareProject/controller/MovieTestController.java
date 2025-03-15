@@ -1,6 +1,7 @@
 package softwareProject.controller;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@Slf4j
 public class MovieTestController {
 
     @Autowired
@@ -58,6 +60,9 @@ public class MovieTestController {
 
         if(session.getAttribute("loggedInUser") != null) {
 
+            User u = (User) session.getAttribute("loggedInUser");
+
+
             int movieId = Integer.parseInt(id);
 
             // totalAmountOItems in basket
@@ -74,6 +79,8 @@ public class MovieTestController {
 
             MovieDbByMovieId  movieDbByMovieId = movieService.getMoviesByMovieId(movieId);
             model.addAttribute("movieName", movieDbByMovieId.getTitle());
+
+            log.info("User {} clicked to watch movie videos on {}", u.getUsername(), movieDbByMovieId.getTitle());
 
             return "videos";
 
@@ -144,6 +151,9 @@ public class MovieTestController {
 
         if(session.getAttribute("loggedInUser") != null) {
 
+            User u = (User) session.getAttribute("loggedInUser");
+
+
             // totalAmountOItems in basket
             getTotalAmountOfItemsInCart(session, model);
 
@@ -161,6 +171,7 @@ public class MovieTestController {
 
             model.addAttribute("query", query);
 
+            log.info("User {} searched for movies on {}", u.getUsername(), query);
 
             return "search_index";
 
