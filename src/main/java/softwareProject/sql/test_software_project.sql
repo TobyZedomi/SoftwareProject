@@ -158,15 +158,17 @@ CREATE TABLE password_reset_tokens
 );
 
 
-CREATE TABLE reviews
+CREATE TABLE `reviews`
 (
-    id        INT AUTO_INCREMENT PRIMARY KEY,
-    name      VARCHAR(255) NOT NULL,
-    email     VARCHAR(255) NOT NULL,
-    content   TEXT         NOT NULL,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    `username` VARCHAR(50) NOT NULL,
+    `movie_id` INT NOT NULL,
+    `movie_title` VARCHAR(255) NOT NULL,
+    `content` TEXT NOT NULL,
+    `rating` INT CHECK (rating BETWEEN 1 AND 5),
+    `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`username`, `movie_id`),
+    FOREIGN KEY (`username`) REFERENCES users(`username`) ON DELETE CASCADE
 );
-
 
 /* TRIGGERS AND TABLES FOR TRIGGERS  */
 
