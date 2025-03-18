@@ -113,14 +113,4 @@ VALUES (1, 'cart_items','DELETE' , 1, '2026-01-30 00:00:00'),
        (5, 'cart_items','DELETE' , 2, '2026-01-30 00:00:00'),
        (6, 'cart_items','DELETE' , 3, '2026-01-30 00:00:00');
 
-INSERT INTO reviews (username, movie_id, movie_title, content, rating)
-VALUES   ('john_doe', 101, 'Inception', 'Amazing movie with a mind-blowing concept!', 5),
-          ('jane_smith', 102, 'The Dark Knight', 'Best Batman movie ever!', 5),
-         ('michael_j', 103, 'Interstellar', 'Visually stunning but a bit too long.', 4),
-        ('emily_d', 104, 'Titanic', 'Classic romance, I cried at the end.', 5),
-         ('chris_w', 105, 'Avatar', 'Great visuals, but the story felt familiar.', 4),
-         ('laura_m', 106, 'The Godfather', 'A true cinematic masterpiece.', 5),
-         ('daniel_b', 107, 'The Matrix', 'Iconic sci-fi film with deep themes.', 5),
-        ('sophia_l', 108, 'Joker', 'Joaquin Phoenix gave an outstanding performance.', 5),
-         ('james_a', 109, 'Fight Club', 'The first rule of Fight Club is...', 4),
-           ('olivia_t', 110, 'Pulp Fiction', 'A classic Tarantino movie with great dialogue.', 5);
+
