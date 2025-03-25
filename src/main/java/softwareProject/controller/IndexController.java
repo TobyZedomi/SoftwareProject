@@ -752,4 +752,39 @@ public class IndexController {
         return "notValidUser";
     }
 
+    @GetMapping("/favList")
+    public String favouriteList(HttpSession session, Model model) {
+
+        if(session.getAttribute("loggedInUser") != null) {
+
+            User u = (User) session.getAttribute("loggedInUser");
+
+            getTotalAmountOfItemsInCart(session, model);
+
+            FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
+
+            ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(u.getUsername());
+
+            /*
+            for (int i = 0; i < favoriteLists.size();i++){
+
+                MovieDbByMovieId  movieDbByMovieId = movieService.getMoviesByMovieId(favoriteLists.get(i).getMovieDb_id());
+
+                ArrayList<MovieDbByMovieId> movieTests = new ArrayList<>();
+
+                movieTests.add(movieDbByMovieId);
+
+                model.addAttribute("movies", movieTests);
+            }
+
+             */
+            model.addAttribute("movies", favoriteLists);
+
+            return "favList";
+        }
+
+        return "notValidUser";
+    }
+
+
 }
