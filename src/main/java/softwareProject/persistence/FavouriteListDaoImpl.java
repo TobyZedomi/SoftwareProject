@@ -128,6 +128,47 @@ public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
     }
 
 
+    // delet favourite list
+
+    @Override
+    public int deleteFroFavouriteList(String username, int movieId){
+        int rowsAffected = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        try{
+
+            con = getConnection();
+
+            String query = "DELETE from favouritelist where username = ? and movieDb_id = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setString(1,username);
+            ps.setInt(2,movieId);
+
+            rowsAffected = ps.executeUpdate();
+        }catch (SQLException e) {
+            System.out.println("Exception occured in the updateProductName() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the updateProductName() method");
+                e.getMessage();
+            }
+        }
+
+        return rowsAffected;
+
+    }
+
+
+
     /**
      * Search through each row in the favouriteList
      * @param rs is the rating query being searched

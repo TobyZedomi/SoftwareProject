@@ -67,7 +67,7 @@ public class FavoriteListController {
 
 
                 MovieDbByMovieId  movieDbByMovieId = movieService.getMoviesByMovieId(movieDB_Id);
-                message = "Movie " +movieDbByMovieId.getTitle() + " was added to favouriteList";
+                message = "Movie " +movieDbByMovieId.getTitle() + " is added to your Favourite List";
                 model.addAttribute("message", message);
 
                 log.info(message);
@@ -82,6 +82,66 @@ public class FavoriteListController {
         }
 
         return "notValidUser";
+    }
+
+
+    // delete fav list
+
+    @GetMapping("/deleteFavList")
+    public String deleteFavList(HttpSession session,
+                                @RequestParam(name = "movieId") String movieId, Model model){
+
+        if(session.getAttribute("loggedInUser") != null) {
+
+            int movieDB_Id = Integer.parseInt(movieId);
+
+
+            FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
+
+            User user = (User) session.getAttribute("loggedInUser");
+
+            int delete = favoriteListDao.deleteFroFavouriteList(user.getUsername(), movieDB_Id);
+
+            String message;
+            if (delete > 0){
+
+                MovieDbByMovieId  movieDbByMovieId = movieService.getMoviesByMovieId(movieDB_Id);
+                message = movieDbByMovieId.getTitle()+ " was deleted from your favourite list ";
+                model.addAttribute("message", message);
+                log.info(message);
+
+                getTotalAmountOfItemsInCart( session,model);
+
+
+                ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(user.getUsername());
+
+
+                model.addAttribute("movies", favoriteLists);
+
+                return "favList";
+
+            }else{
+
+                MovieDbByMovieId  movieDbByMovieId = movieService.getMoviesByMovieId(movieDB_Id);
+                message = movieDbByMovieId.getTitle()+ " was not deleted from your favourite list";
+                model.addAttribute("message", message);
+                log.info(message);
+
+                getTotalAmountOfItemsInCart( session,model);
+
+
+                ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(user.getUsername());
+
+
+                model.addAttribute("movies", favoriteLists);
+
+                return "favList";
+            }
+
+        }
+
+        return "notValidUser";
+
     }
 
     private void toViewMostPopularMovies(Model model) {
