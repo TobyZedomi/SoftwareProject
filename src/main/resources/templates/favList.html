@@ -178,8 +178,11 @@
     <div id="background"></div>
 
     <div>
-        <h1>Favourite List</h1>
+        <h1 th:text="| ${#ctx.session.loggedInUser.getUsername()} Favourite List Of Movies | ">Favourite List</h1>
     </div>
+
+    <div id="message" class="message" th:text="${message}"></div>
+
 
     <div id="card-area">
         <div class="wrapper">
@@ -194,6 +197,7 @@
                             <p th:text="${movie.getOverview()}" style="overflow: auto; scrollbar-width: none;" ></p>
 
                             <a th:href="@{/movieTrailer(id=${movie.getMovieDb_id()})}">View Videos</a>
+                            <a th:href="@{/deleteFavList(movieId=${movie.getMovieDb_id()})}">Remove</a>
 
                         </div>
                     </div>
