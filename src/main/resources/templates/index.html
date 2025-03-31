@@ -297,13 +297,17 @@
           <div class="overlay">
             <h3 th:text="${movie.getTitle()}"> Mountain</h3>
             <p th:text="${movie.getOverview()}" style="overflow: auto; scrollbar-width: none;" ></p>
+
+            <div class="action_btn" style="margin: 0 auto; display: inline;">
+
             <a th:href="@{/movieTrailer(id=${movie.getId()})}">View Videos</a>
+            <a th:href="@{/addMovieFavList(movieId=${movie.id}, backdrop_path=${movie.getBackdrop_path()}, overview=${movie.getOverview()}, title=${movie.getTitle()}, release_date=${movie.getRelease_date()})}"class="remove_cart" rel="2" title="Add to favourite list" >
+              <i class="fa fa-heart" style="color:red"></i>
+            </a>
+            </div>
+
             <a th:href="@{/writeReview(movieId=${movie.id}, movieTitle=${movie.title})}" class="btn btn-danger btn-sm">
               Write a Review
-            </a>
-
-            <a th:href="@{/addMovieFavList(movieId=${movie.id}, backdrop_path=${movie.getBackdrop_path()}, overview=${movie.getOverview()}, title=${movie.getTitle()}, release_date=${movie.getRelease_date()})}"class="remove_cart" rel="2" >
-              <i class="fas fa-heart"></i>
             </a>
 
           </div>

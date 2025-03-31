@@ -775,4 +775,21 @@ public class IndexController {
     }
 
 
+    @GetMapping("/chatRoom")
+    public String chatRoom(HttpSession session, Model model) {
+
+        if(session.getAttribute("loggedInUser") != null) {
+
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "chatRoom";
+
+        }
+
+
+        return "notValidUser";
+
+    }
+
+
 }
