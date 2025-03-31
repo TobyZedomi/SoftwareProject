@@ -11,5 +11,5 @@ import java.time.LocalDateTime;
 public class PasswordResetToken {
     private String email;
     private String token;
-    private LocalDateTime expiry;
+    private LocalDateTime date;
 }
