@@ -40,8 +40,19 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" th:href="@{/index}" style="font-weight: bold; font-family: poppins;">Home</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" th:href="@{/movie_index}" style="font-weight: bold;font-family: poppins;" >Movies</a>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-weight: bold;font-family: poppins;">
+             Movies
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" th:href="@{/movie_index}" style="font-weight: bold;font-family: poppins;" >Movies</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" th:href="@{/favList}" style="font-weight: bold;font-family: poppins;" >Favourite List</a>
+              </li>
+            </ul>
           </li>
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" th:href="@{/subscription_index}" style="font-weight: bold;font-family: poppins;" >Subscriptions</a>

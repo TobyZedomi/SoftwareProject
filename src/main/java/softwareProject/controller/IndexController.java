@@ -752,4 +752,27 @@ public class IndexController {
         return "notValidUser";
     }
 
+    @GetMapping("/favList")
+    public String favouriteList(HttpSession session, Model model) {
+
+        if(session.getAttribute("loggedInUser") != null) {
+
+            User u = (User) session.getAttribute("loggedInUser");
+
+            getTotalAmountOfItemsInCart(session, model);
+
+            FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
+
+            ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(u.getUsername());
+
+
+            model.addAttribute("movies", favoriteLists);
+
+            return "favList";
+        }
+
+        return "notValidUser";
+    }
+
+
 }

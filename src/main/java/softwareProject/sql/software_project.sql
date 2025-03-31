@@ -56,6 +56,9 @@ CREATE TABLE favouriteList
 (
     username   varchar(255) NOT NULL,
     movieDb_id int(11) NOT NULL,
+    backdrop_path VARCHAR(255),
+    overview VARCHAR(8000),
+    title VARCHAR(255),
     PRIMARY KEY (username, movieDb_id),
     FOREIGN KEY (username) REFERENCES users (username)
 );
