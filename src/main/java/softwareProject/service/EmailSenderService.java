@@ -185,7 +185,11 @@ public class EmailSenderService {
         <div>
           <a href="http://localhost:8080/reset_password?token=%s" target="_blank">click link to set password</a>
         </div>
-        """.formatted(token), true);
+        token=%s
+        <div>
+        You must insert this when reseting password. Copy after the =
+        </div>
+        """.formatted(token,token), true);
         mailSender.send(mimeMessage);
     }
 }
