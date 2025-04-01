@@ -175,7 +175,7 @@ public class EmailSenderService {
      * @param email is email that its being sent
      * @throws MessagingException if there something wrong with sending the email
      */
-    public void sendSetPasswordEmail(String email) throws MessagingException {
+    public void sendSetPasswordEmail(String email, String token) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
         mimeMessageHelper.setFrom("screensafari321@gmail.com");
@@ -183,10 +183,9 @@ public class EmailSenderService {
         mimeMessageHelper.setSubject("Set Password");
         mimeMessageHelper.setText("""
         <div>
-          <a href="http://localhost:8080/reset_password?email=%s" target="_blank">click link to set password</a>
+          <a href="http://localhost:8080/reset_password?token=%s" target="_blank">click link to set password</a>
         </div>
-        """.formatted(email), true);
-
+        """.formatted(token), true);
         mailSender.send(mimeMessage);
     }
 }

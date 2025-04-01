@@ -2,7 +2,6 @@ package softwareProject.controller;
 
 
 import jakarta.mail.MessagingException;
-import jakarta.mail.Session;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
@@ -12,29 +11,24 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import softwareProject.business.Cart;
 import softwareProject.business.MovieTest;
+import softwareProject.business.ResetPasswordToken;
 import softwareProject.business.User;
 import softwareProject.persistence.*;
 import org.springframework.ui.Model;
 import softwareProject.service.EmailSenderService;
 import softwareProject.service.MovieService;
 
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static softwareProject.persistence.UserDaoImpl.hashPassword;
 
 
 @Slf4j
@@ -397,9 +391,9 @@ public class UserController {
     @Autowired
     private EmailSenderService senderService;
 
-    public void sendMail(String userEmail ) throws MessagingException, IOException {
+    public void sendMail(String userEmail, String token) throws MessagingException, IOException {
 
-        senderService.sendSetPasswordEmail(userEmail);
+        senderService.sendSetPasswordEmail(userEmail,token);
     }
 
     @PostMapping("/forgot-password")
@@ -415,7 +409,13 @@ public class UserController {
 
         UserDao userDao = new UserDaoImpl("database.properties");
 
+        ResetPasswordDao resetPasswordDao = new ResetPasswordDaoImpl("database.properties");
+
         String message;
+
+        String token = UUID.randomUUID().toString();
+
+        resetPasswordDao.insertToken(email,token,LocalDateTime.now().plusMinutes(30));
 
         User user = userDao.findUserByThereEmail(email);
 
@@ -429,18 +429,31 @@ public class UserController {
 
         message = "Password has been sent";
         model.addAttribute("sentPassword", message);
-        sendMail(email);
+        sendMail(email,token);
 
 
     }
 
-    @GetMapping("/set-password")
-    public String setPasswordR(@RequestParam(name="newPassword") String newPassword,@RequestParam(name="newPassword2") String newPassword2, Model model, HttpSession session) throws MessagingException, InvalidKeySpecException, NoSuchAlgorithmException {
-        return setPassword( newPassword,newPassword2, model, session);
+    @PostMapping("/set-password")
+    public String setPasswordR(@RequestParam(name="token") String token, @RequestParam(name="newPassword") String newPassword,@RequestParam(name="newPassword2") String newPassword2, Model model, HttpSession session) throws MessagingException, InvalidKeySpecException, NoSuchAlgorithmException {
+
+        ResetPasswordDao resetPasswordDao = new ResetPasswordDaoImpl("database.properties");
+
+        ResetPasswordToken resetPasswordToken= resetPasswordDao.findToken(token);
+
+        log.info("Token: "+token);
+
+        if(resetPasswordToken == null || resetPasswordToken.getExpiry().isBefore(LocalDateTime.now())){
+            model.addAttribute("error", "Invalid or token has expired");
+            return "reset_password";
+        }
+
+        return setPassword(resetPasswordToken.getEmail(), newPassword,newPassword2, model, session);
     }
 
-    public String setPassword(String newPassword, String newPassword2, Model model, HttpSession session) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public String setPassword(String email, String newPassword, String newPassword2, Model model, HttpSession session) throws InvalidKeySpecException, NoSuchAlgorithmException {
         UserDao userDao = new UserDaoImpl("database.properties");
+        ResetPasswordDao resetPasswordDao = new ResetPasswordDaoImpl("database.properties");
 
         Pattern passwordRegex = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{7,70}$");
         Matcher match1 = passwordRegex.matcher(newPassword);
@@ -472,11 +485,11 @@ public class UserController {
         }
 
 
-        String emailUser = (String) session.getAttribute("emailForUser");
 
-        int complete = userDao.updatePassword(emailUser,newPassword);
+        int complete = userDao.updatePassword(email,newPassword);
 
         if (complete>0) {
+            resetPasswordDao.deleteByEmail(email);
             return "reset_success";
         }else{
             return "reset_password";

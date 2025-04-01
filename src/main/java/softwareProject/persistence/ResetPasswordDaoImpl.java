@@ -1,7 +1,6 @@
 package softwareProject.persistence;
 
-import softwareProject.business.Friends;
-import softwareProject.business.PasswordResetToken;
+import softwareProject.business.ResetPasswordToken;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -40,7 +39,7 @@ public class ResetPasswordDaoImpl extends MySQLDao implements ResetPasswordDao{
         // TRY to prepare a statement from the connection
         // When you are parameterizing the update, remember that you need
         // to use the ? notation (so you can fill in the blanks later)
-        try (PreparedStatement ps = conn.prepareStatement("insert into reset_password_token values(?,?,?)")) {
+        try (PreparedStatement ps = conn.prepareStatement("insert into password_reset_tokens (email, token, expiry) values(?,?,?)")) {
             // Fill in the blanks, i.e. parameterize the update
             ps.setString(1, email);
             ps.setString(2, token);
@@ -65,13 +64,13 @@ public class ResetPasswordDaoImpl extends MySQLDao implements ResetPasswordDao{
         return rowsAffected;
     }
     @Override
-    public PasswordResetToken findToken(String token) {
+    public ResetPasswordToken findToken(String token) {
         // DATABASE CODE
         //
         // Create variable to hold the result of the operation
         // Remember, where you are NOT doing a select, you will only ever get
         // a number indicating how many things were changed/affected
-        PasswordResetToken found = null;
+        ResetPasswordToken found = null;
 
         Connection conn = super.getConnection();
 
@@ -118,7 +117,7 @@ public class ResetPasswordDaoImpl extends MySQLDao implements ResetPasswordDao{
         // TRY to prepare a statement from the connection
         // When you are parameterizing the update, remember that you need
         // to use the ? notation (so you can fill in the blanks later)
-        try (PreparedStatement ps = conn.prepareStatement("delete from reset_password_token where email = ?")) {
+        try (PreparedStatement ps = conn.prepareStatement("delete from password_reset_tokens where email = ?")) {
             // Fill in the blanks, i.e. parameterize the update
             ps.setString(1, email);
 
@@ -142,12 +141,12 @@ public class ResetPasswordDaoImpl extends MySQLDao implements ResetPasswordDao{
     }
 
 
-    private PasswordResetToken mapRow(ResultSet rs)throws SQLException {
+    private ResetPasswordToken mapRow(ResultSet rs)throws SQLException {
 
-        PasswordResetToken p = new PasswordResetToken(
+        ResetPasswordToken p = new ResetPasswordToken(
                 rs.getString("email"),
                 rs.getString("token"),
-                rs.getTimestamp("date").toLocalDateTime()
+                rs.getTimestamp("expiry").toLocalDateTime()
         );
         return p;
     }

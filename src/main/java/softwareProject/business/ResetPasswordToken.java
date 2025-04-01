@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class PasswordResetToken {
+public class ResetPasswordToken {
     private String email;
     private String token;
-    private LocalDateTime date;
+    private LocalDateTime expiry;
 }
