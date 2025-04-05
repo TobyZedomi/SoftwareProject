@@ -356,7 +356,7 @@
         <input type="hidden" id="name" th:value="${#ctx.session.loggedInUser.getDisplayName()}" placeholder="Username" autocomplete="off" class="form-control" />
       </div>
       <div class="form-group">
-        <button type="submit" class="btn btn-danger" >Enter Live Chat</button>
+        <button type="submit" class="btn btn-danger">Enter Live Chat</button>
       </div>
     </form>
   </div>
@@ -369,7 +369,7 @@
 <div id="chat-page" class="hidden">
   <div class="container">
     <div class="chat-header">
-      <h1 style="color: black">Live Chat </h1>
+      <h1 style="color: black">Live Chat</h1>
     </div>
     <div class="connecting">
       Connecting...
@@ -382,6 +382,7 @@
         <div class="input-group clearfix">
           <input style="margin-top:10px; " type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
           <button style="margin-top:10px; " type="submit" class="btn btn-danger">Send</button>
+          <button id="disconnect" class="btn btn-danger" type="submit">Disconnect</button>
         </div>
       </div>
     </form>
@@ -390,10 +391,6 @@
 
 
 </div>
-
-
-
-
 
 
 
@@ -407,6 +404,7 @@
   var messageInput = document.querySelector('#message');
   var messageArea = document.querySelector('#messageArea');
   var connectingElement = document.querySelector('.connecting');
+  var disconnectButton = document.querySelector('#disconnect');
 
   var stompClient = null;
   var username = null;
@@ -415,6 +413,16 @@
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
     '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
   ];
+
+  function disconnect() {
+    if (stompClient !== null) {
+      stompClient.disconnect();
+      usernamePage.classList.remove('hidden');
+      chatPage.classList.add('hidden');
+    }
+    setConnected(false);
+    console.log("Disconnected");
+  }
 
   function connect(event) {
     username = document.querySelector('#name').value.trim();
@@ -516,6 +524,8 @@
 
   usernameForm.addEventListener('submit', connect, true)
   messageForm.addEventListener('submit', sendMessage, true)
+  disconnectButton.addEventListener('submit', disconnect)
+
 </script>
 
 

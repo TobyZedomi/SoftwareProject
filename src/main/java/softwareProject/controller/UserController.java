@@ -3,20 +3,25 @@ package softwareProject.controller;
 
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import softwareProject.business.Cart;
-import softwareProject.business.MovieTest;
-import softwareProject.business.ResetPasswordToken;
-import softwareProject.business.User;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+import softwareProject.business.*;
 import softwareProject.persistence.*;
 import org.springframework.ui.Model;
 import softwareProject.service.EmailSenderService;
 import softwareProject.service.MovieService;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +38,8 @@ import java.util.regex.Pattern;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
+@Component
 public class UserController {
 
     @Autowired
@@ -298,7 +305,9 @@ public class UserController {
             User u = (User) session.getAttribute("loggedInUser");
 
 
+
             if (session != null) {
+                handleWebSocketDisconnectListener(session);
                 session.invalidate();
                 log.info("User {} logged out of system", u.getUsername());
             }
@@ -310,6 +319,24 @@ public class UserController {
         }
 
         return "notValidUser";
+    }
+
+    private final SimpMessageSendingOperations messageTemplate;
+    public void handleWebSocketDisconnectListener( HttpSession session){
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+        StompSession session1 = (StompSession) session.getAttribute("username");
+
+            log.info("User disconnected: {} ", u.getDisplayName());
+            var chatMessage = ChatMessage.builder()
+                    .type(MessageType.LEAVE)
+                    .sender(u.getDisplayName())
+                    .build();
+            messageTemplate.convertAndSend("/topic/public", chatMessage);
+
+            //session1.disconnect();
+
     }
 
     // totalAmount in Cart
