@@ -233,61 +233,6 @@
     </ul>
   </div>
 
-  <!--
-
-  <div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Select Genre of movie
-    </button>
-    <ul class="dropdown-menu">
-      <li><a th:href="@{/viewByGenre(genre=${1})}">Action</a></li>
-      <li><a th:href="@{/viewByGenre(genre=${2})}">Comedy</a></li>
-      <li><a th:href="@{/viewByGenre(genre=${3})}">Science-Fiction</a></li>
-      <li><a th:href="@{/viewByGenre(genre=${4})}">Thriller</a></li>
-      <li><a th:href="@{/viewByGenre(genre=${5})}">Animation</a></li>
-    </ul>
-  </div>
-  <br>
-
-
-
-  <div class="row row-cols-1 row-cols-md-3 g-4">
-    <div th:each="movie : ${moviesGenre}">
-    <div class="col">
-      <div class="card h-100">
-        <img th:src="@{'/css/images/'+${movie.movie_image}}" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 th:text="${movie.movie_name}" class="card-title">Card title</h5>
-          <p  th:text="${movie.movie_info}" class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-          <a th:href="@{/getAllStreamingServicesForMovie(movieID=${movie.movie_id})}"><button type="button" class="btn btn-primary">Where to watch movie</button></a>
-        </div>
-        <div class="card-footer">
-          <small th:text="  |Date Of Release:  ${movie.date_of_release} |"  class="text-muted">Last updated 3 mins ago</small>
-        </div>
-      </div>
-    </div>
-    </div>
-  </div>
-
-  -->
-
-  <!-- Testing -->
-
-
-
-  <!--
-  <div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Select Genre of movie
-    </button>
-    <ul class="dropdown-menu">
-      <li><a href="/apiMovie">Get Most Popular Movies</a></li>
-    </ul>
-  </div>
-
--->
-
-
   <div id="card-area">
     <div class="wrapper">
       <div class="box-area">
@@ -323,50 +268,6 @@
 
 
   </div>
-
-
-<div  th:unless="${#ctx.session.loggedInUser != null}">
-  <style>
-
-    h2{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 50px;
-      color: darkred;
-      font-weight: bold;
-      -webkit-text-stroke: 3px black;
-    }
-
-    a{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    body{
-      margin: 0;
-    }
-
-    #background1{
-      background-image: url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D.avif");
-      height: 100vh;
-      width: 100%;
-      background-size: cover;
-      background-position: center center;
-      position: fixed;
-      top: 0;
-      z-index: -1;
-    }
-
-  </style>
-
-  <div id="background1"></div>
-
-
-  <h2>You have to login to get access to this page</h2>
-  <a href ="/" ><button type="button" class="btn btn-primary">Go to Login page</button></a>
-</div>
 
 </body>
 </html>
