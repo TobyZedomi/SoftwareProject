@@ -19,4 +19,6 @@ public class MovieTest {
     private String title;
     private String release_date;
 
+    @Setter
+    private boolean favourite = false;
 }
