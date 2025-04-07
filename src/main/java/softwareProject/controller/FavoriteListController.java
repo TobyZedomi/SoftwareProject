@@ -131,6 +131,15 @@ public class FavoriteListController {
 
                 ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(user.getUsername());
 
+                String name = null;
+                for (int i = 0; i < favoriteLists.size();i++) {
+
+                    name = favoriteLists.get(i).getUsername();
+
+                }
+
+                session.setAttribute("favoriteLists", name);
+
 
                 model.addAttribute("movies", favoriteLists);
 

@@ -96,9 +96,6 @@ public class IndexController {
 
                         movies.get(i).setFavourite(true);
                     }
-
-
-
                 }
 
             }
@@ -790,6 +787,11 @@ public class IndexController {
 
             ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(u.getUsername());
 
+            for (int i = 0; i < favoriteLists.size();i++) {
+
+                session.setAttribute("favoriteLists", favoriteLists.get(i).getUsername());
+
+            }
 
             model.addAttribute("movies", favoriteLists);
 
