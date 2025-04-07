@@ -11,4 +11,8 @@ public interface FavoriteListDao {
     public ArrayList<FavoriteList> getAllFavouriteListByUsername(String username);
 
     public int deleteFroFavouriteList(String username, int movieId);
+
+    public FavoriteList getFavouriteListByUsernameAndMovieId(String username, int movieId);
+
+    public ArrayList<FavoriteList> getAllFavouriteList();
 }

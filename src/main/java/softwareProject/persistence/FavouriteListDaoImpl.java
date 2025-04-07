@@ -3,6 +3,7 @@ package softwareProject.persistence;
 import softwareProject.business.BillingAddress;
 import softwareProject.business.CartItem;
 import softwareProject.business.FavoriteList;
+import softwareProject.business.MovieProduct;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -128,6 +129,52 @@ public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
     }
 
 
+
+    @Override
+    public ArrayList<FavoriteList> getAllFavouriteList(){
+
+        ArrayList<FavoriteList> favoriteLists = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
+            con = getConnection();
+
+            String query = "Select * from favouritelist";
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery();
+
+            while(rs.next())
+            {
+               FavoriteList f = mapRow(rs);
+                favoriteLists.add(f);
+            }
+        }catch(SQLException e){
+            System.out.println(LocalDateTime.now() + ": An SQLException  occurred while preparing the SQL " +
+                    "statement.");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the  method: " + e.getMessage());
+            }
+        }
+
+        return favoriteLists;
+    }
+
+
     // delet favourite list
 
     @Override
@@ -166,6 +213,53 @@ public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
         return rowsAffected;
 
     }
+
+
+    @Override
+    public FavoriteList getFavouriteListByUsernameAndMovieId(String username, int movieId) {
+
+        FavoriteList favoriteList = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+
+        try {
+
+            con = getConnection();
+
+            String query = "SELECT * FROM favouritelist where username = ? and movieDb_id = ?";
+            ps = con.prepareStatement(query);
+            ps.setString(1,username);
+            ps.setInt(2,movieId);
+            rs = ps.executeQuery();
+
+
+            if (rs.next()) {
+
+                favoriteList = mapRow(rs);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Exception occured in the getMovieById() method: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the getProductByCode() method: " + e.getMessage());
+            }
+        }
+        return favoriteList;
+    }
+
 
 
 
