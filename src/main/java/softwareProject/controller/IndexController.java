@@ -1,6 +1,5 @@
 package softwareProject.controller;
 
-import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,10 +9,10 @@ import softwareProject.business.*;
 import softwareProject.persistence.FriendDao;
 import softwareProject.persistence.FriendDaoImpl;
 import softwareProject.persistence.*;
-import softwareProject.service.EmailSenderService;
 import softwareProject.service.MovieService;
 
-import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -816,6 +815,40 @@ public class IndexController {
 
         return "notValidUser";
 
+    }
+    @GetMapping("/revenue")
+    public String revenue(HttpSession session, Model model){
+        if(session.getAttribute("loggedInUser") != null) {
+
+            getTotalAmountOfItemsInCart(session, model);
+            AuditPurchasedItemsDao auditPurchasedItemsDao = new AuditPurchasedItemsDaoImpl("database.properties");
+
+            LocalDateTime start = LocalDateTime.now().minusYears(1);
+            LocalDateTime end = LocalDateTime.now();
+
+            Map<LocalDate, List<AuditPurchasedItems>> monthlyPurchases = auditPurchasedItemsDao.searchForPurchasesGroupedByMonth(start, end);
+
+            List<String> keySet = new ArrayList<>();
+            List<Double> values = new ArrayList<>();
+
+            for (Map.Entry<LocalDate, List<AuditPurchasedItems>> entry : monthlyPurchases.entrySet()) {
+                String monthName = entry.getKey().getMonth().toString() + " " + entry.getKey().getYear();
+                double total = 0;
+                for (AuditPurchasedItems item : entry.getValue()) {
+                    total = item.getPrice() + total;
+                }
+
+                keySet.add(monthName);
+                values.add(total);
+            }
+
+            model.addAttribute("keySet", keySet);
+            model.addAttribute("values", values);
+
+            return "revenue";
+
+        }
+        return "notValidUser";
     }
 
 
