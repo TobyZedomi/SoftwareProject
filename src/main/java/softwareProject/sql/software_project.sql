@@ -210,6 +210,36 @@ CREATE TABLE auditsCartItems
     FOREIGN KEY (movie_id) REFERENCES movieProduct (movie_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE TABLE auditPurchasedItems
+(
+    auditPurchasedItemsID INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    order_id INT NOT NULL,
+    price DOUBLE NOT NULL,
+    created_at DATETIME DEFAULT current_timestamp,
+    FOREIGN KEY (username) REFERENCES users(username),
+    FOREIGN KEY (order_id) REFERENCES shop_order(order_id)
+);
+
+DELIMITER //
+
+CREATE TRIGGER logPurchaseItemInsert
+    AFTER INSERT ON orderItem
+    FOR EACH ROW
+BEGIN
+    DECLARE orderUser VARCHAR(255);
+
+    SELECT username INTO orderUser
+    FROM shop_order
+    WHERE order_id = NEW.order_id;
+
+    INSERT INTO auditPurchasedItems (username, order_id, price)
+    VALUES (orderUser, NEW.order_id, NEW.price);
+END;
+//
+
+DELIMITER ;
+
 DELIMITER
 //
 
