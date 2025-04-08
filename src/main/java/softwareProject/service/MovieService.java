@@ -136,4 +136,14 @@ public class MovieService {
         return response.getBody().getResults();
     }
 
+
+    // search by movies under a particular genre
+
+    public  List<MovieSearchByGenre> getMoviesBySearchOnParticularGenre(String genreId, String query){
+
+        ResponseEntity<MovieSearchByGenreResponse> response = restTemplate.getForEntity("https://api.themoviedb.org/3/discover/movie?certification="+query+"&include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres="+genreId+"&api_key="+API_KEY, MovieSearchByGenreResponse.class);
+
+        return response.getBody().getResults();
+    }
+
 }
