@@ -55,6 +55,12 @@ public class ReccomendationsController {
 
             }
 
+            String recs = "Random Movie Recommendations";
+            model.addAttribute("recs1", recs);
+
+            String favList = "Favourite List";
+            model.addAttribute("favList", favList);
+
 
 
             return "movie_recs";

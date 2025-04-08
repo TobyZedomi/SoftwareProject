@@ -872,6 +872,9 @@ public class IndexController {
 
             getTotalAmountOfItemsInCart(session, model);
 
+            String recs = "Random Movie Recommendations";
+            model.addAttribute("recs1", recs);
+
             return "movie_recs";
         }
 

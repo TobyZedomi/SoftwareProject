@@ -154,6 +154,35 @@
       top: 0;
       z-index: -1;
     }
+
+
+
+    a.three:link {
+      text-decoration: none;
+    }
+
+    a.three:visited {
+      text-decoration: none;
+    }
+
+    a.three:hover {
+      text-decoration: underline;
+    }
+
+    a.three:active {
+      text-decoration: underline;
+    }
+
+    p.two{
+      color: black;
+    }
+
+    p.two:visited {color:#0000ff;}
+    p.two:hover {font-size:150%;}
+
+    .dropdown-menu{
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    }
   </style>
 </head>
 
@@ -165,9 +194,19 @@
 
   <div id="background"></div>
 
+  <div class="dropdown" style=" margin-top: 50px; margin-left: 50px;">
+    <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Recommendations
+    </button>
+    <ul class="dropdown-menu" style=" box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)">
+      <li><a class="three" th:href="@{/movieRecs}" style="text-decoration:none"><p class="two" th:text="${recs1}"></p></a></li>
+    </ul>
+  </div>
+
   <div>
     <h1 th:text=" | Random Movie Reccomendations for ${#ctx.session.loggedInUser.getUsername()} |"></h1>
   </div>
+
 
 
   <div id="card-area">
