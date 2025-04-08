@@ -21,32 +21,6 @@ public class MovieTestController {
     @Autowired
     private MovieService movieService;
 
-    /*
-
-    @GetMapping("/api/movie")
-    public ResponseEntity<List<MovieTest>> getMovies(){
-        List<MovieTest> movies = movieService.getMovies();
-
-        if (movies.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
-        return new ResponseEntity<>(movies, HttpStatus.OK);
-    }
-
-     */
-
-    /*
-    @GetMapping("/apiMovie")
-    public String getMostPopularMovies( Model model, HttpSession session){
-        // add these two lines into login page
-        List<MovieTest> movies = movieService.getMovies();
-        model.addAttribute("movies", movies);
-        return "index";
-    }
-
-     */
-
 
     /**
      * Getting movie videos based on the movie id entered

@@ -124,14 +124,23 @@ public class IndexController {
 
         if(session.getAttribute("loggedInUser") != null) {
 
+            User u = (User) session.getAttribute("loggedInUser");
+
+
             /// get total number of items in cart for user
 
             getTotalAmountOfItemsInCart(session, model);
 
             //
 
+            FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
+
+
+            ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(u.getUsername());
+
             List<GenreTest> genres = movieService.getGenres();
             model.addAttribute("genres", genres);
+
 
             List<MovieTest> movieByGenres = movieService.getMoviesByGenre("878");
 
@@ -143,6 +152,14 @@ public class IndexController {
                     newMovie.add(movieByGenres.get(i));
                     model.addAttribute("movieByGenres", newMovie);
                 }
+
+                for (int j = 0; j < favoriteLists.size(); j++) {
+
+                    if (favoriteLists.get(j).getMovieDb_id() == movieByGenres.get(i).getId()) {
+
+                        movieByGenres.get(i).setFavourite(true);
+                    }
+                }
             }
 
             // genre by id and get the name
@@ -152,13 +169,6 @@ public class IndexController {
             GenreTest genre = genreDao.getGenreById(878);
 
             model.addAttribute("genreName", genre.getName());
-
-
-            for (int i = 0; i < movieByGenres.size(); i++) {
-
-                List<MovieTrailer> trailers = movieService.getTrailer(movieByGenres.get(i).getId());
-                model.addAttribute("trailers", trailers);
-            }
 
             return "movie_index";
         }
@@ -794,6 +804,10 @@ public class IndexController {
 
             model.addAttribute("movies", favoriteLists);
 
+            String recs = "Random Movie Recommendations";
+            model.addAttribute("recs", recs);
+
+
             return "favList";
         }
 
@@ -848,6 +862,20 @@ public class IndexController {
             return "revenue";
 
         }
+        return "notValidUser";
+    }
+
+
+    @GetMapping("/movie_recs")
+    public String movie_recs(HttpSession session, Model model) {
+
+        if(session.getAttribute("loggedInUser") != null) {
+
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "movie_recs";
+        }
+
         return "notValidUser";
     }
 

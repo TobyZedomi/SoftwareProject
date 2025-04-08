@@ -100,6 +100,79 @@ public class FavoriteListController {
 
     }
 
+    // addMovieFavList 2
+
+    @GetMapping("/addMovieFavList2")
+    public String addMovieFavList2(@RequestParam(name = "movieId") String movieId,
+                                  @RequestParam(name = "backdrop_path") String backdrop_path,
+                                  @RequestParam(name = "overview") String overview,
+                                  @RequestParam(name = "title") String title, Model model, HttpSession session) {
+
+
+        if(session.getAttribute("loggedInUser") != null) {
+
+            int movieDB_Id = Integer.parseInt(movieId);
+
+
+            FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
+
+            User user = (User) session.getAttribute("loggedInUser");
+
+            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title));
+
+            String message;
+            if(complete == -1){
+
+                favoriteListDao.deleteFroFavouriteList(user.getUsername(), movieDB_Id);
+
+                // for deleted movie
+                //  model.addAttribute("movieId", movieDB_Id);
+
+
+                FavoriteList favoriteListUser = favoriteListDao.getFavouriteListByUsernameAndMovieId(user.getUsername(), movieDB_Id);
+                session.setAttribute("favouriteListUser", favoriteListUser);
+
+
+                //model.addAttribute("movieId",950387);
+
+
+                MovieDbByMovieId movieDbByMovieId = movieService.getMoviesByMovieId(movieDB_Id);
+                message = movieDbByMovieId.getTitle() + " was deleted from your Favourite List";
+                model.addAttribute("messageDelete", message);
+
+
+                log.info(message);
+
+                getTotalAmountOfItemsInCart(session, model);
+
+                toViewMoviesByGenre(model, session);
+
+                return "movie_index";
+
+
+            }else{
+
+
+                MovieDbByMovieId  movieDbByMovieId = movieService.getMoviesByMovieId(movieDB_Id);
+                message = "Movie " +movieDbByMovieId.getTitle() + " was added to favouriteList";
+                model.addAttribute("message", message);
+
+                log.info(message);
+
+                getTotalAmountOfItemsInCart( session,model);
+
+               toViewMoviesByGenre(model, session);
+
+                return "movie_index";
+            }
+
+        }
+
+        return "notValidUser";
+
+    }
+
+
 
     // delete fav list
 
@@ -201,12 +274,57 @@ public class FavoriteListController {
                     movies.get(i).setFavourite(true);
                 }
             }
-
-
-
-
         }
 
+    }
+
+
+    private void toViewMoviesByGenre(Model model, HttpSession session){
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+
+        /// get total number of items in cart for user
+
+        getTotalAmountOfItemsInCart(session, model);
+
+        //
+
+        FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
+
+
+        ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(u.getUsername());
+
+        List<GenreTest> genres = movieService.getGenres();
+        model.addAttribute("genres", genres);
+
+        List<MovieTest> movieByGenres = movieService.getMoviesByGenre("878");
+
+        List<MovieTest> newMovie = new ArrayList<>();
+
+        for (int i = 0; i < movieByGenres.size() - 2; i++) {
+
+            if (movieByGenres.get(i).getBackdrop_path() != null) {
+                newMovie.add(movieByGenres.get(i));
+                model.addAttribute("movieByGenres", newMovie);
+            }
+
+            for (int j = 0; j < favoriteLists.size(); j++) {
+
+                if (favoriteLists.get(j).getMovieDb_id() == movieByGenres.get(i).getId()) {
+
+                    movieByGenres.get(i).setFavourite(true);
+                }
+            }
+        }
+
+        // genre by id and get the name
+
+        GenreDao genreDao = new GenreDaoImpl("database.properties");
+
+        GenreTest genre = genreDao.getGenreById(878);
+
+        model.addAttribute("genreName", genre.getName());
     }
 
 
