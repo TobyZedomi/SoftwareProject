@@ -154,29 +154,13 @@ public class MovieTestController {
 
             }
 
-            /*
-
-            List<MovieSearchByGenre> movieBySearch = movieService.getMoviesBySearchOnParticularGenre(genreId2, query);
-
-            List<MovieSearchByGenre> newMovieBySearch = new ArrayList<>();
-
-            for (int i = 0; i < movieBySearch.size() - 2; i++) {
-
-                if (movieBySearch.get(i).getBackdrop_path() != null) {
-                    newMovieBySearch.add(movieBySearch.get(i));
-                    model.addAttribute("movieBySearchGenre", newMovieBySearch);
-                }
-            }
-
-
-             */
         model.addAttribute("query", query);
 
         log.info("User {} searched for movies on {}", u.getUsername(), query);
 
             viewMoviesByGenre(session, model);
 
-        return "searchGenre_index";
+        return "searchMovie_index";
 
     }
 

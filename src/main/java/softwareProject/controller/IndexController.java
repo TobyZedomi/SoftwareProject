@@ -878,18 +878,4 @@ public class IndexController {
         return "notValidUser";
     }
 
-
-
-
-    @GetMapping("/searchGenre_index")
-    public String searchGenreIndex(HttpSession session, Model model) {
-
-        if(session.getAttribute("loggedInUser") != null) {
-
-            return "movie_index";
-        }
-        return "notValidUser";
-    }
-
-
 }
