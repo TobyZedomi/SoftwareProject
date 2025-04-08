@@ -124,4 +124,16 @@ public class MovieService {
 
         return response.getBody();
     }
+
+
+    // getRecommendations
+
+    public  List<MovieRecommendations> getRecommendations(int movieId){
+
+        ResponseEntity<MovieRecommendationResponse> response = restTemplate.getForEntity("https://api.themoviedb.org/3/movie/"+movieId+"/recommendations"+"?"+"&api_key="+API_KEY, MovieRecommendationResponse.class);
+
+
+        return response.getBody().getResults();
+    }
+
 }
