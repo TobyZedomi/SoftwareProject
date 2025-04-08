@@ -865,7 +865,6 @@ public class IndexController {
         return "notValidUser";
     }
 
-
     @GetMapping("/movie_recs")
     public String movie_recs(HttpSession session, Model model) {
 
@@ -876,6 +875,19 @@ public class IndexController {
             return "movie_recs";
         }
 
+        return "notValidUser";
+    }
+
+
+
+
+    @GetMapping("/searchGenre_index")
+    public String searchGenreIndex(HttpSession session, Model model) {
+
+        if(session.getAttribute("loggedInUser") != null) {
+
+            return "movie_index";
+        }
         return "notValidUser";
     }
 

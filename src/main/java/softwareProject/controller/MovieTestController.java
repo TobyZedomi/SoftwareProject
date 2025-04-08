@@ -24,15 +24,16 @@ public class MovieTestController {
 
     /**
      * Getting movie videos based on the movie id entered
-     * @param model holds the attributes for the view
-     * @param id is teh movie id being searched
+     *
+     * @param model   holds the attributes for the view
+     * @param id      is teh movie id being searched
      * @param session holds the logged in users details
      * @return videos page if te videos exist and noVideo page if there are no videos for that movie
      */
     @GetMapping("/movieTrailer")
-    public String getMovieTrailer(Model model, @RequestParam(name = "id") String id, HttpSession session){
+    public String getMovieTrailer(Model model, @RequestParam(name = "id") String id, HttpSession session) {
 
-        if(session.getAttribute("loggedInUser") != null) {
+        if (session.getAttribute("loggedInUser") != null) {
 
             User u = (User) session.getAttribute("loggedInUser");
 
@@ -51,7 +52,7 @@ public class MovieTestController {
             }
             model.addAttribute("trailers", trailers);
 
-            MovieDbByMovieId  movieDbByMovieId = movieService.getMoviesByMovieId(movieId);
+            MovieDbByMovieId movieDbByMovieId = movieService.getMoviesByMovieId(movieId);
             model.addAttribute("movieName", movieDbByMovieId.getTitle());
 
             log.info("User {} clicked to watch movie videos on {}", u.getUsername(), movieDbByMovieId.getTitle());
@@ -61,23 +62,26 @@ public class MovieTestController {
         }
 
         return "notValidUser";
-}
+    }
 
 
     /**
      * View movies by the genre id
+     *
      * @param session holds the users logged information
-     * @param model holds the information for the view
-     * @param id is the genre id being searched
+     * @param model   holds the information for the view
+     * @param id      is the genre id being searched
      * @return
      */
 
     @GetMapping("/viewMovieByGenre")
-    public String viewMovieGenre(HttpSession session, Model model, @RequestParam(name = "id") int id){
+    public String viewMovieGenre(HttpSession session, Model model, @RequestParam(name = "id") int id) {
 
-        if(session.getAttribute("loggedInUser") != null) {
+        if (session.getAttribute("loggedInUser") != null) {
 
             String genre_id = Integer.toString(id);
+
+            session.setAttribute("genreId2", genre_id);
 
             // totalAmountOItems in basket
             getTotalAmountOfItemsInCart(session, model);
@@ -112,18 +116,87 @@ public class MovieTestController {
     }
 
 
+    @GetMapping("/viewMovieBySearchOnParticularGenre")
+    public String viewMovieBySearchOnParticularGenre(HttpSession session, Model model, @RequestParam(name = "query") String query) {
+
+
+        if (session.getAttribute("loggedInUser") != null) {
+
+            User u = (User) session.getAttribute("loggedInUser");
+
+
+           // String genreId2 = (String) session.getAttribute("genreId2");
+
+           // int genreIdInt = Integer.parseInt(genreId2);
+
+
+            // totalAmountOItems in basket
+            getTotalAmountOfItemsInCart(session, model);
+
+
+
+            List<MovieTest> movieBySearch = movieService.getMoviesBySearch(query);
+
+            System.out.println(movieBySearch);
+
+            List<MovieTest> newMovieBySearch = new ArrayList<>();
+
+
+            for (int i = 0; i < movieBySearch.size(); i++) {
+
+
+                if (movieBySearch.get(i).getBackdrop_path() != null) {
+
+
+                    newMovieBySearch.add(movieBySearch.get(i));
+                    model.addAttribute("movieBySearchGenre", newMovieBySearch);
+                }
+
+            }
+
+            /*
+
+            List<MovieSearchByGenre> movieBySearch = movieService.getMoviesBySearchOnParticularGenre(genreId2, query);
+
+            List<MovieSearchByGenre> newMovieBySearch = new ArrayList<>();
+
+            for (int i = 0; i < movieBySearch.size() - 2; i++) {
+
+                if (movieBySearch.get(i).getBackdrop_path() != null) {
+                    newMovieBySearch.add(movieBySearch.get(i));
+                    model.addAttribute("movieBySearchGenre", newMovieBySearch);
+                }
+            }
+
+
+             */
+        model.addAttribute("query", query);
+
+        log.info("User {} searched for movies on {}", u.getUsername(), query);
+
+            viewMoviesByGenre(session, model);
+
+        return "searchGenre_index";
+
+    }
+
+        return"notValidUser";
+}
+
+
     /**
      * View movies by what is searched in the search bar
+     *
      * @param session holds the users logged information
-     * @param model holds the information for the view
-     * @param query is the movie being searched
+     * @param model   holds the information for the view
+     * @param query   is the movie being searched
      * @return the search index page
      */
     @GetMapping("/viewMovieBySearch")
-    public String viewMovieBySearch(HttpSession session, Model model, @RequestParam(name = "query") String query){
+    public String viewMovieBySearch(HttpSession session, Model model, @RequestParam(name = "query") String query) {
 
 
-        if(session.getAttribute("loggedInUser") != null) {
+        if (session.getAttribute("loggedInUser") != null) {
 
             User u = (User) session.getAttribute("loggedInUser");
 
@@ -157,12 +230,13 @@ public class MovieTestController {
 
     /**
      * Get the total amount of cart items in the cart for the user
+     *
      * @param session holds the users logged information
-     * @param model holds the information for the view
+     * @param model   holds the information for the view
      */
 
     // total amount of items in cart
-    public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
+    public void getTotalAmountOfItemsInCart(HttpSession session, Model model) {
 
         /// get total number of items in cart for user
 
@@ -177,5 +251,55 @@ public class MovieTestController {
         int totalCartItems = cartItemDao.totalNumberOfCartItems(cart.getCart_id());
         model.addAttribute("totalCartItems", totalCartItems);
     }
+
+
+    private void viewMoviesByGenre(HttpSession session, Model model) {
+        User u = (User) session.getAttribute("loggedInUser");
+
+
+        /// get total number of items in cart for user
+
+        getTotalAmountOfItemsInCart(session, model);
+
+        //
+
+        FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
+
+
+        ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(u.getUsername());
+
+        List<GenreTest> genres = movieService.getGenres();
+        model.addAttribute("genres", genres);
+
+
+        List<MovieTest> movieByGenres = movieService.getMoviesByGenre("878");
+
+        List<MovieTest> newMovie = new ArrayList<>();
+
+        for (int i = 0; i < movieByGenres.size() - 2; i++) {
+
+            if (movieByGenres.get(i).getBackdrop_path() != null) {
+                newMovie.add(movieByGenres.get(i));
+                model.addAttribute("movieByGenres", newMovie);
+            }
+
+            for (int j = 0; j < favoriteLists.size(); j++) {
+
+                if (favoriteLists.get(j).getMovieDb_id() == movieByGenres.get(i).getId()) {
+
+                    movieByGenres.get(i).setFavourite(true);
+                }
+            }
+        }
+
+        // genre by id and get the name
+
+        GenreDao genreDao = new GenreDaoImpl("database.properties");
+
+        GenreTest genre = genreDao.getGenreById(878);
+
+        model.addAttribute("genreName", genre.getName());
+    }
+
 
 }

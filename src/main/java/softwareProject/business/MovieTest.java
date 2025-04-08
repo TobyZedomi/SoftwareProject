@@ -2,6 +2,8 @@ package softwareProject.business;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -15,6 +17,8 @@ public class MovieTest {
     private int id;
 
     private String backdrop_path;
+
+    private List<Integer> genre_ids;
     private String overview;
     private String title;
     private String release_date;
