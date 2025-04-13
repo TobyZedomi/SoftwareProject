@@ -278,6 +278,8 @@ public class MovieTestController {
 
         // genre by id and get the name
 
+        // use a session for this based on the controller method view movie by genre, testing branch
+
         GenreDao genreDao = new GenreDaoImpl("database.properties");
 
         GenreTest genre = genreDao.getGenreById(878);
