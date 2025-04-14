@@ -190,53 +190,6 @@ public class IndexController {
     }
 
 
-    private void toViewMoviesByGenreMovieIndex(Model model, HttpSession session){
-
-        User u = (User) session.getAttribute("loggedInUser");
-
-
-        /// get total number of items in cart for user
-
-        getTotalAmountOfItemsInCart(session, model);
-
-        FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
-
-
-        ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(u.getUsername());
-
-        List<GenreTest> genres = movieService.getGenres();
-        model.addAttribute("genres", genres);
-
-
-        List<MovieTest> movieByGenres = movieService.getMoviesByGenre("878");
-
-        List<MovieTest> newMovie = new ArrayList<>();
-
-        for (int i = 0; i < movieByGenres.size() - 2; i++) {
-
-            if (movieByGenres.get(i).getBackdrop_path() != null) {
-                newMovie.add(movieByGenres.get(i));
-                model.addAttribute("movieByGenres", newMovie);
-            }
-
-            for (int j = 0; j < favoriteLists.size(); j++) {
-
-                if (favoriteLists.get(j).getMovieDb_id() == movieByGenres.get(i).getId()) {
-
-                    movieByGenres.get(i).setFavourite(true);
-                }
-            }
-        }
-
-        // genre by id and get the name
-
-        GenreDao genreDao = new GenreDaoImpl("database.properties");
-
-        GenreTest genre = genreDao.getGenreById(878);
-
-        model.addAttribute("genreName", genre.getName());
-    }
-
 
     @GetMapping("/logout_index")
     public String userIndex2() {
@@ -944,4 +897,52 @@ public class IndexController {
         return "notValidUser";
     }
 
+
+
+    private void toViewMoviesByGenreMovieIndex(Model model, HttpSession session){
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+
+        /// get total number of items in cart for user
+
+        getTotalAmountOfItemsInCart(session, model);
+
+        FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
+
+
+        ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(u.getUsername());
+
+        List<GenreTest> genres = movieService.getGenres();
+        model.addAttribute("genres", genres);
+
+
+        List<MovieTest> movieByGenres = movieService.getMoviesByGenre("878");
+
+        List<MovieTest> newMovie = new ArrayList<>();
+
+        for (int i = 0; i < movieByGenres.size() - 2; i++) {
+
+            if (movieByGenres.get(i).getBackdrop_path() != null) {
+                newMovie.add(movieByGenres.get(i));
+                model.addAttribute("movieByGenres", newMovie);
+            }
+
+            for (int j = 0; j < favoriteLists.size(); j++) {
+
+                if (favoriteLists.get(j).getMovieDb_id() == movieByGenres.get(i).getId()) {
+
+                    movieByGenres.get(i).setFavourite(true);
+                }
+            }
+        }
+
+        // genre by id and get the name
+
+        GenreDao genreDao = new GenreDaoImpl("database.properties");
+
+        GenreTest genre = genreDao.getGenreById(878);
+
+        model.addAttribute("genreName", genre.getName());
+    }
 }
