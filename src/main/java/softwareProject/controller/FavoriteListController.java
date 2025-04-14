@@ -39,6 +39,8 @@ public class FavoriteListController {
 
             int movieDB_Id = Integer.parseInt(movieId);
 
+            session.setAttribute("movieId", movieDB_Id);
+
 
             FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
 
@@ -114,6 +116,8 @@ public class FavoriteListController {
 
             int movieDB_Id = Integer.parseInt(movieId);
 
+            session.setAttribute("movieId", movieDB_Id);
+
 
             FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
 
@@ -179,6 +183,8 @@ public class FavoriteListController {
         if(session.getAttribute("loggedInUser") != null) {
 
             int movieDB_Id = Integer.parseInt(movieId);
+
+            session.setAttribute("movieId", movieDB_Id);
 
 
             FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
@@ -246,6 +252,8 @@ public class FavoriteListController {
 
             int movieDB_Id = Integer.parseInt(movieId);
 
+            session.setAttribute("movieId2", movieDB_Id);
+
 
             FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
 
@@ -310,6 +318,8 @@ public class FavoriteListController {
 
             int movieDB_Id = Integer.parseInt(movieId);
 
+            session.setAttribute("movieId", movieDB_Id);
+
 
             FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
 
@@ -340,6 +350,9 @@ public class FavoriteListController {
                 String favList = "Favourite List";
                 model.addAttribute("favList", favList);
 
+                String recs2 = "Most Common Genre In FavouriteList";
+                model.addAttribute("recs2", recs2);
+
                 favListForRandomRecs(model, session, favoriteListDao, user);
 
                 return "movie_recs";
@@ -363,6 +376,9 @@ public class FavoriteListController {
                 String favList = "Favourite List";
                 model.addAttribute("favList", favList);
 
+                String recs2 = "Most Common Genre In FavouriteList";
+                model.addAttribute("recs2", recs2);
+
                 favListForRandomRecs(model, session, favoriteListDao, user);
 
                 return "movie_recs";
@@ -374,34 +390,92 @@ public class FavoriteListController {
 
     }
 
-    private void favListForRandomRecs(Model model, HttpSession session, FavoriteListDao favoriteListDao, User user) {
 
-        int randomNumber = (int) session.getAttribute("randomNumber");
+    // add fav list for recs of movies based on most common genre in users fav list
 
-        List<MovieRecommendations> movieRecs = movieService.getRecommendations(randomNumber);
+    @GetMapping("/addMovieFavList6")
+    public String addMovieFavList6(@RequestParam(name = "movieId") String movieId,
+                                   @RequestParam(name = "backdrop_path") String backdrop_path,
+                                   @RequestParam(name = "overview") String overview,
+                                   @RequestParam(name = "title") String title, Model model, HttpSession session) {
 
-        List<MovieRecommendations> newMovie = new ArrayList<>();
+
+        if(session.getAttribute("loggedInUser") != null) {
+
+            int movieDB_Id = Integer.parseInt(movieId);
+
+            session.setAttribute("movieId", movieDB_Id);
 
 
-        ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(user.getUsername());
+            FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
 
-        for (int i = 0; i < 15; i++) {
+            User user = (User) session.getAttribute("loggedInUser");
 
-            if (movieRecs.get(i).getBackdrop_path() != null) {
-                newMovie.add(movieRecs.get(i));
-                model.addAttribute("movieRecs",newMovie);
-            }
+            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title));
 
-            for (int j = 0; j < favoriteLists.size(); j++) {
+            String message;
+            if(complete == -1){
 
-                if (favoriteLists.get(j).getMovieDb_id() == movieRecs.get(i).getId()) {
+                favoriteListDao.deleteFroFavouriteList(user.getUsername(), movieDB_Id);
 
-                    movieRecs.get(i).setFavourite(true);
-                }
+
+                FavoriteList favoriteListUser = favoriteListDao.getFavouriteListByUsernameAndMovieId(user.getUsername(), movieDB_Id);
+                session.setAttribute("favouriteListUser", favoriteListUser);
+
+                MovieDbByMovieId movieDbByMovieId = movieService.getMoviesByMovieId(movieDB_Id);
+                message = movieDbByMovieId.getTitle() + " was deleted from your Favourite List";
+                model.addAttribute("messageDelete", message);
+
+                log.info(message);
+
+                getTotalAmountOfItemsInCart(session, model);
+
+                String recs = "Random Movie Recommendations";
+                model.addAttribute("recs1", recs);
+
+                String favList = "Favourite List";
+                model.addAttribute("favList", favList);
+
+                String recs2 = "Most Common Genre In FavouriteList";
+                model.addAttribute("recs2", recs2);
+
+                favListForRecsBasedOnMostCommonMovieInFavList(model, session);
+
+                return "movie_recsGenre";
+
+            }else{
+
+
+                MovieDbByMovieId  movieDbByMovieId = movieService.getMoviesByMovieId(movieDB_Id);
+                message = "Movie: " +movieDbByMovieId.getTitle() + " was added to favouriteList";
+                model.addAttribute("message", message);
+
+                log.info(message);
+
+                getTotalAmountOfItemsInCart( session,model);
+
+                // creating a session to hold random number
+
+                String recs = "Random Movie Recommendations";
+                model.addAttribute("recs1", recs);
+
+                String favList = "Favourite List";
+                model.addAttribute("favList", favList);
+
+                String recs2 = "Most Common Genre In FavouriteList";
+                model.addAttribute("recs2", recs2);
+
+                favListForRecsBasedOnMostCommonMovieInFavList(model, session);
+
+                return "movie_recsGenre";
             }
 
         }
+
+        return "notValidUser";
+
     }
+
 
 
     // delete fav list
@@ -482,6 +556,8 @@ public class FavoriteListController {
         // create new list to add the movies from the movie db into
         List<MovieTest> newMovie = new ArrayList<>();
 
+        String [] genreId = null;
+
         FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
 
 
@@ -489,6 +565,9 @@ public class FavoriteListController {
 
         // loop through the movie db list and reduce the size by 2
         for (int i = 0; i < movies.size() - 2; i++) {
+
+            genreId = movies.get(i).getGenre_ids();
+
 
             // if any backdrop image is unavailable it will not add it to the new arraylist
             if (movies.get(i).getBackdrop_path() != null) {
@@ -506,6 +585,21 @@ public class FavoriteListController {
             }
         }
 
+
+        // putting movies into genreMovieTable
+
+        int genreId2 = 0;
+
+        GenreForMovieDao genreForMovieDao = new GenreForMovieDaoImpl("database.properties");
+
+            genreId2 = Integer.parseInt(genreId[0]);
+            System.out.println(genreId2);
+
+
+            int movieId = (int) session.getAttribute("movieId");
+
+        genreForMovieDao.addGenreForMovie(new GenreForMovie(0, u.getUsername(), movieId, genreId2));
+
     }
 
 
@@ -517,6 +611,8 @@ public class FavoriteListController {
         /// get total number of items in cart for user
 
         getTotalAmountOfItemsInCart(session, model);
+
+        String [] genreId2 = null;
 
         FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
 
@@ -536,6 +632,8 @@ public class FavoriteListController {
             List<MovieTest> newMovie = new ArrayList<>();
 
             for (int i = 0; i < movieByGenres.size() - 2; i++) {
+
+                genreId2 = movieByGenres.get(i).getGenre_ids();
 
                 if (movieByGenres.get(i).getBackdrop_path() != null) {
                     newMovie.add(movieByGenres.get(i));
@@ -559,6 +657,19 @@ public class FavoriteListController {
 
             model.addAttribute("genreName", genre.getName());
 
+            // putting movies into genreMovieTable
+
+            int genreId3 = 0;
+
+            GenreForMovieDao genreForMovieDao = new GenreForMovieDaoImpl("database.properties");
+
+            genreId3 = Integer.parseInt(genreId2[0]);
+
+
+            int movieId = (int) session.getAttribute("movieId");
+
+            genreForMovieDao.addGenreForMovie(new GenreForMovie(0, u.getUsername(), movieId, genreId3));
+
         }  else {
             toViewMoviesByGenreMovieIndex(model, session);
         }
@@ -578,6 +689,8 @@ public class FavoriteListController {
 
         getTotalAmountOfItemsInCart(session, model);
 
+        String [] genreId = null;
+
         FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
 
 
@@ -592,6 +705,8 @@ public class FavoriteListController {
         List<MovieTest> newMovie = new ArrayList<>();
 
         for (int i = 0; i < movieByGenres.size() - 2; i++) {
+
+            genreId = movieByGenres.get(i).getGenre_ids();
 
             if (movieByGenres.get(i).getBackdrop_path() != null) {
                 newMovie.add(movieByGenres.get(i));
@@ -614,6 +729,20 @@ public class FavoriteListController {
         GenreTest genre = genreDao.getGenreById(878);
 
         model.addAttribute("genreName", genre.getName());
+
+        // putting movies into genreMovieTable
+
+        int genreId2 = 0;
+
+        GenreForMovieDao genreForMovieDao = new GenreForMovieDaoImpl("database.properties");
+
+        genreId2 = Integer.parseInt(genreId[0]);
+        System.out.println(genreId2);
+
+
+        int movieId = (int) session.getAttribute("movieId");
+
+        genreForMovieDao.addGenreForMovie(new GenreForMovie(0, u.getUsername(), movieId, genreId2));
     }
 
 
@@ -629,7 +758,11 @@ public class FavoriteListController {
 
         List<MovieTest> newMovieBySearch = new ArrayList<>();
 
+        String [] genreId = null;
+
         for (int i = 0; i < movieBySearch.size() - 2; i++) {
+
+            genreId = movieBySearch.get(i).getGenre_ids();
 
             if (movieBySearch.get(i).getBackdrop_path() != null) {
                 newMovieBySearch.add(movieBySearch.get(i));
@@ -648,7 +781,20 @@ public class FavoriteListController {
 
         model.addAttribute("query", query);
 
-        log.info("User {} searched for movies on {}", user.getUsername(), query);
+        /*
+        int genreId2 = 0;
+
+        GenreForMovieDao genreForMovieDao = new GenreForMovieDaoImpl("database.properties");
+
+        genreId2 = Integer.parseInt(genreId[0]);
+        System.out.println(genreId2);
+
+
+        int movieId = (int) session.getAttribute("movieId");
+
+        genreForMovieDao.addGenreForMovie(new GenreForMovie(0, user.getUsername(), movieId, genreId2));
+
+         */
     }
 
     private void favouriteListForMovieBySearch(Model model, HttpSession session, User user) {
@@ -665,7 +811,12 @@ public class FavoriteListController {
 
         List<MovieTest> newMovieBySearch = new ArrayList<>();
 
+        String [] genreId = null;
+
         for (int i = 0; i < movieBySearch.size(); i++) {
+
+            genreId = movieBySearch.get(i).getGenre_ids();
+
             if (movieBySearch.get(i).getBackdrop_path() != null) {
                 newMovieBySearch.add(movieBySearch.get(i));
                 model.addAttribute("movieBySearchGenre", newMovieBySearch);
@@ -682,9 +833,127 @@ public class FavoriteListController {
         }
 
         model.addAttribute("query", query);
+
+        int genreId2 = 0;
+
+        GenreForMovieDao genreForMovieDao = new GenreForMovieDaoImpl("database.properties");
+
+        genreId2 = Integer.parseInt(genreId[0]);
+        System.out.println(genreId2);
+
+
+        int movieId = (int) session.getAttribute("movieId");
+
+        genreForMovieDao.addGenreForMovie(new GenreForMovie(0, user.getUsername(), movieId, genreId2));
+
     }
 
 
+
+    private void favListForRandomRecs(Model model, HttpSession session, FavoriteListDao favoriteListDao, User user) {
+
+        int randomNumber = (int) session.getAttribute("randomNumber");
+
+        List<MovieRecommendations> movieRecs = movieService.getRecommendations(randomNumber);
+
+        List<MovieRecommendations> newMovie = new ArrayList<>();
+
+        String [] genreId = null;
+
+        ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(user.getUsername());
+
+        for (int i = 0; i < 15; i++) {
+
+            genreId = movieRecs.get(i).getGenre_ids();
+
+            if (movieRecs.get(i).getBackdrop_path() != null) {
+                newMovie.add(movieRecs.get(i));
+                model.addAttribute("movieRecs",newMovie);
+            }
+
+            for (int j = 0; j < favoriteLists.size(); j++) {
+
+                if (favoriteLists.get(j).getMovieDb_id() == movieRecs.get(i).getId()) {
+
+                    movieRecs.get(i).setFavourite(true);
+                }
+            }
+
+        }
+
+
+        System.out.println(genreId);
+        int genreId2 = 0;
+
+        GenreForMovieDao genreForMovieDao = new GenreForMovieDaoImpl("database.properties");
+
+        genreId2 = Integer.parseInt(genreId[0]);
+        System.out.println(genreId2);
+
+
+        int movieId = (int) session.getAttribute("movieId");
+
+        genreForMovieDao.addGenreForMovie(new GenreForMovie(0, user.getUsername(), movieId, genreId2));
+    }
+
+
+
+    private void favListForRecsBasedOnMostCommonMovieInFavList(Model model, HttpSession session){
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+        FavouriteListDaoImpl favouriteListDao = new FavouriteListDaoImpl("database.properties");
+        ArrayList<FavoriteList> favoriteLists = favouriteListDao.getAllFavouriteListByUsername(u.getUsername());
+
+        GenreForMovieDaoImpl genreForMovieDao = new GenreForMovieDaoImpl("database.properties");
+        ArrayList<GenreForMovie> genreForMovies = genreForMovieDao.getAllGenreForMovieByUsername(u.getUsername());
+
+
+        int mostCommonGenreId = (int) session.getAttribute("mostCommonGenreId");
+
+        List<MovieTest> movieByGenres = movieService.getMoviesByGenre(String.valueOf(mostCommonGenreId));
+
+        String [] genreId = null;
+
+        List<MovieTest> newMovie = new ArrayList<>();
+
+        for (int i = 0; i < movieByGenres.size() - 2; i++) {
+
+            genreId = movieByGenres.get(i).getGenre_ids();
+
+            if (movieByGenres.get(i).getBackdrop_path() != null) {
+                newMovie.add(movieByGenres.get(i));
+                model.addAttribute("movieByGenres", newMovie);
+            }
+
+            for (int j = 0; j < favoriteLists.size(); j++) {
+
+                if (favoriteLists.get(j).getMovieDb_id() == movieByGenres.get(i).getId()) {
+
+                    movieByGenres.get(i).setFavourite(true);
+                }
+            }
+        }
+
+        GenreDao genreDao = new GenreDaoImpl("database.properties");
+
+        GenreTest genre = genreDao.getGenreById(mostCommonGenreId);
+        model.addAttribute("genreName", genre.getName());
+
+
+
+        System.out.println(genreId);
+        int genreId2 = 0;
+
+
+        genreId2 = Integer.parseInt(genreId[0]);
+        System.out.println(genreId2);
+
+
+        int movieId = (int) session.getAttribute("movieId");
+
+        genreForMovieDao.addGenreForMovie(new GenreForMovie(0, u.getUsername(), movieId, genreId2));
+    }
 
 
     /**

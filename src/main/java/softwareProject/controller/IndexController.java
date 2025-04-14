@@ -820,6 +820,9 @@ public class IndexController {
             String recs = "Random Movie Recommendations";
             model.addAttribute("recs", recs);
 
+            String recs2 = "Most Common Genre In FavouriteList";
+            model.addAttribute("recs2", recs2);
+
 
             return "favList";
         }
@@ -889,6 +892,22 @@ public class IndexController {
             model.addAttribute("recs1", recs);
 
             return "movie_recs";
+        }
+
+        return "notValidUser";
+    }
+
+    @GetMapping("/movie_recsGenre")
+    public String movie_recsGenre(HttpSession session, Model model) {
+
+        if(session.getAttribute("loggedInUser") != null) {
+
+            getTotalAmountOfItemsInCart(session, model);
+
+            String recs = "Movie Recommendations Based on your Most Popular Genre Favourite";
+            model.addAttribute("recs2", recs);
+
+            return "movie_recsGenre";
         }
 
         return "notValidUser";
