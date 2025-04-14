@@ -106,13 +106,26 @@ public class ReccomendationsController {
                 }
             }
 
+            if (genreIds.isEmpty()){
+
+                String recs = "Random Movie Recommendations";
+                model.addAttribute("recs1", recs);
+
+                String favList = "Favourite List";
+                model.addAttribute("favList", favList);
+
+                String recs2 = "Most Common Genre In FavouriteList";
+                model.addAttribute("recs2", recs2);
+
+                return "goToMoviesPage";
+            }
+
             int maxCount = 0;
             int mostCommonGenreId = 0;
 
             for (int i = 0; i < genreIds.size(); i++) {
 
                 int count = 0;
-
                 for (int j = 0; j < genreIds.size(); j++) {
                     if (genreIds.get(i) == genreIds.get(j)) {
                         count++;
