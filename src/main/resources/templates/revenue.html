@@ -23,13 +23,68 @@
         top: 0;
         z-index: -1;
     }
+
+    h1{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 50px;
+        color: white;
+        font-weight: bold;
+        -webkit-text-stroke: 1px darkred;
+        font-family: poppins;
+    }
+
+
+    a.three:link {
+        text-decoration: none;
+    }
+
+    a.three:visited {
+        text-decoration: none;
+    }
+
+    a.three:hover {
+        text-decoration: underline;
+    }
+
+    a.three:active {
+        text-decoration: underline;
+    }
+
+    p.two{
+        color: black;
+        font-family: poppins;
+    }
+
+    p.two:visited {color:#0000ff;}
+    p.two:hover {font-size:150%;}
+
+    .dropdown-menu{
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    }
+
 </style>
 </head>
 <body>
 <div id="background"></div>
 <div th:replace="~{fragments/menu :: menu-bar}"></div>
+
+
+<div class="dropdown" style=" margin-top: 50px; margin-left: 50px;">
+    <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Statistics
+    </button>
+    <ul class="dropdown-menu" style=" box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)">
+        <li><a class="three" th:href="@{/adminPanelStats}" style="text-decoration:none"><p class="two">Movies deleted from users cart</p></a></li>
+        <li><a class="three" th:href="@{/revenue}" style="text-decoration:none"><p class="two">Revenue Chart</p></a></li>
+    </ul>
+</div>
+
 <div class="container">
-    <h2 align="center">Revenue</h2>
+
+
+    <h1>Revenue</h1>
 
     <div id="container"
          style="width: 550px; height: 400px; margin: 0 auto"></div>

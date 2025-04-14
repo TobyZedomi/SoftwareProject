@@ -211,6 +211,7 @@ public class FavoriteListController {
                 getTotalAmountOfItemsInCart(session, model);
 
 
+                toViewMoviesByGenre(model, session);
                 favouriteListForMovieBySearch(model, session, user);
 
                 return "searchMovie_index";
@@ -226,7 +227,7 @@ public class FavoriteListController {
 
                 getTotalAmountOfItemsInCart( session,model);
 
-
+                toViewMoviesByGenre(model, session);
                 favouriteListForMovieBySearch(model, session, user);
 
                 return "searchMovie_index";

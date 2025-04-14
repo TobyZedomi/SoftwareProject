@@ -43,6 +43,10 @@
             font-family: poppins;
         }
 
+        p{
+            font-family: Poppins;
+        }
+
 
         table {
             font-family: poppins;
@@ -87,6 +91,33 @@
             height: 100px;
         }
 
+        a.three:link {
+            text-decoration: none;
+        }
+
+        a.three:visited {
+            text-decoration: none;
+        }
+
+        a.three:hover {
+            text-decoration: underline;
+        }
+
+        a.three:active {
+            text-decoration: underline;
+        }
+
+        p.two{
+            color: black;
+            font-family: poppins;
+        }
+
+        p.two:visited {color:#0000ff;}
+        p.two:hover {font-size:150%;}
+
+        .dropdown-menu{
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        }
 
     </style>
 
@@ -102,10 +133,20 @@
 <div th:if="${#ctx.session.loggedInUser != null && #ctx.session.loggedInUser.isAdmin() == true}">
 
 
+    <div class="dropdown" style=" margin-top: 50px; margin-left: 50px;">
+        <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Statistics
+        </button>
+        <ul class="dropdown-menu" style=" box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)">
+            <li><a class="three" th:href="@{/adminPanelStats}" style="text-decoration:none;" ><p class="two" >Movies deleted from users cart</p></a></li>
+            <li><a class="three" th:href="@{/revenue}" style="text-decoration:none"><p class="two">Revenue Chart</p></a></li>
+        </ul>
+    </div>
+
    <!-- <canvas id="myChart" style="width:100%;max-width:800px"></canvas>-->
 
     <div>
-        <h1>Statistics</h1>
+        <h1>Movies deleted from users cart</h1>
     </div>
 
     <table>

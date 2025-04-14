@@ -92,7 +92,6 @@
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li th:if="${#ctx.session.loggedInUser != null && #ctx.session.loggedInUser.isAdmin() == true}" ><a class="dropdown-item" th:href="@{/adminPanel_index}" style="font-weight: bold;font-family: poppins;">Admin Movie Product Panel</a></li>
               <li th:if="${#ctx.session.loggedInUser != null && #ctx.session.loggedInUser.isAdmin() == true}"><a class="dropdown-item" th:href="@{/adminPanelStats}" style="font-weight: bold;font-family: poppins;">Statistics</a></li>
-              <li th:if="${#ctx.session.loggedInUser != null && #ctx.session.loggedInUser.isAdmin() == true}"><a class="dropdown-item" th:href="@{/revenue}" style="font-weight: bold;font-family: poppins;">Revenue</a></li>
             </ul>
           </li>
           <li class="nav-item">

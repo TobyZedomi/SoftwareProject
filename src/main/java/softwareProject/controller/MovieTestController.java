@@ -149,7 +149,8 @@ public class MovieTestController {
 
         log.info("User {} searched for movies on {}", u.getUsername(), query);
 
-        favouriteListForMovieBySearch(model, session, u);
+            viewMoviesByGenre(session, model);
+            favouriteListForMovieBySearch(model, session, u);
 
         return "searchMovie_index";
 
