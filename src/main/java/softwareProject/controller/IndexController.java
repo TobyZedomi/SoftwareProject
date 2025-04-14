@@ -141,7 +141,6 @@ public class IndexController {
             List<GenreTest> genres = movieService.getGenres();
             model.addAttribute("genres", genres);
 
-
             List<MovieTest> movieByGenres = movieService.getMoviesByGenre("878");
 
             List<MovieTest> newMovie = new ArrayList<>();

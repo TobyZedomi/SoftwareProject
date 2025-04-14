@@ -108,6 +108,8 @@ public class MovieTestController {
 
             model.addAttribute("genreName", genre.getName());
 
+            viewMoviesByGenre(session, model);
+
             return "movie_index";
 
         }
@@ -255,8 +257,9 @@ public class MovieTestController {
         List<GenreTest> genres = movieService.getGenres();
         model.addAttribute("genres", genres);
 
+       String genreId = (String) session.getAttribute("genreId2");
 
-        List<MovieTest> movieByGenres = movieService.getMoviesByGenre("878");
+        List<MovieTest> movieByGenres = movieService.getMoviesByGenre(genreId);
 
         List<MovieTest> newMovie = new ArrayList<>();
 
@@ -282,7 +285,7 @@ public class MovieTestController {
 
         GenreDao genreDao = new GenreDaoImpl("database.properties");
 
-        GenreTest genre = genreDao.getGenreById(878);
+        GenreTest genre = genreDao.getGenreById(Integer.parseInt(genreId));
 
         model.addAttribute("genreName", genre.getName());
     }

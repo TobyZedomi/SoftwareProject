@@ -298,7 +298,9 @@ public class FavoriteListController {
         List<GenreTest> genres = movieService.getGenres();
         model.addAttribute("genres", genres);
 
-        List<MovieTest> movieByGenres = movieService.getMoviesByGenre("878");
+        String genreId = (String) session.getAttribute("genreId2");
+
+        List<MovieTest> movieByGenres = movieService.getMoviesByGenre(genreId);
 
         List<MovieTest> newMovie = new ArrayList<>();
 
@@ -322,7 +324,7 @@ public class FavoriteListController {
 
         GenreDao genreDao = new GenreDaoImpl("database.properties");
 
-        GenreTest genre = genreDao.getGenreById(878);
+        GenreTest genre = genreDao.getGenreById(Integer.parseInt(genreId));
 
         model.addAttribute("genreName", genre.getName());
     }
