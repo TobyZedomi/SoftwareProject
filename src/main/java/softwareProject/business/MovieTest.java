@@ -18,7 +18,7 @@ public class MovieTest {
 
     private String backdrop_path;
 
-    private List<Integer> genre_ids;
+    private String [] genre_ids;
     private String overview;
     private String title;
     private String release_date;

@@ -71,6 +71,16 @@ public class ReccomendationsController {
     }
 
 
+    @GetMapping("/movieRecsMostCommonGenre")
+    public String movieRecsMostCommonGenre(HttpSession session, Model model){
+
+
+
+
+        return "movie_recsGenre";
+    }
+
+
 
     public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
 
