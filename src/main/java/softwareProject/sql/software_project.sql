@@ -64,6 +64,17 @@ CREATE TABLE favouriteList
 );
 
 
+CREATE TABLE genreForMovie
+(
+    genreForMovie_id INT AUTO_INCREMENT,
+    username   varchar(255) NOT NULL,
+    movieDb_id int(11) NOT NULL,
+    genre_id int(255),
+    PRIMARY KEY (genreForMovie_id),
+    FOREIGN KEY (username) REFERENCES users (username)
+);
+
+
 create table friends
 (
     friend1 varchar(10) not null,

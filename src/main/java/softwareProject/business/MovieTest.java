@@ -18,9 +18,10 @@ public class MovieTest {
 
     private String backdrop_path;
 
-    private String [] genre_ids;
     private String overview;
     private String title;
+
+    private String [] genre_ids;
     private String release_date;
 
     @Setter

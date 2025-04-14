@@ -20,6 +20,8 @@ public class MovieRecommendations {
 
     private String overview;
 
+    private String [] genre_ids;
+
     @Setter
     private boolean favourite = false;
 }
