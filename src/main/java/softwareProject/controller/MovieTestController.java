@@ -108,6 +108,8 @@ public class MovieTestController {
 
             model.addAttribute("genreName", genre.getName());
 
+            viewMoviesByGenre(session, model);
+
             return "movie_index";
 
         }
@@ -255,6 +257,65 @@ public class MovieTestController {
         List<GenreTest> genres = movieService.getGenres();
         model.addAttribute("genres", genres);
 
+        String genreId = (String) session.getAttribute("genreId2");
+
+        if (genreId != null) {
+
+            List<MovieTest> movieByGenres = movieService.getMoviesByGenre(genreId);
+
+            List<MovieTest> newMovie = new ArrayList<>();
+
+            for (int i = 0; i < movieByGenres.size() - 2; i++) {
+
+                if (movieByGenres.get(i).getBackdrop_path() != null) {
+                    newMovie.add(movieByGenres.get(i));
+                    model.addAttribute("movieByGenres", newMovie);
+                }
+
+                for (int j = 0; j < favoriteLists.size(); j++) {
+
+                    if (favoriteLists.get(j).getMovieDb_id() == movieByGenres.get(i).getId()) {
+
+                        movieByGenres.get(i).setFavourite(true);
+                    }
+                }
+            }
+
+            // genre by id and get the name
+
+            // use a session for this based on the controller method view movie by genre, testing branch
+
+            GenreDao genreDao = new GenreDaoImpl("database.properties");
+
+            GenreTest genre = genreDao.getGenreById(Integer.parseInt(genreId));
+
+            model.addAttribute("genreName", genre.getName());
+
+        } else {
+
+            toViewMoviesByGenreMovieIndex(model, session);
+        }
+
+    }
+
+
+    private void toViewMoviesByGenreMovieIndex(Model model, HttpSession session){
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+
+        /// get total number of items in cart for user
+
+        getTotalAmountOfItemsInCart(session, model);
+
+        FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
+
+
+        ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(u.getUsername());
+
+        List<GenreTest> genres = movieService.getGenres();
+        model.addAttribute("genres", genres);
+
 
         List<MovieTest> movieByGenres = movieService.getMoviesByGenre("878");
 
@@ -278,14 +339,13 @@ public class MovieTestController {
 
         // genre by id and get the name
 
-        // use a session for this based on the controller method view movie by genre, testing branch
-
         GenreDao genreDao = new GenreDaoImpl("database.properties");
 
         GenreTest genre = genreDao.getGenreById(878);
 
         model.addAttribute("genreName", genre.getName());
     }
+
 
 
 }
