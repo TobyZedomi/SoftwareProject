@@ -62,9 +62,6 @@ public class IndexController {
 
             FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
 
-
-
-
             /// get total number of items in cart for user
 
             getTotalAmountOfItemsInCart(session, model);

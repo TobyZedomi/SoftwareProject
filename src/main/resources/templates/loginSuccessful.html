@@ -157,6 +157,26 @@
       top: 0;
       z-index: -1;
     }
+
+    .message {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: green;
+      font-weight: bold;
+      margin-bottom: 50px;
+      font-family: poppins;
+    }
+
+    .messageDelete {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: red;
+      font-weight: bold;
+      margin-bottom: 50px;
+      font-family: poppins;
+    }
   </style>
   <title>Success!</title>
 </head>
@@ -167,6 +187,13 @@
 
 <div>
   <h1>Most Popular Movies</h1>
+</div>
+
+<div class="action_btn" style="margin: 0 auto; display: inline;">
+  <div id="message" class="message" th:text="${message}"></div>
+
+  <div id="messageDelete" class="messageDelete" th:text="${messageDelete}"></div>
+
 </div>
 
 
@@ -187,7 +214,13 @@
           <div class="overlay">
             <h3 th:text="${movie.getTitle()}"> Mountain</h3>
             <p th:text="${movie.getOverview()}" style="overflow: auto; scrollbar-width: none;"></p>
-            <a th:href="@{/movieTrailer(id=${movie.getId()})}">View Videos</a>
+            <div class="action_btn" style="margin: 0 auto; display: inline;">
+              <a th:href="@{/movieTrailer(id=${movie.getId()})}">View Videos</a>
+              <a th:href="@{/addMovieFavList(movieId=${movie.getId()}, backdrop_path=${movie.getBackdrop_path()}, overview=${movie.getOverview()}, title=${movie.getTitle()}, release_date=${movie.getRelease_date()})}"
+                 class="remove_cart" rel="2">
+                <i class="fa fa-heart" th:style="${movie.isFavourite() == true} ? 'color: red' : 'color: black'"></i>
+              </a>
+            </div>
           </div>
         </div>
       </div>
