@@ -253,6 +253,10 @@
                                 <i class="fa fa-heart" th:style="${movieByGenre.isFavourite() == true} ? 'color: red' : 'color: black'"></i>
                             </a>
                         </div>
+
+                        <a th:href="@{/writeReview(movieId=${movieByGenre.getId()}, movieTitle=${movieByGenre.getTitle()})}">
+                            Write a Review
+                        </a>
                     </div>
                 </div>
             </div>

@@ -100,7 +100,7 @@ public class FavoriteListController {
 
     }
 
-    // addMovieFavList 2
+    // addMovieFavList for movies by genre
 
     @GetMapping("/addMovieFavList2")
     public String addMovieFavList2(@RequestParam(name = "movieId") String movieId,
@@ -163,6 +163,105 @@ public class FavoriteListController {
 
         return "notValidUser";
 
+    }
+
+
+    // favourite list for search
+
+    @GetMapping("/addMovieFavList3")
+    public String addMovieFavList3(@RequestParam(name = "movieId") String movieId,
+                                   @RequestParam(name = "backdrop_path") String backdrop_path,
+                                   @RequestParam(name = "overview") String overview,
+                                   @RequestParam(name = "title") String title, Model model, HttpSession session) {
+
+
+        if(session.getAttribute("loggedInUser") != null) {
+
+            int movieDB_Id = Integer.parseInt(movieId);
+
+
+            FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
+
+            User user = (User) session.getAttribute("loggedInUser");
+
+            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title));
+
+            String message;
+            if(complete == -1){
+
+                favoriteListDao.deleteFroFavouriteList(user.getUsername(), movieDB_Id);
+
+
+                FavoriteList favoriteListUser = favoriteListDao.getFavouriteListByUsernameAndMovieId(user.getUsername(), movieDB_Id);
+                session.setAttribute("favouriteListUser", favoriteListUser);
+
+                MovieDbByMovieId movieDbByMovieId = movieService.getMoviesByMovieId(movieDB_Id);
+                message = movieDbByMovieId.getTitle() + " was deleted from your Favourite List";
+                model.addAttribute("messageDelete", message);
+
+                log.info(message);
+
+                getTotalAmountOfItemsInCart(session, model);
+
+
+                favouriteListForMovieBySearch(model, session, user);
+
+                return "searchMovie_index";
+
+            }else{
+
+
+                MovieDbByMovieId  movieDbByMovieId = movieService.getMoviesByMovieId(movieDB_Id);
+                message = "Movie " +movieDbByMovieId.getTitle() + " was added to favouriteList";
+                model.addAttribute("message", message);
+
+                log.info(message);
+
+                getTotalAmountOfItemsInCart( session,model);
+
+
+                favouriteListForMovieBySearch(model, session, user);
+
+                return "searchMovie_index";
+            }
+
+        }
+
+        return "notValidUser";
+
+    }
+
+    private void favouriteListForMovieBySearch(Model model, HttpSession session, User user) {
+        FavoriteListDao favoriteListDao1 = new FavouriteListDaoImpl("database.properties");
+
+
+        ArrayList<FavoriteList> favoriteLists = favoriteListDao1.getAllFavouriteListByUsername(user.getUsername());
+
+        String query = (String) session.getAttribute("query");
+
+        List<MovieTest> movieBySearch = movieService.getMoviesBySearch(query);
+
+        System.out.println(movieBySearch);
+
+        List<MovieTest> newMovieBySearch = new ArrayList<>();
+
+        for (int i = 0; i < movieBySearch.size(); i++) {
+            if (movieBySearch.get(i).getBackdrop_path() != null) {
+                newMovieBySearch.add(movieBySearch.get(i));
+                model.addAttribute("movieBySearchGenre", newMovieBySearch);
+            }
+
+            for (int j = 0; j < favoriteLists.size(); j++) {
+
+                if (favoriteLists.get(j).getMovieDb_id() == movieBySearch.get(i).getId()) {
+
+                    movieBySearch.get(i).setFavourite(true);
+                }
+            }
+
+        }
+
+        model.addAttribute("query", query);
     }
 
     // delete fav list
@@ -329,7 +428,7 @@ public class FavoriteListController {
 
 
 
-/// Movie Index
+    /// Movie Index
     private void toViewMoviesByGenreMovieIndex(Model model, HttpSession session){
 
         User u = (User) session.getAttribute("loggedInUser");
@@ -378,6 +477,10 @@ public class FavoriteListController {
     }
 
 
+
+
+
+
     /**
      * Getting the total amount of items in the cart for logged in user
      *
@@ -400,4 +503,5 @@ public class FavoriteListController {
         int totalCartItems = cartItemDao.totalNumberOfCartItems(cart.getCart_id());
         model.addAttribute("totalCartItems", totalCartItems);
     }
+
 }

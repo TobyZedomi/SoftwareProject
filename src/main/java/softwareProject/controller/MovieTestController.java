@@ -126,16 +126,10 @@ public class MovieTestController {
 
             User u = (User) session.getAttribute("loggedInUser");
 
-
-           // String genreId2 = (String) session.getAttribute("genreId2");
-
-           // int genreIdInt = Integer.parseInt(genreId2);
-
-
             // totalAmountOItems in basket
             getTotalAmountOfItemsInCart(session, model);
 
-
+            session.setAttribute("query", query);
 
             List<MovieTest> movieBySearch = movieService.getMoviesBySearch(query);
 
@@ -143,13 +137,8 @@ public class MovieTestController {
 
             List<MovieTest> newMovieBySearch = new ArrayList<>();
 
-
             for (int i = 0; i < movieBySearch.size(); i++) {
-
-
                 if (movieBySearch.get(i).getBackdrop_path() != null) {
-
-
                     newMovieBySearch.add(movieBySearch.get(i));
                     model.addAttribute("movieBySearchGenre", newMovieBySearch);
                 }
@@ -160,7 +149,7 @@ public class MovieTestController {
 
         log.info("User {} searched for movies on {}", u.getUsername(), query);
 
-            viewMoviesByGenre(session, model);
+        favouriteListForMovieBySearch(model, session, u);
 
         return "searchMovie_index";
 
@@ -346,6 +335,40 @@ public class MovieTestController {
         model.addAttribute("genreName", genre.getName());
     }
 
+
+
+    private void favouriteListForMovieBySearch(Model model, HttpSession session, User user) {
+        FavoriteListDao favoriteListDao1 = new FavouriteListDaoImpl("database.properties");
+
+
+        ArrayList<FavoriteList> favoriteLists = favoriteListDao1.getAllFavouriteListByUsername(user.getUsername());
+
+        String query = (String) session.getAttribute("query");
+
+        List<MovieTest> movieBySearch = movieService.getMoviesBySearch(query);
+
+        System.out.println(movieBySearch);
+
+        List<MovieTest> newMovieBySearch = new ArrayList<>();
+
+        for (int i = 0; i < movieBySearch.size(); i++) {
+            if (movieBySearch.get(i).getBackdrop_path() != null) {
+                newMovieBySearch.add(movieBySearch.get(i));
+                model.addAttribute("movieBySearchGenre", newMovieBySearch);
+            }
+
+            for (int j = 0; j < favoriteLists.size(); j++) {
+
+                if (favoriteLists.get(j).getMovieDb_id() == movieBySearch.get(i).getId()) {
+
+                    movieBySearch.get(i).setFavourite(true);
+                }
+            }
+
+        }
+
+        model.addAttribute("query", query);
+    }
 
 
 }
