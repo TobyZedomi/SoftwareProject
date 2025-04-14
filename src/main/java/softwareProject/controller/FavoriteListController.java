@@ -166,7 +166,7 @@ public class FavoriteListController {
     }
 
 
-    // favourite list for search
+    // favourite list for search in movies
 
     @GetMapping("/addMovieFavList3")
     public String addMovieFavList3(@RequestParam(name = "movieId") String movieId,
@@ -229,6 +229,104 @@ public class FavoriteListController {
 
         return "notValidUser";
 
+    }
+
+
+    // favourite list for general search
+
+    @GetMapping("/addMovieFavList4")
+    public String addMovieFavList4(@RequestParam(name = "movieId") String movieId,
+                                   @RequestParam(name = "backdrop_path") String backdrop_path,
+                                   @RequestParam(name = "overview") String overview,
+                                   @RequestParam(name = "title") String title, Model model, HttpSession session) {
+
+
+        if(session.getAttribute("loggedInUser") != null) {
+
+            int movieDB_Id = Integer.parseInt(movieId);
+
+
+            FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
+
+            User user = (User) session.getAttribute("loggedInUser");
+
+            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title));
+
+            String message;
+            if(complete == -1){
+
+                favoriteListDao.deleteFroFavouriteList(user.getUsername(), movieDB_Id);
+
+
+                FavoriteList favoriteListUser = favoriteListDao.getFavouriteListByUsernameAndMovieId(user.getUsername(), movieDB_Id);
+                session.setAttribute("favouriteListUser", favoriteListUser);
+
+                MovieDbByMovieId movieDbByMovieId = movieService.getMoviesByMovieId(movieDB_Id);
+                message = movieDbByMovieId.getTitle() + " was deleted from your Favourite List";
+                model.addAttribute("messageDelete", message);
+
+                log.info(message);
+
+                getTotalAmountOfItemsInCart(session, model);
+
+                favouriteListForGeneralSearchOnNavBar(model, session, user);
+
+                return "search_index";
+
+            }else{
+
+
+                MovieDbByMovieId  movieDbByMovieId = movieService.getMoviesByMovieId(movieDB_Id);
+                message = "Movie " +movieDbByMovieId.getTitle() + " was added to favouriteList";
+                model.addAttribute("message", message);
+
+                log.info(message);
+
+                getTotalAmountOfItemsInCart( session,model);
+
+                favouriteListForGeneralSearchOnNavBar(model, session, user);
+
+                return "search_index";
+            }
+
+        }
+
+        return "notValidUser";
+
+    }
+
+    private void favouriteListForGeneralSearchOnNavBar(Model model, HttpSession session, User user) {
+
+        FavoriteListDao favoriteListDao1 = new FavouriteListDaoImpl("database.properties");
+
+
+        ArrayList<FavoriteList> favoriteLists = favoriteListDao1.getAllFavouriteListByUsername(user.getUsername());
+        String query = (String) session.getAttribute("query1");
+
+        List<MovieTest> movieBySearch = movieService.getMoviesBySearch(query);
+
+        List<MovieTest> newMovieBySearch = new ArrayList<>();
+
+        for (int i = 0; i < movieBySearch.size() - 2; i++) {
+
+            if (movieBySearch.get(i).getBackdrop_path() != null) {
+                newMovieBySearch.add(movieBySearch.get(i));
+                model.addAttribute("movieBySearch", newMovieBySearch);
+            }
+
+            for (int j = 0; j < favoriteLists.size(); j++) {
+
+                if (favoriteLists.get(j).getMovieDb_id() == movieBySearch.get(i).getId()) {
+
+                    movieBySearch.get(i).setFavourite(true);
+                }
+            }
+
+        }
+
+        model.addAttribute("query", query);
+
+        log.info("User {} searched for movies on {}", user.getUsername(), query);
     }
 
     private void favouriteListForMovieBySearch(Model model, HttpSession session, User user) {

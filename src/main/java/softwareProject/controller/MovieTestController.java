@@ -179,6 +179,8 @@ public class MovieTestController {
             // totalAmountOItems in basket
             getTotalAmountOfItemsInCart(session, model);
 
+            session.setAttribute("query1", query);
+
             List<MovieTest> movieBySearch = movieService.getMoviesBySearch(query);
 
             List<MovieTest> newMovieBySearch = new ArrayList<>();
@@ -194,6 +196,8 @@ public class MovieTestController {
             model.addAttribute("query", query);
 
             log.info("User {} searched for movies on {}", u.getUsername(), query);
+
+            favouriteListForGeneralSearchOnNavBar(model, session, u);
 
             return "search_index";
 
@@ -370,5 +374,40 @@ public class MovieTestController {
         model.addAttribute("query", query);
     }
 
+
+
+    private void favouriteListForGeneralSearchOnNavBar(Model model, HttpSession session, User user) {
+
+        FavoriteListDao favoriteListDao1 = new FavouriteListDaoImpl("database.properties");
+
+
+        ArrayList<FavoriteList> favoriteLists = favoriteListDao1.getAllFavouriteListByUsername(user.getUsername());
+        String query = (String) session.getAttribute("query1");
+
+        List<MovieTest> movieBySearch = movieService.getMoviesBySearch(query);
+
+        List<MovieTest> newMovieBySearch = new ArrayList<>();
+
+        for (int i = 0; i < movieBySearch.size() - 2; i++) {
+
+            if (movieBySearch.get(i).getBackdrop_path() != null) {
+                newMovieBySearch.add(movieBySearch.get(i));
+                model.addAttribute("movieBySearch", newMovieBySearch);
+            }
+
+            for (int j = 0; j < favoriteLists.size(); j++) {
+
+                if (favoriteLists.get(j).getMovieDb_id() == movieBySearch.get(i).getId()) {
+
+                    movieBySearch.get(i).setFavourite(true);
+                }
+            }
+
+        }
+
+        model.addAttribute("query", query);
+
+        log.info("User {} searched for movies on {}", user.getUsername(), query);
+    }
 
 }
