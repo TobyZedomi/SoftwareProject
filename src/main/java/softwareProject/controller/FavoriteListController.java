@@ -252,7 +252,7 @@ public class FavoriteListController {
 
             int movieDB_Id = Integer.parseInt(movieId);
 
-            session.setAttribute("movieId", movieDB_Id);
+            session.setAttribute("movieId2", movieDB_Id);
 
 
             FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
@@ -500,7 +500,7 @@ public class FavoriteListController {
 
         GenreForMovieDao genreForMovieDao = new GenreForMovieDaoImpl("database.properties");
 
-            genreId2 = Integer.parseInt(genreId[1]);
+            genreId2 = Integer.parseInt(genreId[0]);
             System.out.println(genreId2);
 
 
@@ -571,7 +571,7 @@ public class FavoriteListController {
 
             GenreForMovieDao genreForMovieDao = new GenreForMovieDaoImpl("database.properties");
 
-            genreId3 = Integer.parseInt(genreId2[1]);
+            genreId3 = Integer.parseInt(genreId2[0]);
 
 
             int movieId = (int) session.getAttribute("movieId");
@@ -644,7 +644,7 @@ public class FavoriteListController {
 
         GenreForMovieDao genreForMovieDao = new GenreForMovieDaoImpl("database.properties");
 
-        genreId2 = Integer.parseInt(genreId[1]);
+        genreId2 = Integer.parseInt(genreId[0]);
         System.out.println(genreId2);
 
 
@@ -689,19 +689,20 @@ public class FavoriteListController {
 
         model.addAttribute("query", query);
 
-        log.info("User {} searched for movies on {}", user.getUsername(), query);
-
+        /*
         int genreId2 = 0;
 
         GenreForMovieDao genreForMovieDao = new GenreForMovieDaoImpl("database.properties");
 
-        genreId2 = Integer.parseInt(genreId[1]);
+        genreId2 = Integer.parseInt(genreId[0]);
         System.out.println(genreId2);
 
 
         int movieId = (int) session.getAttribute("movieId");
 
         genreForMovieDao.addGenreForMovie(new GenreForMovie(0, user.getUsername(), movieId, genreId2));
+
+         */
     }
 
     private void favouriteListForMovieBySearch(Model model, HttpSession session, User user) {
@@ -745,7 +746,7 @@ public class FavoriteListController {
 
         GenreForMovieDao genreForMovieDao = new GenreForMovieDaoImpl("database.properties");
 
-        genreId2 = Integer.parseInt(genreId[1]);
+        genreId2 = Integer.parseInt(genreId[0]);
         System.out.println(genreId2);
 
 
@@ -788,11 +789,13 @@ public class FavoriteListController {
 
         }
 
+
+        System.out.println(genreId);
         int genreId2 = 0;
 
         GenreForMovieDao genreForMovieDao = new GenreForMovieDaoImpl("database.properties");
 
-        genreId2 = Integer.parseInt(genreId[1]);
+        genreId2 = Integer.parseInt(genreId[0]);
         System.out.println(genreId2);
 
 
