@@ -82,7 +82,7 @@ public class FavoriteListController {
 
 
                 MovieDbByMovieId  movieDbByMovieId = movieService.getMoviesByMovieId(movieDB_Id);
-                message = "Movie " +movieDbByMovieId.getTitle() + " was added to favouriteList";
+                message = "Movie: " +movieDbByMovieId.getTitle() + " was added to favouriteList";
                 model.addAttribute("message", message);
 
                 log.info(message);
@@ -146,7 +146,7 @@ public class FavoriteListController {
 
 
                 MovieDbByMovieId  movieDbByMovieId = movieService.getMoviesByMovieId(movieDB_Id);
-                message = "Movie " +movieDbByMovieId.getTitle() + " was added to favouriteList";
+                message = "Movie: " +movieDbByMovieId.getTitle() + " was added to favouriteList";
                 model.addAttribute("message", message);
 
                 log.info(message);
@@ -212,7 +212,7 @@ public class FavoriteListController {
 
 
                 MovieDbByMovieId  movieDbByMovieId = movieService.getMoviesByMovieId(movieDB_Id);
-                message = "Movie " +movieDbByMovieId.getTitle() + " was added to favouriteList";
+                message = "Movie: " +movieDbByMovieId.getTitle() + " was added to favouriteList";
                 model.addAttribute("message", message);
 
                 log.info(message);
@@ -277,7 +277,7 @@ public class FavoriteListController {
 
 
                 MovieDbByMovieId  movieDbByMovieId = movieService.getMoviesByMovieId(movieDB_Id);
-                message = "Movie " +movieDbByMovieId.getTitle() + " was added to favouriteList";
+                message = "Movie: " +movieDbByMovieId.getTitle() + " was added to favouriteList";
                 model.addAttribute("message", message);
 
                 log.info(message);
