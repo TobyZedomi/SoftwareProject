@@ -4,6 +4,7 @@ import softwareProject.business.FavoriteList;
 import softwareProject.business.GenreForMovie;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class GenreForMovieDaoImpl extends MySQLDao implements GenreForMovieDao{
 
@@ -59,6 +60,53 @@ public class GenreForMovieDaoImpl extends MySQLDao implements GenreForMovieDao{
         }
 
         return rowsAffected;
+    }
+
+
+    @Override
+    public ArrayList<GenreForMovie> getAllGenreForMovieByUsername(String username){
+
+        ArrayList<GenreForMovie> genreForMovies = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+
+        try{
+
+            con = getConnection();
+
+            String query = "SELECT * FROM genreForMovie where username = ?";
+            ps = con.prepareStatement(query);
+            // Fill in the blanks, i.e. parameterize the query
+            ps.setString(1, username);
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                GenreForMovie f = mapRow(rs);
+                genreForMovies.add(f);
+
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception occurred when attempting to prepare SQL for execution" + e.getMessage());
+        }finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the getProductByCode() method: " + e.getMessage());
+            }
+        }
+        return genreForMovies;
     }
 
 
