@@ -669,7 +669,9 @@ public class FavoriteListController {
 
             int movieId = (int) session.getAttribute("movieId");
 
-            genreForMovieDao.addGenreForMovie(new GenreForMovie(0, u.getUsername(), movieId, genreId3));
+            int genreIdInteger = Integer.parseInt(genreId);
+
+            genreForMovieDao.addGenreForMovie(new GenreForMovie(0, u.getUsername(), movieId, genreIdInteger));
 
         }  else {
             toViewMoviesByGenreMovieIndex(model, session);
@@ -743,7 +745,7 @@ public class FavoriteListController {
 
         int movieId = (int) session.getAttribute("movieId");
 
-        genreForMovieDao.addGenreForMovie(new GenreForMovie(0, u.getUsername(), movieId, genreId2));
+        genreForMovieDao.addGenreForMovie(new GenreForMovie(0, u.getUsername(), movieId, 878));
     }
 
 
