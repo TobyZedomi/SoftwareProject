@@ -108,6 +108,8 @@ public class MovieTestController {
 
             model.addAttribute("genreName", genre.getName());
 
+            viewMoviesByGenre(session, model);
+
             return "movie_index";
 
         }
@@ -124,16 +126,10 @@ public class MovieTestController {
 
             User u = (User) session.getAttribute("loggedInUser");
 
-
-           // String genreId2 = (String) session.getAttribute("genreId2");
-
-           // int genreIdInt = Integer.parseInt(genreId2);
-
-
             // totalAmountOItems in basket
             getTotalAmountOfItemsInCart(session, model);
 
-
+            session.setAttribute("query", query);
 
             List<MovieTest> movieBySearch = movieService.getMoviesBySearch(query);
 
@@ -141,13 +137,8 @@ public class MovieTestController {
 
             List<MovieTest> newMovieBySearch = new ArrayList<>();
 
-
             for (int i = 0; i < movieBySearch.size(); i++) {
-
-
                 if (movieBySearch.get(i).getBackdrop_path() != null) {
-
-
                     newMovieBySearch.add(movieBySearch.get(i));
                     model.addAttribute("movieBySearchGenre", newMovieBySearch);
                 }
@@ -159,6 +150,7 @@ public class MovieTestController {
         log.info("User {} searched for movies on {}", u.getUsername(), query);
 
             viewMoviesByGenre(session, model);
+            favouriteListForMovieBySearch(model, session, u);
 
         return "searchMovie_index";
 
@@ -188,6 +180,8 @@ public class MovieTestController {
             // totalAmountOItems in basket
             getTotalAmountOfItemsInCart(session, model);
 
+            session.setAttribute("query1", query);
+
             List<MovieTest> movieBySearch = movieService.getMoviesBySearch(query);
 
             List<MovieTest> newMovieBySearch = new ArrayList<>();
@@ -203,6 +197,8 @@ public class MovieTestController {
             model.addAttribute("query", query);
 
             log.info("User {} searched for movies on {}", u.getUsername(), query);
+
+            favouriteListForGeneralSearchOnNavBar(model, session, u);
 
             return "search_index";
 
@@ -255,6 +251,65 @@ public class MovieTestController {
         List<GenreTest> genres = movieService.getGenres();
         model.addAttribute("genres", genres);
 
+        String genreId = (String) session.getAttribute("genreId2");
+
+        if (genreId != null) {
+
+            List<MovieTest> movieByGenres = movieService.getMoviesByGenre(genreId);
+
+            List<MovieTest> newMovie = new ArrayList<>();
+
+            for (int i = 0; i < movieByGenres.size() - 2; i++) {
+
+                if (movieByGenres.get(i).getBackdrop_path() != null) {
+                    newMovie.add(movieByGenres.get(i));
+                    model.addAttribute("movieByGenres", newMovie);
+                }
+
+                for (int j = 0; j < favoriteLists.size(); j++) {
+
+                    if (favoriteLists.get(j).getMovieDb_id() == movieByGenres.get(i).getId()) {
+
+                        movieByGenres.get(i).setFavourite(true);
+                    }
+                }
+            }
+
+            // genre by id and get the name
+
+            // use a session for this based on the controller method view movie by genre, testing branch
+
+            GenreDao genreDao = new GenreDaoImpl("database.properties");
+
+            GenreTest genre = genreDao.getGenreById(Integer.parseInt(genreId));
+
+            model.addAttribute("genreName", genre.getName());
+
+        } else {
+
+            toViewMoviesByGenreMovieIndex(model, session);
+        }
+
+    }
+
+
+    private void toViewMoviesByGenreMovieIndex(Model model, HttpSession session){
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+
+        /// get total number of items in cart for user
+
+        getTotalAmountOfItemsInCart(session, model);
+
+        FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
+
+
+        ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(u.getUsername());
+
+        List<GenreTest> genres = movieService.getGenres();
+        model.addAttribute("genres", genres);
+
 
         List<MovieTest> movieByGenres = movieService.getMoviesByGenre("878");
 
@@ -278,8 +333,6 @@ public class MovieTestController {
 
         // genre by id and get the name
 
-        // use a session for this based on the controller method view movie by genre, testing branch
-
         GenreDao genreDao = new GenreDaoImpl("database.properties");
 
         GenreTest genre = genreDao.getGenreById(878);
@@ -287,5 +340,75 @@ public class MovieTestController {
         model.addAttribute("genreName", genre.getName());
     }
 
+
+
+    private void favouriteListForMovieBySearch(Model model, HttpSession session, User user) {
+        FavoriteListDao favoriteListDao1 = new FavouriteListDaoImpl("database.properties");
+
+
+        ArrayList<FavoriteList> favoriteLists = favoriteListDao1.getAllFavouriteListByUsername(user.getUsername());
+
+        String query = (String) session.getAttribute("query");
+
+        List<MovieTest> movieBySearch = movieService.getMoviesBySearch(query);
+
+        System.out.println(movieBySearch);
+
+        List<MovieTest> newMovieBySearch = new ArrayList<>();
+
+        for (int i = 0; i < movieBySearch.size(); i++) {
+            if (movieBySearch.get(i).getBackdrop_path() != null) {
+                newMovieBySearch.add(movieBySearch.get(i));
+                model.addAttribute("movieBySearchGenre", newMovieBySearch);
+            }
+
+            for (int j = 0; j < favoriteLists.size(); j++) {
+
+                if (favoriteLists.get(j).getMovieDb_id() == movieBySearch.get(i).getId()) {
+
+                    movieBySearch.get(i).setFavourite(true);
+                }
+            }
+
+        }
+
+        model.addAttribute("query", query);
+    }
+
+
+
+    private void favouriteListForGeneralSearchOnNavBar(Model model, HttpSession session, User user) {
+
+        FavoriteListDao favoriteListDao1 = new FavouriteListDaoImpl("database.properties");
+
+
+        ArrayList<FavoriteList> favoriteLists = favoriteListDao1.getAllFavouriteListByUsername(user.getUsername());
+        String query = (String) session.getAttribute("query1");
+
+        List<MovieTest> movieBySearch = movieService.getMoviesBySearch(query);
+
+        List<MovieTest> newMovieBySearch = new ArrayList<>();
+
+        for (int i = 0; i < movieBySearch.size() - 2; i++) {
+
+            if (movieBySearch.get(i).getBackdrop_path() != null) {
+                newMovieBySearch.add(movieBySearch.get(i));
+                model.addAttribute("movieBySearch", newMovieBySearch);
+            }
+
+            for (int j = 0; j < favoriteLists.size(); j++) {
+
+                if (favoriteLists.get(j).getMovieDb_id() == movieBySearch.get(i).getId()) {
+
+                    movieBySearch.get(i).setFavourite(true);
+                }
+            }
+
+        }
+
+        model.addAttribute("query", query);
+
+        log.info("User {} searched for movies on {}", user.getUsername(), query);
+    }
 
 }

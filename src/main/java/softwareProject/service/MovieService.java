@@ -103,7 +103,7 @@ public class MovieService {
     /**
      * search for any movie from the movie db api
      * @param query is the movie being searched
-     * @return a list of movies based on the searche
+     * @return a list of movies based on the searched
      */
 
     public List<MovieTest> getMoviesBySearch(String query){
