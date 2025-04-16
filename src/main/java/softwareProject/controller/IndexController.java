@@ -891,6 +891,12 @@ public class IndexController {
             String recs = "Random Movie Recommendations";
             model.addAttribute("recs1", recs);
 
+            String favList = "Favourite List";
+            model.addAttribute("favList", favList);
+
+            String recs2 = "Most Common Genre In FavouriteList";
+            model.addAttribute("recs2", recs2);
+
             return "movie_recs";
         }
 
