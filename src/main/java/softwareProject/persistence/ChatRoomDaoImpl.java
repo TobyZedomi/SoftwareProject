@@ -126,6 +126,45 @@ public class ChatRoomDaoImpl extends MySQLDao implements ChatRoomDao{
     }
 
 
+    @Override
+    public int deleteChatRoomMessageByTime(LocalDateTime message_date){
+        int rowsAffected = 0;
+
+        Connection con = null;
+        PreparedStatement ps = null;
+
+
+        try{
+
+            con = getConnection();
+
+            String query = "DELETE from chat_room where message_date = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setTimestamp(1, Timestamp.valueOf(message_date));
+            rowsAffected = ps.executeUpdate();
+        }catch (SQLException e) {
+            System.out.println("Exception occured in the updateProductName() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the updateProductName() method");
+                e.getMessage();
+            }
+        }
+
+        return rowsAffected;
+
+    }
+
+
+
 
 
     /**

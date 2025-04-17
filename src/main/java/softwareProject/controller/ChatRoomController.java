@@ -14,6 +14,9 @@ import softwareProject.persistence.ChatRoomDao;
 import softwareProject.persistence.ChatRoomDaoImpl;
 import softwareProject.service.MovieService;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +36,20 @@ public class ChatRoomController {
 
         ArrayList<ChatRoom> chatRooms = chatRoomDao.getAllChatRoom();
 
-        model.addAttribute("chatRooms", chatRooms);
+        ArrayList<ChatRoom> chatRoomArrayList = new ArrayList<>();
+
+        for (int i = 0;  i < chatRooms.size();i++){
+
+            if (chatRooms.get(i).getMessage_date().toLocalTime().isBefore(LocalTime.from(LocalDateTime.now().minusMinutes(5)))){
+
+                chatRoomDao.deleteChatRoomMessageByTime(chatRooms.get(i).getMessage_date());
+            }
+
+            chatRoomArrayList.add(chatRooms.get(i));
+            System.out.println(chatRoomArrayList);
+        }
+
+        model.addAttribute("chatRooms", chatRoomArrayList);
 
         List<MovieTrailer> trailers = movieService.getTrailer(movieId);
 
