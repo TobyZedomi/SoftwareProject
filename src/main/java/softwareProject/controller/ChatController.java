@@ -1,14 +1,12 @@
 package softwareProject.controller;
 
-import jakarta.servlet.http.HttpSession;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import softwareProject.business.*;
 import softwareProject.persistence.*;
 
@@ -19,36 +17,34 @@ import java.time.LocalDateTime;
 @Slf4j
 public class ChatController {
 
-    private final HttpSession session;
+    private SimpMessagingTemplate template;
 
     @Autowired
-    public ChatController(HttpSession session) {
-        this.session = session;
+    public ChatController(SimpMessagingTemplate template){
+        this.template = template;
     }
 
-    @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/public")
-    public ChatMessage sendMessage(@Payload ChatMessage chatMessage){
+    @MessageMapping("/chat.sendMessage/{room}")
+    public void sendMessage(@DestinationVariable String room, @Payload ChatMessage chatMessage){
 
         ChatRoomDaoImpl chatRoomDao = new ChatRoomDaoImpl("database.properties");
 
-       // int chat_room_id = (int) session.getAttribute("id");
+        int chatRoomId = Integer.parseInt(room);
 
 
-        chatRoomDao.addChatRoom(new ChatRoom(0, chatMessage.getSender(), chatMessage.getContent(), LocalDateTime.now(), "DefaultUserImage.jpg"));
+        chatRoomDao.addChatRoom(new ChatRoom(0, chatMessage.getSender(), chatMessage.getContent(), LocalDateTime.now(), "DefaultUserImage.jpg", chatRoomId));
 
-        return chatMessage;
+        this.template.convertAndSend("/topic/public/"+room, chatMessage);
     }
 
 
-    @MessageMapping("/chat.addUser")
-    @SendTo("/topic/public")
-    public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor){
-
+    @MessageMapping("/chat.addUser/{room}")
+    public void addUser(@DestinationVariable String room, @Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor){
 
         //add username in web socket session
         headerAccessor.getSessionAttributes().put("username",chatMessage.getSender());
-        return chatMessage;
+
+        this.template.convertAndSend("/topic/public/"+room, chatMessage);
     }
 
 }
