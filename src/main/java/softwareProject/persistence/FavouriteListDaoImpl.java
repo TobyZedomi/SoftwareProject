@@ -1,5 +1,6 @@
 package softwareProject.persistence;
 
+import org.springframework.stereotype.Repository;
 import softwareProject.business.BillingAddress;
 import softwareProject.business.CartItem;
 import softwareProject.business.FavoriteList;
@@ -9,6 +10,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+@Repository
 public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
 
 
