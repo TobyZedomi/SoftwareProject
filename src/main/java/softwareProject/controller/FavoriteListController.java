@@ -27,6 +27,35 @@ public class FavoriteListController {
     @Autowired
     private MovieService movieService;
 
+    @Autowired
+    private FriendDao friendDao;
+
+    @Autowired
+    private FavoriteListDao favoriteListDao;
+
+    @GetMapping("/friendFavLists")
+    public String getFriendsFavouriteLists(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        String username = user.getUsername();
+        ArrayList<Friends> friends = friendDao.getAllFriends(username);
+        model.addAttribute("friends", friends);
+
+        return "friend_favlist_index";
+    }
+
+    @GetMapping("/friendsFavList")
+    public String getFriendFavourites(@RequestParam("username") String friendUsername, Model model) {
+        ArrayList<FavoriteList> favs = favoriteListDao.getAllFavouriteListByUsername(friendUsername);
+        model.addAttribute("movies", favs);
+        model.addAttribute("friendUsername", friendUsername);
+
+        return "friends_favlist";
+    }
+
 
     @GetMapping("/addMovieFavList")
     public String addMovieFavList(@RequestParam(name = "movieId") String movieId,
