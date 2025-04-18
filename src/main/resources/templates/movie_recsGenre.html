@@ -246,7 +246,7 @@
                             <h3 th:text="${movie.getTitle()}"> Mountain</h3>
                             <p th:text="${movie.getOverview()}" style="overflow: auto; scrollbar-width: none;"></p>
                             <div class="action_btn" style="margin: 0 auto; display: inline;">
-                                <a th:href="@{/movieTrailer(id=${movie.getId()})}">View Videos</a>
+                                <a th:href="@{/getAllChatMessage(id=${movie.getId()})}">View Videos & Live Chat Room</a>
 
                                 <a th:href="@{/addMovieFavList6(movieId=${movie.getId()}, backdrop_path=${movie.getBackdrop_path()}, overview=${movie.getOverview()}, title=${movie.getTitle()})}"
                                    class="remove_cart" rel="2">

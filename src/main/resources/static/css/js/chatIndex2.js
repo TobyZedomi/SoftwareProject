@@ -19,16 +19,6 @@ var colors = [
     '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
 ];
 
-function disconnect() {
-    if (stompClient !== null) {
-        stompClient.disconnect();
-        usernamePage.classList.remove('hidden');
-        chatPage.classList.add('hidden');
-    }
-    setConnected(false);
-    console.log("Disconnected");
-}
-
 function connect(event) {
     username = document.querySelector('#name').value.trim();
 
@@ -91,7 +81,6 @@ function onMessageReceived(payload) {
     } else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' left!';
-        localStorage.clear();
     } else {
         messageElement.classList.add('chat-message');
 
@@ -130,5 +119,4 @@ function getAvatarColor(messageSender) {
 
 usernameForm.addEventListener('submit', connect, true)
 messageForm.addEventListener('submit', sendMessage, true)
-disconnectButton.addEventListener('submit', disconnect)
 
