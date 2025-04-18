@@ -1,6 +1,7 @@
 package softwareProject.persistence;
 
 import org.springframework.context.annotation.ScopeMetadata;
+import org.springframework.stereotype.Repository;
 import softwareProject.business.Friends;
 import softwareProject.business.Genre;
 import softwareProject.business.Movie;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class FriendDaoImpl extends MySQLDao implements FriendDao{
 
     /**
