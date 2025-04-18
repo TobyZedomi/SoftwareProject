@@ -191,6 +191,7 @@ CREATE TABLE chat_room
     message             varchar(8000)  NOT NULL,
     message_date         datetime     NOT NULL,
     user_image     varchar(255) NOT NULL,
+    room_id INT(255),
     PRIMARY KEY (chat_room_id),
     FOREIGN KEY (username) REFERENCES users (username)
 );
