@@ -1,3 +1,4 @@
+/*
 'use strict';
 
 var usernamePage = document.querySelector('#username-page');
@@ -133,5 +134,7 @@ usernameForm.addEventListener('submit', connect, true)
 messageForm.addEventListener('submit', sendMessage, true)
 disconnectButton.addEventListener('submit', disconnect)
 
+
+ */
 
 

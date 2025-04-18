@@ -9,6 +9,7 @@ var messageInput = document.querySelector('#message');
 var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
 var disconnectButton = document.querySelector('#disconnect');
+var roomId = document.querySelector('#room');
 
 var stompClient = null;
 var username = null;
@@ -47,10 +48,10 @@ function connect(event) {
 
 function onConnected() {
     // Subscribe to the Public Topic
-    stompClient.subscribe('/topic/public', onMessageReceived);
+    stompClient.subscribe('/topic/public/'+roomId.value, onMessageReceived);
 
     // Tell your username to the server
-    stompClient.send("/app/chat.addUser",
+    stompClient.send("/app/chat.addUser/"+roomId.value,
         {},
         JSON.stringify({sender: username, type: 'JOIN'})
     )
@@ -73,8 +74,9 @@ function sendMessage(event) {
             content: messageInput.value,
             type: 'CHAT'
         };
-        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+        stompClient.send("/app/chat.sendMessage/" +roomId.value, {}, JSON.stringify(chatMessage));
         messageInput.value = '';
+        roomId.value = roomId.value;
     }
     event.preventDefault();
 }
@@ -129,12 +131,4 @@ function getAvatarColor(messageSender) {
 usernameForm.addEventListener('submit', connect, true)
 messageForm.addEventListener('submit', sendMessage, true)
 disconnectButton.addEventListener('submit', disconnect)
-
-/*
-// connecting each time on refresh
-window.onload = function(e){
-    connect();
-}
-
- */
 
