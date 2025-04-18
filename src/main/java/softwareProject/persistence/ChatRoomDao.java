@@ -12,4 +12,6 @@ public interface ChatRoomDao {
     public ArrayList<ChatRoom> getAllChatRoom();
 
     public int deleteChatRoomMessageByTime(LocalDateTime message_date);
+
+    public ArrayList<ChatRoom> getAllChatRoomByRoomId(int roomId);
 }

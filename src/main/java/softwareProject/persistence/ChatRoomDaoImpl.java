@@ -47,7 +47,7 @@ public class ChatRoomDaoImpl extends MySQLDao implements ChatRoomDao{
         // TRY to prepare a statement from the connection
         // When you are parameterizing the update, remember that you need
         // to use the ? notation (so you can fill in the blanks later)
-        try(PreparedStatement ps = conn.prepareStatement("insert into chat_room values(?, ?,?,?, " +
+        try(PreparedStatement ps = conn.prepareStatement("insert into chat_room values(?, ?,?,?,?, " +
                 "?)")) {
             // Fill in the blanks, i.e. parameterize the update
             ps.setInt(1, chatRoom.getChat_room_id());
@@ -55,6 +55,7 @@ public class ChatRoomDaoImpl extends MySQLDao implements ChatRoomDao{
             ps.setString(3, chatRoom.getMessage());
             ps.setTimestamp(4, Timestamp.valueOf(chatRoom.getMessage_date()));
             ps.setString(5, chatRoom.getUser_image());
+            ps.setInt(6, chatRoom.getRoom_id());
 
             // Execute the update and store how many rows were affected/changed
             // when inserting, this number indicates if the row was
@@ -166,6 +167,53 @@ public class ChatRoomDaoImpl extends MySQLDao implements ChatRoomDao{
 
 
 
+    @Override
+    public ArrayList<ChatRoom> getAllChatRoomByRoomId(int roomId){
+
+        ArrayList<ChatRoom> chatRooms = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+
+        try{
+
+            con = getConnection();
+
+            String query = "SELECT * FROM chat_room where room_id = ?";
+            ps = con.prepareStatement(query);
+            // Fill in the blanks, i.e. parameterize the query
+            ps.setInt(1, roomId);
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                ChatRoom c = mapRow(rs);
+                chatRooms.add(c);
+
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception occurred when attempting to prepare SQL for execution" + e.getMessage());
+        }finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the getProductByCode() method: " + e.getMessage());
+            }
+        }
+        return chatRooms;
+    }
+
+
 
     /**
      * Search through each row in the cartItem
@@ -181,7 +229,8 @@ public class ChatRoomDaoImpl extends MySQLDao implements ChatRoomDao{
                 rs.getString("username"),
                 rs.getString("message"),
                 rs.getTimestamp("message_date").toLocalDateTime(),
-                rs.getString("user_image")
+                rs.getString("user_image"),
+                rs.getInt("room_id")
         );
         return c;
     }
