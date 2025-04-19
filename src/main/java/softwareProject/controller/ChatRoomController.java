@@ -37,6 +37,9 @@ public class ChatRoomController {
 
         ChatRoomDaoImpl chatRoomDao = new ChatRoomDaoImpl("database.properties");
 
+        // delete chat messages that are more than 5 minutes
+        chatRoomDao.deleteChatRoomMessageByTimeMoreThan5Minutes();
+
 
         int movieId = Integer.parseInt(id);
 
@@ -45,22 +48,7 @@ public class ChatRoomController {
 
         ArrayList<ChatRoom> chatRooms = chatRoomDao.getAllChatRoomByRoomId(movieId);
 
-        ArrayList<ChatRoom> chatRoomArrayList = new ArrayList<>();
-
-        for (int i = 0;  i < chatRooms.size();i++){
-
-            if (chatRooms.get(i).getMessage_date().toLocalTime().isBefore(LocalTime.from(LocalDateTime.now().minusMinutes(5)))){
-
-                chatRoomDao.deleteChatRoomMessageByTime(chatRooms.get(i).getMessage_date());
-
-                return "videos";
-            }
-
-            chatRoomArrayList.add(chatRooms.get(i));
-            System.out.println(chatRoomArrayList);
-        }
-
-        model.addAttribute("chatRooms", chatRoomArrayList);
+        model.addAttribute("chatRooms", chatRooms);
 
         List<MovieTrailer> trailers = movieService.getTrailer(movieId);
 

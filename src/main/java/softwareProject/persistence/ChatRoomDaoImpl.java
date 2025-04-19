@@ -128,7 +128,7 @@ public class ChatRoomDaoImpl extends MySQLDao implements ChatRoomDao{
 
 
     @Override
-    public int deleteChatRoomMessageByTime(LocalDateTime message_date){
+    public int deleteChatRoomMessageByTime(int room_id){
         int rowsAffected = 0;
 
         Connection con = null;
@@ -139,10 +139,10 @@ public class ChatRoomDaoImpl extends MySQLDao implements ChatRoomDao{
 
             con = getConnection();
 
-            String query = "DELETE from chat_room where message_date = ?";
+            String query = "DELETE from chat_room where room_id = ?";
 
             ps = con.prepareStatement(query);
-            ps.setTimestamp(1, Timestamp.valueOf(message_date));
+            ps.setInt(1, room_id);
             rowsAffected = ps.executeUpdate();
         }catch (SQLException e) {
             System.out.println("Exception occured in the updateProductName() method: " + e.getMessage());
@@ -213,7 +213,44 @@ public class ChatRoomDaoImpl extends MySQLDao implements ChatRoomDao{
         return chatRooms;
     }
 
+// DELETE FROM chat_room WHERE message_date <= CURRENT_TIMESTAMP - INTERVAL 5 MINUTE;
 
+
+    @Override
+    public int deleteChatRoomMessageByTimeMoreThan5Minutes(){
+        int rowsAffected = 0;
+
+        Connection con = null;
+        PreparedStatement ps = null;
+
+
+        try{
+
+            con = getConnection();
+
+            String query = "DELETE FROM chat_room WHERE message_date <= CURRENT_TIMESTAMP - INTERVAL 5 MINUTE";
+
+            ps = con.prepareStatement(query);
+            rowsAffected = ps.executeUpdate();
+        }catch (SQLException e) {
+            System.out.println("Exception occured in the updateProductName() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the updateProductName() method");
+                e.getMessage();
+            }
+        }
+
+        return rowsAffected;
+
+    }
 
     /**
      * Search through each row in the cartItem

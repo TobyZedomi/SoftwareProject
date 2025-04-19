@@ -24,5 +24,7 @@ public class ChatRoom {
 
     private String user_image;
 
+    private int room_id;
+
 
 }
