@@ -40,6 +40,8 @@ public class SubscriptionPlanController {
 
         model.addAttribute("subscriptionPlan",subscriptionPlan);
         session.setAttribute("subscriptionPicked", subscriptionPlan);
+
+        getTotalAmountOfItemsInCart(session,model);
         return "purchaseSubscription";
 
 

@@ -197,10 +197,12 @@ public class UserController {
 
             CartDao cartDao = new CartDaoImpl("database.properties");
             cartDao.addCart(new Cart(0,username));
-           view = "registerSuccess";
+            view = "registerSuccess";
             model.addAttribute("registeredUser", u);
             session.setAttribute("loggedInUser", u);
             log.info("User {} registered", u.getUsername());
+
+            getTotalAmountOfItemsInCart(session, model);
         }else{
             view = "registerFailed";
             log.info("Registration failed with username {}", username);
