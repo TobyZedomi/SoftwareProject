@@ -94,10 +94,12 @@ function onMessageReceived(payload) {
         var usernameElement = document.createElement('span');
         var usernameText = document.createTextNode(message.sender);
         usernameElement.appendChild(usernameText);
+        usernameElement.style.color = 'black';
         messageElement.appendChild(usernameElement);
     }
 
     var textElement = document.createElement('p');
+    textElement.style.color = 'black';
     var messageText = document.createTextNode(message.content);
     textElement.appendChild(messageText);
 

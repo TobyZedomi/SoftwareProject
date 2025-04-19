@@ -426,12 +426,12 @@
 <div id="chat-page" class="hidden">
   <div class="container" style="width: 400px; height: 500px; left: 1200px" >
     <div class="chat-header">
-      <h5 style="color: white">Live Chat </h5>
+      <h5 th:text="| Live Chat Room for ${movieName} |" style="color: white">Live Chat </h5>
     </div>
     <div class="connecting">
 
     </div>
-    <ul id="messageArea" style="height: 300px">
+    <ul id="messageArea" style="height: 300px;">
 
       <div th:each="chat : ${chatRooms}">
 
