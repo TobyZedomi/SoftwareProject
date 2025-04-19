@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ public class WebSocketEventListener {
 
     private final SimpMessageSendingOperations messageTemplate;
 
-    /*
+/*
 @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event){
 
@@ -38,13 +39,15 @@ public class WebSocketEventListener {
                 .type(MessageType.LEAVE)
                 .sender(username)
                 .build();
-        messageTemplate.convertAndSend("/topic/public", chatMessage);
+        messageTemplate.convertAndSend("/topic/public/", chatMessage);
     }
 
     }
 
+ */
 
-     */
+
+
 
 
     /*

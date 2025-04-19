@@ -14,6 +14,7 @@ import softwareProject.service.MovieService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -105,6 +106,10 @@ public class ReccomendationsController {
                     }
                 }
             }
+
+            // remove duplicates, reference link - https://www.studytonight.com/java-examples/how-to-remove-duplicates-from-arraylist
+
+            genreIds = (ArrayList<Integer>)genreIds.stream().distinct().collect(Collectors.toList());
 
             if (genreIds.isEmpty()){
 

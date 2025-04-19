@@ -354,7 +354,6 @@ public class UserController {
 
         return "notValidUser";
     }
-
     private final SimpMessageSendingOperations messageTemplate;
     public void handleWebSocketDisconnectListener( HttpSession session){
 

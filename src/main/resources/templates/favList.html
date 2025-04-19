@@ -268,7 +268,7 @@
                             <p th:text="${movie.getOverview()}" style="overflow: auto; scrollbar-width: none;" ></p>
 
                             <div class="action_btn" style="margin: 0 auto; display: inline;">
-                                <a th:href="@{/movieTrailer(id=${movie.getMovieDb_id()})}">View Videos</a>
+                                <a th:href="@{/getAllChatMessage(id=${movie.getMovieDb_id()})}">View Videos & Live Chat Room</a>
                                 <a th:href="@{/deleteFavList(movieId=${movie.getMovieDb_id()})}"
                                    class="remove_cart" rel="2">
                                     <i class="fa fa-heart" style="color: red"></i>
