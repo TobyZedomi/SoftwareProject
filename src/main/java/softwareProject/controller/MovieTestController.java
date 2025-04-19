@@ -11,6 +11,7 @@ import softwareProject.business.*;
 import softwareProject.persistence.*;
 import softwareProject.service.MovieService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class MovieTestController {
     private MovieService movieService;
 
 
+
     /**
      * Getting movie videos based on the movie id entered
      *
@@ -30,6 +32,8 @@ public class MovieTestController {
      * @param session holds the logged in users details
      * @return videos page if te videos exist and noVideo page if there are no videos for that movie
      */
+
+
     @GetMapping("/movieTrailer")
     public String getMovieTrailer(Model model, @RequestParam(name = "id") String id, HttpSession session) {
 
@@ -43,6 +47,7 @@ public class MovieTestController {
             // totalAmountOItems in basket
             getTotalAmountOfItemsInCart(session, model);
 
+            session.setAttribute("chat_room_id",id);
 
             List<MovieTrailer> trailers = movieService.getTrailer(movieId);
 
@@ -63,6 +68,8 @@ public class MovieTestController {
 
         return "notValidUser";
     }
+
+
 
 
     /**

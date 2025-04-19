@@ -186,6 +186,21 @@ CREATE TABLE `reviews`
 
 
 
+
+CREATE TABLE chat_room
+(
+    chat_room_id          INT AUTO_INCREMENT,
+    username            varchar(255) NOT NULL,
+    message             varchar(8000)  NOT NULL,
+    message_date         datetime     NOT NULL,
+    user_image     varchar(255) NOT NULL,
+    room_id INT(255),
+    PRIMARY KEY (chat_room_id),
+    FOREIGN KEY (username) REFERENCES users (username)
+);
+
+
+
 /* TRIGGERS AND TABLES FOR TRIGGERS  */
 
 CREATE TABLE auditsMovieProduct
