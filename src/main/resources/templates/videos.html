@@ -407,7 +407,7 @@
 
 <div id="username-page">
   <div class="username-page-container">
-    <h1 class="title" style="color: black">The Chatroom</h1>
+    <h3 class="title" style="color: black; display: flex; justify-content: center;align-items: center;font-weight: bold;-webkit-text-stroke: 1px darkred;font-family: poppins;"  th:text="| The Live Chat Room for ${movieName} |">The Chatroom</h3>
     <form  id="usernameForm" name="usernameForm">
       <div class="form-group">
         <input type="hidden" id="name" th:value="${#ctx.session.loggedInUser.getUsername()}" placeholder="Username" autocomplete="off" class="form-control" />
