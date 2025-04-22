@@ -258,6 +258,8 @@ public class MovieTestController {
         List<GenreTest> genres = movieService.getGenres();
         model.addAttribute("genres", genres);
 
+        GenreDao genreDao = new GenreDaoImpl("database.properties");
+
         String genreId = (String) session.getAttribute("genreId2");
 
         if (genreId != null) {
@@ -270,6 +272,7 @@ public class MovieTestController {
 
                 if (movieByGenres.get(i).getBackdrop_path() != null) {
                     newMovie.add(movieByGenres.get(i));
+                    newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(genreId)).getName());
                     model.addAttribute("movieByGenres", newMovie);
                 }
 
@@ -286,7 +289,6 @@ public class MovieTestController {
 
             // use a session for this based on the controller method view movie by genre, testing branch
 
-            GenreDao genreDao = new GenreDaoImpl("database.properties");
 
             GenreTest genre = genreDao.getGenreById(Integer.parseInt(genreId));
 

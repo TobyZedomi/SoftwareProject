@@ -194,10 +194,13 @@ public class ReccomendationsController {
 
         ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(user.getUsername());
 
+        GenreDao genreDao = new GenreDaoImpl("database.properties");
+
         for (int i = 0; i < 15; i++) {
 
             if (movieRecs.get(i).getBackdrop_path() != null) {
                 newMovie.add(movieRecs.get(i));
+                newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieRecs.get(i).getGenre_ids()[0])).getName());
                 model.addAttribute("movieRecs",newMovie);
             }
 
@@ -261,6 +264,8 @@ public class ReccomendationsController {
         List<GenreTest> genres = movieService.getGenres();
         model.addAttribute("genres", genres);
 
+        GenreDaoImpl genreDao = new GenreDaoImpl("database.properties");
+
         List<MovieTest> movieByGenres = movieService.getMoviesByGenre(String.valueOf(mostCommonGenreId));
 
         List<MovieTest> newMovie = new ArrayList<>();
@@ -269,6 +274,7 @@ public class ReccomendationsController {
 
             if (movieByGenres.get(i).getBackdrop_path() != null) {
                 newMovie.add(movieByGenres.get(i));
+                newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieByGenres.get(i).getGenre_ids()[0])).getName());
                 model.addAttribute("movieByGenres", newMovie);
             }
 
@@ -280,8 +286,6 @@ public class ReccomendationsController {
                 }
             }
         }
-
-        GenreDao genreDao = new GenreDaoImpl("database.properties");
 
         GenreTest genre = genreDao.getGenreById(mostCommonGenreId);
         model.addAttribute("genreName", genre.getName());
