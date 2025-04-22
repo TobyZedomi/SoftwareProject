@@ -1071,4 +1071,23 @@ public class IndexController {
         return "notValidUser";
     }
 
+
+    @GetMapping("/updateToAdmin")
+    public String updateToAdmin(HttpSession session,Model model){
+        if(session.getAttribute("loggedInUser") != null){
+            User user = (User) session.getAttribute("loggedInUser");
+
+            UserDaoImpl userDao = new UserDaoImpl("database.properties");
+
+            ArrayList<User> users = userDao.getAllUsersThatAreNotAdmin();
+
+            model.addAttribute("users", users);
+
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "updateToAdmin";
+        }
+        return "notValidUser";
+    }
+
 }
