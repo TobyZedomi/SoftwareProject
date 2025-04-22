@@ -13,10 +13,7 @@ import softwareProject.service.MovieService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class IndexController {
@@ -884,9 +881,38 @@ public class IndexController {
     @GetMapping("/movie_recs")
     public String movie_recs(HttpSession session, Model model) {
 
-        if(session.getAttribute("loggedInUser") != null) {
+        if (session.getAttribute("loggedInUser") != null) {
 
+            User u = (User) session.getAttribute("loggedInUser");
+
+
+            //  int id = Integer.parseInt(movieId);
+
+            // totalAmountOItems in basket
             getTotalAmountOfItemsInCart(session, model);
+
+            int[] arr = new int[]{822119, 429617, 939243, 661539, 539972, 1084199, 1412113, 51482, 1357633, 1020414, 210577, 146233};
+            System.out.print("Random number from the array = " + arr[new Random().nextInt(arr.length)]);
+
+            // creating a session to hold random number
+
+            session.setAttribute("randomNumber", arr[new Random().nextInt(arr.length)]);
+
+            List<MovieRecommendations> movieRecs = movieService.getRecommendations(arr[new Random().nextInt(arr.length)]);
+
+            List<MovieRecommendations> newMovie = new ArrayList<>();
+
+            FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
+
+
+            for (int i = 0; i < 15; i++) {
+
+                if (movieRecs.get(i).getBackdrop_path() != null) {
+                    newMovie.add(movieRecs.get(i));
+                    model.addAttribute("movieRecs", newMovie);
+                }
+
+            }
 
             String recs = "Random Movie Recommendations";
             model.addAttribute("recs1", recs);
@@ -897,7 +923,12 @@ public class IndexController {
             String recs2 = "Most Common Genre In FavouriteList";
             model.addAttribute("recs2", recs2);
 
+
+            favListForRandomRecs(model, session, favoriteListDao, u);
+
+
             return "movie_recs";
+
         }
 
         return "notValidUser";
@@ -975,5 +1006,35 @@ public class IndexController {
         Map<String, List<MovieReview>> reviewsByMovie = movieService.getReviewsForPopularMovies();
         model.addAttribute("reviewsByMovie", reviewsByMovie);
         return "movie_db_reviews";
+    }
+
+
+
+    private void favListForRandomRecs(Model model, HttpSession session, FavoriteListDao favoriteListDao, User user) {
+        int randomNumber = (Integer) session.getAttribute("randomNumber");
+
+        List<MovieRecommendations> movieRecs = movieService.getRecommendations(randomNumber);
+
+        List<MovieRecommendations> newMovie = new ArrayList<>();
+
+
+        ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(user.getUsername());
+
+        for (int i = 0; i < 15; i++) {
+
+            if (movieRecs.get(i).getBackdrop_path() != null) {
+                newMovie.add(movieRecs.get(i));
+                model.addAttribute("movieRecs",newMovie);
+            }
+
+            for (int j = 0; j < favoriteLists.size(); j++) {
+
+                if (favoriteLists.get(j).getMovieDb_id() == movieRecs.get(i).getId()) {
+
+                    movieRecs.get(i).setFavourite(true);
+                }
+            }
+
+        }
     }
 }
