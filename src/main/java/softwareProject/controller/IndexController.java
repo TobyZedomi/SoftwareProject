@@ -2,6 +2,7 @@ package softwareProject.controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,9 +12,13 @@ import softwareProject.persistence.FriendDaoImpl;
 import softwareProject.persistence.*;
 import softwareProject.service.MovieService;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import static org.apache.tomcat.util.http.FastHttpDateFormat.formatDate;
 
 @Controller
 public class IndexController {
@@ -1037,4 +1042,24 @@ public class IndexController {
 
         }
     }
+
+    @GetMapping("/orderHistory")
+    public String userPurchasedItems(HttpSession session,Model model){
+        if(session.getAttribute("loggedInUser") != null){
+            User user = (User) session.getAttribute("loggedInUser");
+
+            AuditPurchasedItemsDao auditPurchasedItemsDao = new AuditPurchasedItemsDaoImpl("database.properties");
+
+            ArrayList<AuditPurchasedItems> userOrders = auditPurchasedItemsDao.purchasedItemsUser(user.getUsername());
+           // for(AuditPurchasedItems item : userOrders){
+           ///     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH:mm:ss");
+           //     LocalDateTime localDateTime = sdf.parse(item.getCreated_at());
+           // }
+            model.addAttribute("Orders", userOrders);
+
+            return "orderHistory";
+        }
+        return "notValidUser";
+    }
+
 }
