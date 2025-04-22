@@ -26,7 +26,7 @@ class FavouriteListDaoImplMockTest {
 
         System.out.println("Adding Favourite List mock Test");
 
-        FavoriteList tester = new FavoriteList("admin", 863313424, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire");
+        FavoriteList tester = new FavoriteList("admin", 863313424, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire", "Drama",18);
 
         /// Create Mock Objects
 
@@ -36,7 +36,7 @@ class FavouriteListDaoImplMockTest {
 
 
         // Filling mock objects with appropriately dummy data
-        when(dbConn.prepareStatement("insert into favouriteList values(?, ?, ?, ?, " +
+        when(dbConn.prepareStatement("insert into favouriteList values(?, ?, ?, ?,?,?, " +
                 "?)")).thenReturn(ps);
 
         // fill in data
@@ -66,8 +66,8 @@ class FavouriteListDaoImplMockTest {
 
         System.out.println("Mock testing to get FavouriteList by username");
 
-        FavoriteList f1 = new FavoriteList("admin", 863313424, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire");
-        FavoriteList f2 = new FavoriteList("admin", 863313424, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire");
+        FavoriteList f1 = new FavoriteList("admin", 863313424, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire","Drama",18);
+        FavoriteList f2 = new FavoriteList("admin", 863313424, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire", "Drama",18);
 
         ArrayList<FavoriteList> expectedResults = new ArrayList<>();
         expectedResults.add(f1);
@@ -121,8 +121,8 @@ class FavouriteListDaoImplMockTest {
         System.out.println("Mock test to get all FavouriteList ");
         /// expected Results
 
-        FavoriteList f1 = new FavoriteList("admin", 863313424, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire");
-        FavoriteList f2 = new FavoriteList("Toby", 863313424, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire");
+        FavoriteList f1 = new FavoriteList("admin", 863313424, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire","Drama",18);
+        FavoriteList f2 = new FavoriteList("Toby", 863313424, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire","Drama",18);
 
         ArrayList<FavoriteList> expectedResults = new ArrayList<>();
         expectedResults.add(f1);
@@ -168,7 +168,7 @@ class FavouriteListDaoImplMockTest {
 
         System.out.println("Delete from the favourite list");
 
-        FavoriteList f1 = new FavoriteList("admin", 863313424, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire");
+        FavoriteList f1 = new FavoriteList("admin", 863313424, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire","Drama",18);
 
         // Create Mock Objects
 
@@ -199,7 +199,7 @@ class FavouriteListDaoImplMockTest {
 
         System.out.println("Mock testing to get FavouriteList by username and movie id");
 
-        FavoriteList f1 = new FavoriteList("admin", 863313424, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire");
+        FavoriteList f1 = new FavoriteList("admin", 863313424, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire","Drama",18);
 
         /// Create Mock Objects
 

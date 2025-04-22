@@ -26,7 +26,7 @@ class FavouriteListDaoImplIntegrationTest {
 
         System.out.println("Integration test to add a new movie to the favourite list");
 
-        FavoriteList tester = new FavoriteList("Toby", 4, "test", "test", "test");
+        FavoriteList tester = new FavoriteList("Toby", 4, "test", "test", "test", "test",5);
         int correctResult = 1;
 
         Connection conn = connectionSource.getConnection();
@@ -52,7 +52,7 @@ class FavouriteListDaoImplIntegrationTest {
 
         System.out.println("Integration test to add to favourite list but username doesnt exist");
 
-        FavoriteList tester = new FavoriteList("Yellow", 4, "test", "test", "test");
+        FavoriteList tester = new FavoriteList("Yellow", 4, "test", "test", "test", "test",4);
 
         int correctResult = -1;
 
@@ -75,7 +75,7 @@ class FavouriteListDaoImplIntegrationTest {
 
         System.out.println("Integration test to add to favourite list but username and movie id already taken");
 
-        FavoriteList tester = new FavoriteList("admin", 86331, "test", "test", "test");
+        FavoriteList tester = new FavoriteList("admin", 86331, "test", "test", "test","test",4);
 
         int correctResult = -1;
 
@@ -128,7 +128,7 @@ class FavouriteListDaoImplIntegrationTest {
         FavouriteListDaoImpl favouriteListDao = new FavouriteListDaoImpl(conn);
 
         ArrayList<FavoriteList> expected = new ArrayList<>();
-        expected.add(new FavoriteList( "Toby", 1373723, "/ibF5XVxTzf1ayzZrmiJqgeQ39Qk.jpg", "War stories about family, ethics and honor include the true story of two U.S. Marines who in a span of six seconds, must stand their ground to stop a suicide truck bomb, a Navy Corpsman who attempts to hold on to his humanity, and a WW2 soldier who gets separated from his squad and is forced to re-evaluate his code.", "The Codes of War"));
+        expected.add(new FavoriteList( "Toby", 1373723, "/ibF5XVxTzf1ayzZrmiJqgeQ39Qk.jpg", "War stories about family, ethics and honor include the true story of two U.S. Marines who in a span of six seconds, must stand their ground to stop a suicide truck bomb, a Navy Corpsman who attempts to hold on to his humanity, and a WW2 soldier who gets separated from his squad and is forced to re-evaluate his code.", "The Codes of War", "Action", 28));
 
         ArrayList<FavoriteList> result = favouriteListDao.getAllFavouriteListByUsername("Toby");
 
@@ -154,7 +154,7 @@ class FavouriteListDaoImplIntegrationTest {
         FavouriteListDaoImpl favouriteListDao = new FavouriteListDaoImpl(conn);
 
         ArrayList<FavoriteList> expected = new ArrayList<>();
-        expected.add(new FavoriteList( "Toby", 1373723, "/ibF5XVxTzf1ayzZrmiJqgeQ39Qk.jpg", "War stories about family, ethics and honor include the true story of two U.S. Marines who in a span of six seconds, must stand their ground to stop a suicide truck bomb, a Navy Corpsman who attempts to hold on to his humanity, and a WW2 soldier who gets separated from his squad and is forced to re-evaluate his code.", "The Codes of War"));
+        expected.add(new FavoriteList( "Toby", 1373723, "/ibF5XVxTzf1ayzZrmiJqgeQ39Qk.jpg", "War stories about family, ethics and honor include the true story of two U.S. Marines who in a span of six seconds, must stand their ground to stop a suicide truck bomb, a Navy Corpsman who attempts to hold on to his humanity, and a WW2 soldier who gets separated from his squad and is forced to re-evaluate his code.", "The Codes of War", "Action", 28));
 
         ArrayList<FavoriteList> result = favouriteListDao.getAllFavouriteListByUsername("Yellow");
 
@@ -183,9 +183,9 @@ class FavouriteListDaoImplIntegrationTest {
         FavouriteListDaoImpl favouriteListDao = new FavouriteListDaoImpl(conn);
 
         ArrayList<FavoriteList> expected = new ArrayList<>();
-        expected.add(new FavoriteList("admin", 86331, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire"));
-        expected.add(new FavoriteList("admin", 950387, "/2Nti3gYAX513wvhp8IiLL6ZDyOm.jpg", "Four misfits find themselves struggling with ordinary problems when they are suddenly pulled through a mysterious portal into the Overworld: a bizarre, cubic wonderland that thrives on imagination. To get back home, they'll have to master this world while embarking on a magical quest with an unexpected, expert crafter, Steve.", "A Minecraft Movie"));
-        expected.add(new FavoriteList( "Toby", 1373723, "/ibF5XVxTzf1ayzZrmiJqgeQ39Qk.jpg", "War stories about family, ethics and honor include the true story of two U.S. Marines who in a span of six seconds, must stand their ground to stop a suicide truck bomb, a Navy Corpsman who attempts to hold on to his humanity, and a WW2 soldier who gets separated from his squad and is forced to re-evaluate his code.", "The Codes of War"));
+        expected.add(new FavoriteList("admin", 86331, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire", "Drama",18));
+        expected.add(new FavoriteList("admin", 950387, "/2Nti3gYAX513wvhp8IiLL6ZDyOm.jpg", "Four misfits find themselves struggling with ordinary problems when they are suddenly pulled through a mysterious portal into the Overworld: a bizarre, cubic wonderland that thrives on imagination. To get back home, they'll have to master this world while embarking on a magical quest with an unexpected, expert crafter, Steve.", "A Minecraft Movie", "Family",10751));
+        expected.add(new FavoriteList( "Toby", 1373723, "/ibF5XVxTzf1ayzZrmiJqgeQ39Qk.jpg", "War stories about family, ethics and honor include the true story of two U.S. Marines who in a span of six seconds, must stand their ground to stop a suicide truck bomb, a Navy Corpsman who attempts to hold on to his humanity, and a WW2 soldier who gets separated from his squad and is forced to re-evaluate his code.", "The Codes of War", "Action", 28));
 
         ArrayList<FavoriteList> result = favouriteListDao.getAllFavouriteList();
 
@@ -211,7 +211,7 @@ class FavouriteListDaoImplIntegrationTest {
         System.out.println("Integration test to delete cartItem by cart id and movie id ");
 
 
-        FavoriteList tester = new FavoriteList("admin", 86331, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire");
+        FavoriteList tester = new FavoriteList("admin", 86331, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire","Drama",18);
 
         Connection conn = connectionSource.getConnection();
         conn.setAutoCommit(false);
@@ -236,7 +236,7 @@ class FavouriteListDaoImplIntegrationTest {
         System.out.println("Integration test to delete cartItem but username doesnt exist ");
 
 
-        FavoriteList tester = new FavoriteList("Yellow", 86331, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire");
+        FavoriteList tester = new FavoriteList("Yellow", 86331, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire","Drama",18);
 
         Connection conn = connectionSource.getConnection();
         conn.setAutoCommit(false);
@@ -261,7 +261,7 @@ class FavouriteListDaoImplIntegrationTest {
         System.out.println("Integration test to delete from favourite list but movie id doesnt exist ");
 
 
-        FavoriteList tester = new FavoriteList("admin", 86331344, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire");
+        FavoriteList tester = new FavoriteList("admin", 86331344, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire","Drama",18);
 
         Connection conn = connectionSource.getConnection();
         conn.setAutoCommit(false);
@@ -290,7 +290,7 @@ class FavouriteListDaoImplIntegrationTest {
         conn.setAutoCommit(false);
         FavouriteListDaoImpl favouriteListDao = new FavouriteListDaoImpl(conn);
 
-        FavoriteList tester = new FavoriteList("admin", 86331, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire");
+        FavoriteList tester = new FavoriteList("admin", 86331, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire","Drama",18);
 
 
         FavoriteList result = favouriteListDao.getFavouriteListByUsernameAndMovieId(tester.getUsername(), tester.getMovieDb_id());
@@ -314,7 +314,7 @@ class FavouriteListDaoImplIntegrationTest {
         conn.setAutoCommit(false);
         FavouriteListDaoImpl favouriteListDao = new FavouriteListDaoImpl(conn);
 
-        FavoriteList tester = new FavoriteList("Yellow", 86331, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire");
+        FavoriteList tester = new FavoriteList("Yellow", 86331, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire","Drama",18);
 
 
         FavoriteList result = favouriteListDao.getFavouriteListByUsernameAndMovieId(tester.getUsername(), tester.getMovieDb_id());
@@ -338,7 +338,7 @@ class FavouriteListDaoImplIntegrationTest {
         conn.setAutoCommit(false);
         FavouriteListDaoImpl favouriteListDao = new FavouriteListDaoImpl(conn);
 
-        FavoriteList tester = new FavoriteList("admin", 863313424, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire");
+        FavoriteList tester = new FavoriteList("admin", 863313424, "/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg", "In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.", "Desire","Drama",18);
 
 
         FavoriteList result = favouriteListDao.getFavouriteListByUsernameAndMovieId(tester.getUsername(), tester.getMovieDb_id());
