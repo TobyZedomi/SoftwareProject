@@ -50,7 +50,9 @@ public class FavoriteListController {
 
             User user = (User) session.getAttribute("loggedInUser");
 
-            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, genreName));
+            int genreId2 = Integer.parseInt(genreId);
+
+            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, genreName, genreId2));
 
             String message;
             if(complete == -1){
@@ -133,7 +135,9 @@ public class FavoriteListController {
 
             User user = (User) session.getAttribute("loggedInUser");
 
-            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, genreName));
+            int genreId2 = Integer.parseInt(genreId);
+
+            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, genreName, genreId2));
 
             String message;
             if(complete == -1){
@@ -201,7 +205,7 @@ public class FavoriteListController {
 
             User user = (User) session.getAttribute("loggedInUser");
 
-            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, "Adventure"));
+            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, "Adventure", 12));
 
             String message;
             if(complete == -1){
@@ -269,7 +273,7 @@ public class FavoriteListController {
 
             User user = (User) session.getAttribute("loggedInUser");
 
-            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, "Adventure"));
+            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, "Adventure", 12));
 
             String message;
             if(complete == -1){
@@ -341,7 +345,9 @@ public class FavoriteListController {
 
             User user = (User) session.getAttribute("loggedInUser");
 
-            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, genreName));
+            int genreId2 = Integer.parseInt(genreId);
+
+            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, genreName, genreId2));
 
             String message;
             if(complete == -1){
@@ -431,7 +437,9 @@ public class FavoriteListController {
 
             User user = (User) session.getAttribute("loggedInUser");
 
-            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, genreName));
+            int genreId2 = Integer.parseInt(genreId);
+
+            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, genreName, genreId2));
 
             String message;
             if(complete == -1){

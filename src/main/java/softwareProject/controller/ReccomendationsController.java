@@ -99,17 +99,8 @@ public class ReccomendationsController {
             ArrayList<Integer> genreIds = new ArrayList();
 
             for (int i = 0; i < favoriteLists.size(); i++) {
-
-                for (int j = 0; j < genreForMovies.size(); j++) {
-                    if (favoriteLists.get(i).getMovieDb_id() == genreForMovies.get(j).getMovie_id()) {
-                        genreIds.add(genreForMovies.get(j).getGenre_id());
-                    }
-                }
+                        genreIds.add(favoriteLists.get(i).getGenreId());
             }
-
-            // remove duplicates, reference link - https://www.studytonight.com/java-examples/how-to-remove-duplicates-from-arraylist
-
-            genreIds = (ArrayList<Integer>)genreIds.stream().distinct().collect(Collectors.toList());
 
             if (genreIds.isEmpty()){
 
@@ -232,12 +223,7 @@ public class ReccomendationsController {
         ArrayList<Integer> genreIds = new ArrayList();
 
         for (int i = 0; i < favoriteLists.size(); i++) {
-
-            for (int j = 0; j < genreForMovies.size(); j++) {
-                if (favoriteLists.get(i).getMovieDb_id() == genreForMovies.get(j).getMovie_id()) {
-                    genreIds.add(genreForMovies.get(j).getGenre_id());
-                }
-            }
+            genreIds.add(favoriteLists.get(i).getGenreId());
         }
 
         int maxCount = 0;

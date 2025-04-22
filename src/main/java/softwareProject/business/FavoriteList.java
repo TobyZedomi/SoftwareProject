@@ -19,5 +19,7 @@ public class FavoriteList {
     private String backdrop_path;
     private String overview;
     private String title;
-    private String genreId;
+    private String genreName;
+
+    private int genreId;
 }
