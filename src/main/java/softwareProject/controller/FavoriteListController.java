@@ -32,7 +32,7 @@ public class FavoriteListController {
     public String addMovieFavList(@RequestParam(name = "movieId") String movieId,
                                   @RequestParam(name = "backdrop_path") String backdrop_path,
                                   @RequestParam(name = "overview") String overview,
-                                  @RequestParam(name = "title") String title, Model model, HttpSession session) {
+                                  @RequestParam(name = "title") String title, @RequestParam(name = "genreId") String genreId, Model model, HttpSession session) {
 
 
         if(session.getAttribute("loggedInUser") != null) {
@@ -41,12 +41,16 @@ public class FavoriteListController {
 
             session.setAttribute("movieId", movieDB_Id);
 
+            GenreDao genreDao = new GenreDaoImpl("database.properties");
+
+            GenreTest genre = genreDao.getGenreById(Integer.parseInt(genreId));
+            String genreName = genre.getName();
 
             FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
 
             User user = (User) session.getAttribute("loggedInUser");
 
-            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title));
+            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, genreName));
 
             String message;
             if(complete == -1){
@@ -109,7 +113,7 @@ public class FavoriteListController {
     public String addMovieFavList2(@RequestParam(name = "movieId") String movieId,
                                   @RequestParam(name = "backdrop_path") String backdrop_path,
                                   @RequestParam(name = "overview") String overview,
-                                  @RequestParam(name = "title") String title, Model model, HttpSession session) {
+                                  @RequestParam(name = "title") String title, Model model,@RequestParam(name = "genreId") String genreId, HttpSession session) {
 
 
         if(session.getAttribute("loggedInUser") != null) {
@@ -118,12 +122,18 @@ public class FavoriteListController {
 
             session.setAttribute("movieId", movieDB_Id);
 
+            GenreDao genreDao = new GenreDaoImpl("database.properties");
+
+            GenreTest genre = genreDao.getGenreById(Integer.parseInt(genreId));
+            String genreName = genre.getName();
+
+
 
             FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
 
             User user = (User) session.getAttribute("loggedInUser");
 
-            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title));
+            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, genreName));
 
             String message;
             if(complete == -1){
@@ -191,7 +201,7 @@ public class FavoriteListController {
 
             User user = (User) session.getAttribute("loggedInUser");
 
-            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title));
+            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, "Adventure"));
 
             String message;
             if(complete == -1){
@@ -255,12 +265,11 @@ public class FavoriteListController {
 
             session.setAttribute("movieId2", movieDB_Id);
 
-
             FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
 
             User user = (User) session.getAttribute("loggedInUser");
 
-            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title));
+            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, "Adventure"));
 
             String message;
             if(complete == -1){
@@ -312,7 +321,7 @@ public class FavoriteListController {
     public String addMovieFavList5(@RequestParam(name = "movieId") String movieId,
                                    @RequestParam(name = "backdrop_path") String backdrop_path,
                                    @RequestParam(name = "overview") String overview,
-                                   @RequestParam(name = "title") String title, Model model, HttpSession session) {
+                                   @RequestParam(name = "title") String title,@RequestParam(name = "genreId") String genreId, Model model, HttpSession session) {
 
 
         if(session.getAttribute("loggedInUser") != null) {
@@ -321,12 +330,18 @@ public class FavoriteListController {
 
             session.setAttribute("movieId", movieDB_Id);
 
+            GenreDao genreDao = new GenreDaoImpl("database.properties");
+
+            GenreTest genre = genreDao.getGenreById(Integer.parseInt(genreId));
+            String genreName = genre.getName();
+
+
 
             FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
 
             User user = (User) session.getAttribute("loggedInUser");
 
-            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title));
+            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, genreName));
 
             String message;
             if(complete == -1){
@@ -398,7 +413,7 @@ public class FavoriteListController {
     public String addMovieFavList6(@RequestParam(name = "movieId") String movieId,
                                    @RequestParam(name = "backdrop_path") String backdrop_path,
                                    @RequestParam(name = "overview") String overview,
-                                   @RequestParam(name = "title") String title, Model model, HttpSession session) {
+                                   @RequestParam(name = "title") String title,@RequestParam(name = "genreId") String genreId, Model model, HttpSession session) {
 
 
         if(session.getAttribute("loggedInUser") != null) {
@@ -407,12 +422,16 @@ public class FavoriteListController {
 
             session.setAttribute("movieId", movieDB_Id);
 
+            GenreDao genreDao = new GenreDaoImpl("database.properties");
+
+            GenreTest genre = genreDao.getGenreById(Integer.parseInt(genreId));
+            String genreName = genre.getName();
 
             FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
 
             User user = (User) session.getAttribute("loggedInUser");
 
-            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title));
+            int complete = favoriteListDao.addFavouriteList(new FavoriteList(user.getUsername(), movieDB_Id, backdrop_path, overview, title, genreName));
 
             String message;
             if(complete == -1){
