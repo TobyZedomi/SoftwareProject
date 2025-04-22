@@ -521,6 +521,16 @@ public class FavoriteListController {
 
                 model.addAttribute("movies", favoriteLists);
 
+                String recs = "Random Movie Recommendations";
+                model.addAttribute("recs", recs);
+
+                String favList = "Favourite List";
+                model.addAttribute("favList", favList);
+
+                String recs2 = "Most Common Genre In FavouriteList";
+                model.addAttribute("recs2", recs2);
+
+
                 return "favList";
 
             } else {
