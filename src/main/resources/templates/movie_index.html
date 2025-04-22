@@ -248,7 +248,7 @@
                         <div class="action_btn" style="margin: 0 auto; display: inline;">
                             <a th:href="@{/getAllChatMessage(id=${movieByGenre.getId()})}">View Videos & Live Chat Room</a>
 
-                            <a th:href="@{/addMovieFavList2(movieId=${movieByGenre.getId()}, backdrop_path=${movieByGenre.getBackdrop_path()}, overview=${movieByGenre.getOverview()}, title=${movieByGenre.getTitle()}, release_date=${movieByGenre.getRelease_date()})}"
+                            <a th:href="@{/addMovieFavList2(movieId=${movieByGenre.getId()}, backdrop_path=${movieByGenre.getBackdrop_path()}, overview=${movieByGenre.getOverview()}, title=${movieByGenre.getTitle()}, release_date=${movieByGenre.getRelease_date()}, genreId=${movieByGenre.getGenre_ids()[0]})}"
                                class="remove_cart" rel="2">
                                 <i class="fa fa-heart" th:style="${movieByGenre.isFavourite() == true} ? 'color: red' : 'color: black'"></i>
                             </a>

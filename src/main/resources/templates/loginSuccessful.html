@@ -216,7 +216,7 @@
             <p th:text="${movie.getOverview()}" style="overflow: auto; scrollbar-width: none;"></p>
             <div class="action_btn" style="margin: 0 auto; display: inline;">
               <a th:href="@{/getAllChatMessage(id=${movie.getId()})}">View Videos & Live Chat Room</a>
-              <a th:href="@{/addMovieFavList(movieId=${movie.getId()}, backdrop_path=${movie.getBackdrop_path()}, overview=${movie.getOverview()}, title=${movie.getTitle()}, release_date=${movie.getRelease_date()})}"
+              <a th:href="@{/addMovieFavList(movieId=${movie.getId()}, backdrop_path=${movie.getBackdrop_path()}, overview=${movie.getOverview()}, title=${movie.getTitle()}, release_date=${movie.getRelease_date()}, genreId=${movie.getGenre_ids()[0]})}"
                  class="remove_cart" rel="2">
                 <i class="fa fa-heart" th:style="${movie.isFavourite() == true} ? 'color: red' : 'color: black'"></i>
               </a>
