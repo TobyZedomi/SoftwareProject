@@ -296,6 +296,9 @@ public class UserController {
 
             ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(u.getUsername());
 
+            GenreDao genreDao = new GenreDaoImpl("database.properties");
+
+
             // loop through the movie db list and reduce the size by 2
             for (int i = 0; i < movies.size() - 2; i++) {
 
@@ -304,6 +307,7 @@ public class UserController {
                 if (movies.get(i).getBackdrop_path() != null) {
                     // add the movies from the movie db into the new arraylist
                     newMovie.add(movies.get(i));
+                    newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movies.get(i).getGenre_ids()[0])).getName());
                     model.addAttribute("movies", newMovie);
                 }
 

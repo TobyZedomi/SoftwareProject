@@ -24,6 +24,8 @@ public class MovieTest {
     private String [] genre_ids;
     private String release_date;
 
+    private String genreName;
+
     @Setter
     private boolean favourite = false;
 }

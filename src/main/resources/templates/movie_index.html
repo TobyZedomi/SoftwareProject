@@ -7,7 +7,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 
 
-
     <title>Title</title>
 
     <style>
@@ -248,15 +247,19 @@
                         <div class="action_btn" style="margin: 0 auto; display: inline;">
                             <a th:href="@{/getAllChatMessage(id=${movieByGenre.getId()})}">View Videos & Live Chat Room</a>
 
-                            <a th:href="@{/addMovieFavList2(movieId=${movieByGenre.getId()}, backdrop_path=${movieByGenre.getBackdrop_path()}, overview=${movieByGenre.getOverview()}, title=${movieByGenre.getTitle()}, release_date=${movieByGenre.getRelease_date()})}"
+                            <a th:href="@{/addMovieFavList2(movieId=${movieByGenre.getId()}, backdrop_path=${movieByGenre.getBackdrop_path()}, overview=${movieByGenre.getOverview()}, title=${movieByGenre.getTitle()}, release_date=${movieByGenre.getRelease_date()}, genreId=${movieByGenre.getGenre_ids()[0]})}"
                                class="remove_cart" rel="2">
                                 <i class="fa fa-heart" th:style="${movieByGenre.isFavourite() == true} ? 'color: red' : 'color: black'"></i>
                             </a>
                         </div>
 
-                        <a th:href="@{/writeReview(movieId=${movieByGenre.getId()}, movieTitle=${movieByGenre.getTitle()})}">
-                            Write a Review
-                        </a>
+                        <div class="action_btn" style="margin: 0 auto; display: inline; margin-top: 10px;">
+                            <a th:href="@{/writeReview(movieId=${movieByGenre.id}, movieTitle=${movieByGenre.title})}">
+                                Write a Review
+                            </a>
+
+                            <span class="badge text-bg-danger" style="background-color: black; color: white; font-weight: bold;  border-radius: 50px; margin-left: 20px" th:text="${movieByGenre.getGenreName()}"></span>
+                        </div>
                     </div>
                 </div>
             </div>

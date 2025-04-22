@@ -99,17 +99,8 @@ public class ReccomendationsController {
             ArrayList<Integer> genreIds = new ArrayList();
 
             for (int i = 0; i < favoriteLists.size(); i++) {
-
-                for (int j = 0; j < genreForMovies.size(); j++) {
-                    if (favoriteLists.get(i).getMovieDb_id() == genreForMovies.get(j).getMovie_id()) {
-                        genreIds.add(genreForMovies.get(j).getGenre_id());
-                    }
-                }
+                        genreIds.add(favoriteLists.get(i).getGenreId());
             }
-
-            // remove duplicates, reference link - https://www.studytonight.com/java-examples/how-to-remove-duplicates-from-arraylist
-
-            genreIds = (ArrayList<Integer>)genreIds.stream().distinct().collect(Collectors.toList());
 
             if (genreIds.isEmpty()){
 
@@ -194,10 +185,13 @@ public class ReccomendationsController {
 
         ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(user.getUsername());
 
+        GenreDao genreDao = new GenreDaoImpl("database.properties");
+
         for (int i = 0; i < 15; i++) {
 
             if (movieRecs.get(i).getBackdrop_path() != null) {
                 newMovie.add(movieRecs.get(i));
+                //newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieRecs.get(i).getGenre_ids()[0])).getName());
                 model.addAttribute("movieRecs",newMovie);
             }
 
@@ -229,12 +223,7 @@ public class ReccomendationsController {
         ArrayList<Integer> genreIds = new ArrayList();
 
         for (int i = 0; i < favoriteLists.size(); i++) {
-
-            for (int j = 0; j < genreForMovies.size(); j++) {
-                if (favoriteLists.get(i).getMovieDb_id() == genreForMovies.get(j).getMovie_id()) {
-                    genreIds.add(genreForMovies.get(j).getGenre_id());
-                }
-            }
+            genreIds.add(favoriteLists.get(i).getGenreId());
         }
 
         int maxCount = 0;
@@ -261,6 +250,8 @@ public class ReccomendationsController {
         List<GenreTest> genres = movieService.getGenres();
         model.addAttribute("genres", genres);
 
+        GenreDaoImpl genreDao = new GenreDaoImpl("database.properties");
+
         List<MovieTest> movieByGenres = movieService.getMoviesByGenre(String.valueOf(mostCommonGenreId));
 
         List<MovieTest> newMovie = new ArrayList<>();
@@ -269,6 +260,7 @@ public class ReccomendationsController {
 
             if (movieByGenres.get(i).getBackdrop_path() != null) {
                 newMovie.add(movieByGenres.get(i));
+                newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieByGenres.get(i).getGenre_ids()[0])).getName());
                 model.addAttribute("movieByGenres", newMovie);
             }
 
@@ -280,8 +272,6 @@ public class ReccomendationsController {
                 }
             }
         }
-
-        GenreDao genreDao = new GenreDaoImpl("database.properties");
 
         GenreTest genre = genreDao.getGenreById(mostCommonGenreId);
         model.addAttribute("genreName", genre.getName());

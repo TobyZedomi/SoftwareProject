@@ -50,7 +50,7 @@ public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
         // TRY to prepare a statement from the connection
         // When you are parameterizing the update, remember that you need
         // to use the ? notation (so you can fill in the blanks later)
-        try(PreparedStatement ps = conn.prepareStatement("insert into favouriteList values(?, ?, ?, ?, " +
+        try(PreparedStatement ps = conn.prepareStatement("insert into favouriteList values(?, ?, ?, ?,?,?, " +
                 "?)")) {
             // Fill in the blanks, i.e. parameterize the update
             ps.setString(1, favoriteList.getUsername());
@@ -58,6 +58,8 @@ public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
             ps.setString(3, favoriteList.getBackdrop_path());
             ps.setString(4, favoriteList.getOverview());
             ps.setString(5, favoriteList.getTitle());
+            ps.setString(6, favoriteList.getGenreName());
+            ps.setInt(7, favoriteList.getGenreId());
 
             // Execute the update and store how many rows were affected/changed
             // when inserting, this number indicates if the row was
@@ -277,7 +279,9 @@ public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
                 rs.getInt("movieDb_id"),
                 rs.getString("backdrop_path"),
                 rs.getString("overview"),
-                rs.getString("title")
+                rs.getString("title"),
+                rs.getString("genreName"),
+                rs.getInt("genreId")
 
         );
         return f;

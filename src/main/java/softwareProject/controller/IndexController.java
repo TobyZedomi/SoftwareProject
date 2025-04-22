@@ -77,6 +77,8 @@ public class IndexController {
 
             ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(u.getUsername());
 
+            GenreDao genreDao = new GenreDaoImpl("database.properties");
+
             // loop through the movie db list and reduce the size by 2
             for (int i = 0; i < movies.size() - 2; i++) {
 
@@ -85,6 +87,7 @@ public class IndexController {
                     if (movies.get(i).getBackdrop_path() != null) {
                         // add the movies from the movie db into the new arraylist
                         newMovie.add(movies.get(i));
+                        newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movies.get(i).getGenre_ids()[0])).getName());
                         model.addAttribute("movies", newMovie);
                     }
 
@@ -134,6 +137,9 @@ public class IndexController {
 
             FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
 
+            GenreDao genreDao = new GenreDaoImpl("database.properties");
+
+
 
             ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(u.getUsername());
 
@@ -152,6 +158,7 @@ public class IndexController {
 
                     if (movieByGenres.get(i).getBackdrop_path() != null) {
                         newMovie.add(movieByGenres.get(i));
+                        newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(genreId)).getName());
                         model.addAttribute("movieByGenres", newMovie);
                     }
 
@@ -167,8 +174,6 @@ public class IndexController {
                 // genre by id and get the name
 
                 // use a session for this based on the controller method view movie by genre, testing branch
-
-                GenreDao genreDao = new GenreDaoImpl("database.properties");
 
                 GenreTest genre = genreDao.getGenreById(Integer.parseInt(genreId));
 
@@ -983,6 +988,7 @@ public class IndexController {
 
             if (movieByGenres.get(i).getBackdrop_path() != null) {
                 newMovie.add(movieByGenres.get(i));
+                newMovie.get(i).setGenreName("Science Fiction");
                 model.addAttribute("movieByGenres", newMovie);
             }
 
@@ -1025,10 +1031,13 @@ public class IndexController {
 
         ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(user.getUsername());
 
+        GenreDao genreDao = new GenreDaoImpl("database.properties");
+
         for (int i = 0; i < 15; i++) {
 
             if (movieRecs.get(i).getBackdrop_path() != null) {
                 newMovie.add(movieRecs.get(i));
+                //newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieRecs.get(i).getGenre_ids()[0])).getName());
                 model.addAttribute("movieRecs",newMovie);
             }
 
