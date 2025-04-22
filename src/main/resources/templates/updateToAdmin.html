@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" rel="stylesheet">
+  <script crossorigin="anonymous" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <style>
+    #myChart {
+
+      margin-top: 150px;
+      margin-left: 400px;
+    }
+
+    body{
+      margin: 0;
+    }
+
+    #background{
+      background-image: url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D.avif");
+      height: 100vh;
+      width: 100%;
+      background-size: cover;
+      background-position: center center;
+      position: fixed;
+      top: 0;
+      z-index: -1;
+    }
+
+
+    h1{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 50px;
+      color: white;
+      font-weight: bold;
+      -webkit-text-stroke: 1px darkred;
+      font-family: poppins;
+    }
+
+    p{
+      font-family: Poppins;
+    }
+
+
+    table {
+      font-family: poppins;
+      border-collapse: collapse;
+      width: 50%;
+      margin-top: 150px;
+      margin-left: auto;
+      margin-right: auto;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: center;
+      padding: 8px;
+    }
+
+    th{
+      background-color: red;
+      color: black;
+      font-weight: bold;
+    }
+
+    tr {
+      background-color: #dddddd;
+    }
+
+    h1{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 50px;
+      color: white;
+      font-weight: bold;
+      -webkit-text-stroke: 1px darkred;
+      font-family: poppins;
+    }
+
+    .movieImage{
+      width: 100px;
+      height: 100px;
+    }
+
+    a.three:link {
+      text-decoration: none;
+    }
+
+    a.three:visited {
+      text-decoration: none;
+    }
+
+    a.three:hover {
+      text-decoration: underline;
+    }
+
+    a.three:active {
+      text-decoration: underline;
+    }
+
+    p.two{
+      color: black;
+      font-family: poppins;
+    }
+
+    p.two:visited {color:#0000ff;}
+    p.two:hover {font-size:150%;}
+
+    .dropdown-menu{
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    }
+
+  </style>
+
+  <style>
+    .message1 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: green;
+      font-weight: bold;
+      margin-bottom: 50px;
+      font-family: poppins;
+    }
+  </style>
+
+  <title>Title</title>
+</head>
+<body>
+
+<div id="background"></div>
+
+<div th:replace="~{fragments/menu :: menu-bar}"></div>
+
+<div th:if="${#ctx.session.loggedInUser != null && #ctx.session.loggedInUser.isAdmin() == true}">
+
+  <!-- <canvas id="myChart" style="width:100%;max-width:800px"></canvas>-->
+
+  <div>
+    <h1>All General Users In The System</h1>
+  </div>
+
+  <div id="message1" class="message1" th:text="${message}"></div>
+
+  <table>
+    <thead style="color: red" >
+    <tr>
+      <th>UserName</th>
+      <th>Display Name</th>
+      <th>Email</th>
+      <th>IsAdmin</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+      <td th:text="${user.getUsername()}"></td>
+      <td th:text="${user.getDisplayName()}"></td>
+      <td th:text="${user.getEmail()}"></td>
+      <td th:text="${user.isAdmin()}"></td>
+      <td>
+        <a th:href="@{/updateUserToAdmin(username=${user.getUsername()})}"><button type="button" class="btn btn-danger" title="Update To Admin">Update To Admin</button></a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+</div>
+
+
+<div th:unless="${#ctx.session.loggedInUser != null && #ctx.session.loggedInUser.isAdmin() == true}">
+  <p>Insufficient permissions</p>
+</div>
+
+</body>
+</html>
