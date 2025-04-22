@@ -967,4 +967,13 @@ public class IndexController {
 
         model.addAttribute("genreName", genre.getName());
     }
+
+
+
+    @GetMapping("/popularReviews")
+    public String getPopularMovieReviews(Model model) {
+        Map<String, List<MovieReview>> reviewsByMovie = movieService.getReviewsForPopularMovies();
+        model.addAttribute("reviewsByMovie", reviewsByMovie);
+        return "movie_db_reviews";
+    }
 }
