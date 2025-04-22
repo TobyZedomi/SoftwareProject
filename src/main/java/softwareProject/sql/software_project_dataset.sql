@@ -29,10 +29,10 @@ VALUES ('Toby', 12, 5, 'One of the greatest movies ive watched in my life'),
        ('James', 7, 3.5, 'Amazing movie'),
        ('James', 15, 3, 'Good movie, i like it a lot');
 
-INSERT INTO `favouriteList` (`username`, `movieDb_id`, `backdrop_path`, `overview`, `title`, `genreId`)
-    VALUES ('admin', 86331, '/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg', 'In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.', 'Desire', 'Drama'),
-           ('admin', 950387, '/2Nti3gYAX513wvhp8IiLL6ZDyOm.jpg', 'Four misfits find themselves struggling with ordinary problems when they are suddenly pulled through a mysterious portal into the Overworld: a bizarre, cubic wonderland that thrives on imagination. To get back home, they''ll have to master this world while embarking on a magical quest with an unexpected, expert crafter, Steve.', 'A Minecraft Movie', 'Family'),
-           ('Toby', 1373723, '/ibF5XVxTzf1ayzZrmiJqgeQ39Qk.jpg', 'War stories about family, ethics and honor include the true story of two U.S. Marines who in a span of six seconds, must stand their ground to stop a suicide truck bomb, a Navy Corpsman who attempts to hold on to his humanity, and a WW2 soldier who gets separated from his squad and is forced to re-evaluate his code.', 'The Codes of War', 'Action');
+INSERT INTO `favouriteList` (`username`, `movieDb_id`, `backdrop_path`, `overview`, `title`, `genreName`, `genreId`)
+    VALUES ('admin', 86331, '/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg', 'In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.', 'Desire', 'Drama', 18),
+           ('admin', 950387, '/2Nti3gYAX513wvhp8IiLL6ZDyOm.jpg', 'Four misfits find themselves struggling with ordinary problems when they are suddenly pulled through a mysterious portal into the Overworld: a bizarre, cubic wonderland that thrives on imagination. To get back home, they''ll have to master this world while embarking on a magical quest with an unexpected, expert crafter, Steve.', 'A Minecraft Movie', 'Family', 10751 ),
+           ('Toby', 1373723, '/ibF5XVxTzf1ayzZrmiJqgeQ39Qk.jpg', 'War stories about family, ethics and honor include the true story of two U.S. Marines who in a span of six seconds, must stand their ground to stop a suicide truck bomb, a Navy Corpsman who attempts to hold on to his humanity, and a WW2 soldier who gets separated from his squad and is forced to re-evaluate his code.', 'The Codes of War', 'Action', 28);
 
 
 INSERT INTO `genreForMovie` (`genreForMovie_id`, `username`, `movieDb_id`, `genre_id`)

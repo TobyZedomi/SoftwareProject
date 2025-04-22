@@ -52,6 +52,7 @@ CREATE TABLE review
 );
 
 
+
 CREATE TABLE favouriteList
 (
     username   varchar(255) NOT NULL,
@@ -59,10 +60,12 @@ CREATE TABLE favouriteList
     backdrop_path VARCHAR(255),
     overview VARCHAR(8000),
     title VARCHAR(255),
-    genreId VARCHAR(255),
+    genreName VARCHAR(255),
+    genreId int(255),
     PRIMARY KEY (username, movieDb_id),
     FOREIGN KEY (username) REFERENCES users (username)
 );
+
 
 CREATE TABLE genreForMovie
 (
