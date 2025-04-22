@@ -236,9 +236,13 @@
                                     </a>
                                 </div>
 
-                            <a th:href="@{/writeReview(movieId=${movie.id}, movieTitle=${movie.title})}">
-                                Write a Review
-                            </a>
+                            <div class="action_btn" style="margin: 0 auto; display: inline; margin-top: 10px;">
+                                <a th:href="@{/writeReview(movieId=${movie.id}, movieTitle=${movie.title})}">
+                                    Write a Review
+                                </a>
+
+                                <span class="badge text-bg-danger" style="background-color: black; color: white; font-weight: bold;  border-radius: 50px; margin-left: 20px" th:text="${movie.getGenreName()}"></span>
+                            </div>
 
                         </div>
                     </div>
