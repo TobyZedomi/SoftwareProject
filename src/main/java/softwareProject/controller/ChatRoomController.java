@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import softwareProject.business.*;
-import softwareProject.persistence.ChatRoomDao;
-import softwareProject.persistence.ChatRoomDaoImpl;
-import softwareProject.persistence.MovieProductDao;
-import softwareProject.persistence.MovieProductDaoImpl;
+import softwareProject.persistence.*;
 import softwareProject.service.MovieService;
 
 import java.io.File;
@@ -63,6 +60,7 @@ public class ChatRoomController {
 
         System.out.println(chatRooms);
 
+        getTotalAmountOfItemsInCart(session,model);
 
         return "videos";
     }
@@ -100,7 +98,21 @@ public class ChatRoomController {
 
  */
 
+    public void getTotalAmountOfItemsInCart(HttpSession session,Model model){
 
+        /// get total number of items in cart for user
+
+        User u = (User) session.getAttribute("loggedInUser");
+
+        CartDao cartDao = new CartDaoImpl("database.properties");
+
+        Cart cart = cartDao.getCartByUsername(u.getUsername());
+
+        CartItemDao cartItemDao = new CartItemDaoImpl("database.properties");
+
+        int totalCartItems = cartItemDao.totalNumberOfCartItems(cart.getCart_id());
+        model.addAttribute("totalCartItems", totalCartItems);
+    }
 
 
 

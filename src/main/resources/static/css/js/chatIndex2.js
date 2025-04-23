@@ -114,7 +114,8 @@ function onMessageReceived(payload) {
         var timeText = document.createTextNode(text);
         timeElement.appendChild(timeText);
         timeElement.style.color = 'black';
-        timeElement.style.marginLeft = "140px";
+        timeElement.style.fontWeight = 'bold';
+        timeElement.style.marginLeft = "130px";
         messageElement.appendChild(timeElement);
     }
 
