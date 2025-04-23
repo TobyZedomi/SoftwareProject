@@ -261,8 +261,7 @@
                             <a th:href="@{/writeReview(movieId=${movieByGenre.id}, movieTitle=${movieByGenre.title})}">
                                 Write a Review
                             </a>
-
-                            <span class="badge text-bg-danger" style="background-color: black; color: white; font-weight: bold;  border-radius: 50px; margin-left: 20px" th:text="${movieByGenre.getGenreName()}"></span>
+                            <a th:text="${movieByGenre.getGenreName()}" class="badge badge-danger" style="background-color: #C41E3A; color: white; font-weight: bold;  border-radius: 50px; margin-left: 20px"  title="View More Movies on This Genre">Danger</a>
                         </div>
                     </div>
                 </div>
