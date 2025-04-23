@@ -122,7 +122,7 @@
   </style>
 
   <style>
-    .message1 {
+    #message1 {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -149,7 +149,11 @@
     <h1>All General Users In The System</h1>
   </div>
 
-  <div id="message1" class="message1" th:text="${message}"></div>
+  <div th:if="${message != null}">
+
+    <div id="message1" class="alert alert-success"  style="width: 800px; margin: auto;" th:text="${message}"></div>
+
+  </div>
 
   <table>
     <thead style="color: red" >
