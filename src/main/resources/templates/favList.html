@@ -156,7 +156,7 @@
             z-index: -1;
         }
 
-        .message{
+        #message{
             display: flex;
             justify-content: center;
             align-items: center;
@@ -248,7 +248,10 @@
         <h1 th:text="| ${#ctx.session.loggedInUser.getUsername()} Favourite List Of Movies | ">Favourite List</h1>
     </div>
 
-    <div id="message" class="message" th:text="${message}"></div>
+
+        <div th:if="${message != null}">
+            <div id="message" class="alert alert-danger"  style="width: 800px; margin: auto;" th:text="${message}"></div>
+        </div>
 
 
     <div id="card-area">

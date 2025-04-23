@@ -161,7 +161,7 @@
             z-index: -1;
         }
 
-        .message1 {
+        #message1 {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -171,7 +171,7 @@
             font-family: poppins;
         }
 
-        .messageDelete {
+        #messageDelete {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -195,10 +195,14 @@
         <h1>Most Popular Movies</h1>
     </div>
 
-    <div class="action_btn" style="margin: 0 auto; display: inline;">
-    <div id="message1" class="message1" th:text="${message}"></div>
+        <div th:if="${message != null}">
+            <div class="alert alert-success" style="width: 800px; margin: auto;" id="message1" th:text="${message}" role="alert">
+            </div>
+        </div>
 
-    <div id="messageDelete" class="messageDelete" th:text="${messageDelete}"></div>
+        <div th:if="${messageDelete != null}">
+
+    <div id="messageDelete" class="alert alert-danger"  style="width: 800px; margin: auto;" th:text="${messageDelete}"></div>
 
         </div>
 

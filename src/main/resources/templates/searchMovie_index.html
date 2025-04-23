@@ -179,7 +179,7 @@
       z-index: -1;
     }
 
-    .message {
+    #message {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -189,7 +189,7 @@
       font-family: poppins;
     }
 
-    .messageDelete {
+    #messageDelete {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -206,12 +206,6 @@
 <div id="background"></div>
 
 
-<div class="action_btn" style="margin: 0 auto; display: inline;">
-  <div id="message" class="message" th:text="${message}"></div>
-
-  <div id="messageDelete" class="messageDelete" th:text="${messageDelete}"></div>
-
-</div>
 
 <div class="dropdown" style=" margin-top: 50px; margin-left: 50px;">
   <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -235,7 +229,14 @@
 
 <h1 th:text=" |Movies for ${query} |"></h1>
 
+<div th:if="${message != null}">
+  <div class="alert alert-success" style="width: 800px; margin: auto;" id="message" th:text="${message}" role="alert">
+  </div>
+</div>
 
+<div th:if="${messageDelete != null}">
+  <div id="messageDelete" class="alert alert-danger"  style="width: 800px; margin: auto;" th:text="${messageDelete}"></div>
+</div>
 
 <div id="card-area">
   <div class="wrapper">

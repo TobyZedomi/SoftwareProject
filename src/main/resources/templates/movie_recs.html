@@ -184,7 +184,7 @@
       box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
     }
 
-    .message {
+    #message {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -194,7 +194,7 @@
       font-family: poppins;
     }
 
-    .messageDelete {
+    #messageDelete {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -229,11 +229,13 @@
     <h1 th:text=" | Random Movie Reccomendations for ${#ctx.session.loggedInUser.getUsername()} |"></h1>
   </div>
 
-  <div class="action_btn" style="margin: 0 auto; display: inline;">
-    <div id="message" class="message" th:text="${message}"></div>
+  <div th:if="${message != null}">
+    <div class="alert alert-success" style="width: 800px; margin: auto;" id="message" th:text="${message}" role="alert">
+    </div>
+  </div>
 
-    <div id="messageDelete" class="messageDelete" th:text="${messageDelete}"></div>
-
+  <div th:if="${messageDelete != null}">
+    <div id="messageDelete" class="alert alert-danger"  style="width: 800px; margin: auto;" th:text="${messageDelete}"></div>
   </div>
 
   <div id="card-area">
