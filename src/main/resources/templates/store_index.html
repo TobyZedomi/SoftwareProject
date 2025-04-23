@@ -10,11 +10,21 @@
     <title>Title</title>
 
     <style>
-        .message{
+        #message {
             display: flex;
             justify-content: center;
             align-items: center;
             color: red;
+            font-weight: bold;
+            margin-bottom: 50px;
+            font-family: poppins;
+        }
+
+        #messageAdded {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: green;
             font-weight: bold;
             margin-bottom: 50px;
             font-family: poppins;
@@ -194,7 +204,18 @@
     <h1>Movie Store</h1>
 </div>
 
-<div id="message" class="message" th:text="${message}"></div>
+
+
+<div th:if="${message != null}">
+    <div class="alert alert-danger" style="width: 800px; margin: auto;" id="message" th:text="${message}" role="alert">
+    </div>
+</div>
+
+<div th:if="${messageAdded != null}">
+
+    <div id="messageAdded" class="alert alert-success"  style="width: 800px; margin: auto;" th:text="${messageAdded}"></div>
+
+</div>
 
 
 <form class="d-flex" role="search" method="get" action="/viewMovieProductBySearch">

@@ -117,7 +117,7 @@ public class CartItemController {
                 System.out.println(answer);
 
                 String message = movieProduct.getMovie_name() + " was added to cart";
-                model.addAttribute("message", message);
+                model.addAttribute("messageAdded", message);
                 log.info(" User {} added movie {} to cart ", u.getUsername(), movieProduct.getMovie_name());
 
 
