@@ -105,6 +105,19 @@ function onMessageReceived(payload) {
 
     messageElement.appendChild(textElement);
 
+    // getting time of message
+
+    if(message.type === 'CHAT') {
+        var timeElement = document.createElement('span');
+        const d = new Date();
+        let text = d.toLocaleTimeString();
+        var timeText = document.createTextNode(text);
+        timeElement.appendChild(timeText);
+        timeElement.style.color = 'black';
+        timeElement.style.marginLeft = "140px";
+        messageElement.appendChild(timeElement);
+    }
+
     messageArea.appendChild(messageElement);
     messageArea.scrollTop = messageArea.scrollHeight;
 }
