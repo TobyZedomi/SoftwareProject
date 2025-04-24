@@ -201,6 +201,15 @@ CREATE TABLE chat_room
     FOREIGN KEY (username) REFERENCES users (username)
 );
 
+CREATE TABLE otp_login
+(
+    id          INT AUTO_INCREMENT,
+    email    varchar(255) NOT NULL,
+    otp_number  INT(255),
+    expiry  TIMESTAMP NOT NULL,
+    PRIMARY KEY (id)
+);
+
 
 
 /* TRIGGERS AND TABLES FOR TRIGGERS  */
@@ -342,6 +351,18 @@ CREATE PROCEDURE addIntoCartItem(param_cart_id INT, param_movie_id INT)
 BEGIN
 INSERT INTO cart_items(cart_id, movie_id)
 VALUES (param_cart_id, param_movie_id);
+END
+//
+DELIMITER //
+
+DELIMITER //
+CREATE PROCEDURE getMovieRevenueStats()
+BEGIN
+SELECT mp.movie_name, SUM(oi.price) AS totalRevenue
+FROM movieproduct mp
+         JOIN orderitem oi ON mp.movie_id = oi.movie_id
+GROUP BY mp.movie_name
+ORDER BY totalRevenue DESC;
 END
 //
 DELIMITER //
