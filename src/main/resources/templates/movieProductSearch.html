@@ -235,7 +235,7 @@
             </div>
             <h4 th:text="${movieProduct.movie_name}"></h4>
             <div>
-                <span th:text="|£${movieProduct.listPrice} |" style="font-weight: bold; color: white"></span>
+                <span th:text="|€${movieProduct.listPrice} |" style="font-weight: bold; color: white"></span>
                 <button title="Add To Cart"><a th:href="@{/addCartItemMovieProductSearch(movieId=${movieProduct.getMovie_id()})}"><i class="fa fa-shopping-cart"></i></a></button>
             </div>
         </div>

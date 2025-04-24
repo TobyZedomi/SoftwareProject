@@ -334,10 +334,10 @@
         </span>
                 </h4>
                 <div th:each="movie : ${movies}" style="display: flex; justify-content: space-between;">
-                    <p  th:text="${movie.getMovie_name()}"><a href="#"></a> <p style="font-weight: bold; margin-left: 30px"><span class="price" th:text=" |£${movie.listPrice} |" style="color: white; font-weight: bold;"></span></p></p>
+                    <p  th:text="${movie.getMovie_name()}"><a href="#"></a> <p style="font-weight: bold; margin-left: 30px"><span class="price" th:text=" |€${movie.listPrice} |" style="color: white; font-weight: bold;"></span></p></p>
                 </div>
                 <hr>
-                <p>Total <span class="price" style="color:white"><b th:text=" |£${total} |"></b></span></p>
+                <p>Total <span class="price" style="color:white"><b th:text=" |€${total} |"></b></span></p>
             </div>
         </div>
     </div>
@@ -494,10 +494,10 @@
         </span>
                 </h4>
                 <div th:each="movie : ${movies}" style="display: flex; justify-content: space-between;">
-                    <p  th:text="${movie.getMovie_name()}"><a href="#"></a> <p style="font-weight: bold; margin-left: 30px"><span class="price" th:text=" |£${movie.listPrice} |" style="color: white; font-weight: bold;"></span></p></p>
+                    <p  th:text="${movie.getMovie_name()}"><a href="#"></a> <p style="font-weight: bold; margin-left: 30px"><span class="price" th:text=" |€${movie.listPrice} |" style="color: white; font-weight: bold;"></span></p></p>
                 </div>
                 <hr>
-                <p>Total <span class="price" style="color:white"><b style="color:white" th:text=" |£${total} |"></b></span></p>
+                <p>Total <span class="price" style="color:white"><b style="color:white" th:text=" |€${total} |"></b></span></p>
             </div>
         </div>
     </div>

@@ -130,7 +130,7 @@
           </td>
           <td  th:text="${movie.getMovie_name()}"><a href="#">Age Of Wisdom Tan Graphic Tee</a>
           </td>
-          <td th:text=" |£${movie.listPrice} |" class="price"></td>
+          <td th:text=" |€${movie.listPrice} |" class="price"></td>
           <td class="text-center">
             <a th:href="@{/deleteCartItem(movieId=${movie.getMovie_id()})}"class="remove_cart" rel="2" >
               <i class="fa fa-trash-o"></i>
@@ -139,7 +139,7 @@
         </tr>
         <tr>
           <td colspan="6" align="right">Total Price</td>
-          <td class="total" colspan="2" th:text=" |£${total} |"><b></b>
+          <td class="total" colspan="2" th:text=" |€${total} |"><b></b>
           </td>
         </tr>
         </tbody>
