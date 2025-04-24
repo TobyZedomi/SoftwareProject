@@ -2,28 +2,18 @@ package softwareProject.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeBodyPart;
-import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
 import softwareProject.business.*;
 import softwareProject.persistence.*;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Objects;
 
 
 @Service
@@ -190,6 +180,26 @@ public class EmailSenderService {
         You must insert this when reseting password. Copy after the =
         </div>
         """.formatted(token,token), true);
+        mailSender.send(mimeMessage);
+    }
+
+    /**
+     * Sending email for login
+     * @param email is email that its being sent
+     * @throws MessagingException if there something wrong with sending the email
+     */
+    public void sendAuthentication(String email, int number) throws MessagingException {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+        mimeMessageHelper.setFrom("screensafari321@gmail.com");
+        mimeMessageHelper.setTo(email);
+        mimeMessageHelper.setSubject("Log in number");
+        mimeMessageHelper.setText("""
+        <div>
+         Your authentication number is below.
+        </div>
+        %s
+        """.formatted(number), true);
         mailSender.send(mimeMessage);
     }
 }
