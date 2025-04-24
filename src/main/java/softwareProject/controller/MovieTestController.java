@@ -404,9 +404,12 @@ public class MovieTestController {
 
         List<MovieTest> newMovieBySearch = new ArrayList<>();
 
+        GenreDaoImpl genreDao = new GenreDaoImpl("database.properties");
+
         for (int i = 0; i < movieBySearch.size() - 2; i++) {
 
-            if (movieBySearch.get(i).getBackdrop_path() != null) {
+            if (movieBySearch.get(i).getBackdrop_path() != null && movieBySearch.get(i).getGenre_ids().length > 0) {
+                movieBySearch.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieBySearch.get(i).getGenre_ids()[0])).getName());
                 newMovieBySearch.add(movieBySearch.get(i));
                 model.addAttribute("movieBySearch", newMovieBySearch);
             }
