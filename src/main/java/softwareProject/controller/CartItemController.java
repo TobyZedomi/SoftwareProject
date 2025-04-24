@@ -165,48 +165,98 @@ public class CartItemController {
 
             CartItemDao cartItemDao = new CartItemDaoImpl("database.properties");
 
+           int delete = cartItemDao.deleteCartItemByCartIdAndMovieId(cart.getCart_id(), movieID2);
 
-            ArrayList<CartItem> cartItems = cartItemDao.getAllCartItemsByCartId(cart.getCart_id());
+            if (delete > 0) {
 
-            ArrayList<MovieProduct> movies = new ArrayList<>();
 
-            for (int i = 0; i < cartItems.size(); i++) {
+                ArrayList<CartItem> cartItems = cartItemDao.getAllCartItemsByCartId(cart.getCart_id());
+
+                ArrayList<MovieProduct> movies = new ArrayList<>();
+
+                for (int i = 0; i < cartItems.size(); i++) {
+
+                    MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+                    movies.add(movieProductDao.getMovieById(cartItems.get(i).getMovie_id()));
+                    model.addAttribute("movies", movies);
+                }
+
+                // get total Price
+
+                double total = 0;
+
+                for (int i = 0; i < movies.size(); i++) {
+
+                    total = total + movies.get(i).getListPrice();
+                }
+
+                model.addAttribute("total", total);
+
+                // totalAmountOItems in basket
+                getTotalAmountOfItemsInCart(session, model);
+
+
+                // deleting cartItem
+
+                //cartItemDao.deleteCartItemByCartIdAndMovieId(cart.getCart_id(), movieID2);
+
+                // message to user about deleted movie and log files
 
                 MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+                MovieProduct movieProduct = movieProductDao.getMovieById(movieID2);
 
-                movies.add(movieProductDao.getMovieById(cartItems.get(i).getMovie_id()));
-                model.addAttribute("movies", movies);
+                String message = movieProduct.getMovie_name() + " was deleted from the cart";
+                model.addAttribute("message", message);
+                log.info(" User {} deleted movie {} from cart ", u.getUsername(), movieProduct.getMovie_name());
+
+                return "cart_index";
+
+            }else{
+
+                ArrayList<CartItem> cartItems = cartItemDao.getAllCartItemsByCartId(cart.getCart_id());
+
+                ArrayList<MovieProduct> movies = new ArrayList<>();
+
+                for (int i = 0; i < cartItems.size(); i++) {
+
+                    MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+                    movies.add(movieProductDao.getMovieById(cartItems.get(i).getMovie_id()));
+                    model.addAttribute("movies", movies);
+                }
+
+                // get total Price
+
+                double total = 0;
+
+                for (int i = 0; i < movies.size(); i++) {
+
+                    total = total + movies.get(i).getListPrice();
+                }
+
+                model.addAttribute("total", total);
+
+                // totalAmountOItems in basket
+                getTotalAmountOfItemsInCart(session, model);
+
+
+                // deleting cartItem
+
+                //cartItemDao.deleteCartItemByCartIdAndMovieId(cart.getCart_id(), movieID2);
+
+                // message to user about deleted movie and log files
+
+                MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+                MovieProduct movieProduct = movieProductDao.getMovieById(movieID2);
+
+                String message = movieProduct.getMovie_name() + " was not deleted from the cart";
+                model.addAttribute("message", message);
+                log.info(" User {} deleted movie {} from cart ", u.getUsername(), movieProduct.getMovie_name());
+
+                return "cart_index";
+
             }
-
-            // get total Price
-
-            double total = 0;
-
-            for (int i = 0; i < movies.size(); i++) {
-
-                total = total + movies.get(i).getListPrice();
-            }
-
-            model.addAttribute("total", total);
-
-            // totalAmountOItems in basket
-            getTotalAmountOfItemsInCart(session, model);
-
-
-            // deleting cartItem
-
-            cartItemDao.deleteCartItemByCartIdAndMovieId(cart.getCart_id(), movieID2);
-
-            // message to user about deleted movie and log files
-
-            MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
-            MovieProduct movieProduct = movieProductDao.getMovieById(movieID2);
-
-            String message = movieProduct.getMovie_name() + " was deleted from the cart";
-            model.addAttribute("message", message);
-            log.info(" User {} deleted movie {} from cart ", u.getUsername(), movieProduct.getMovie_name());
-
-            return "cart_index";
 
         }
 
