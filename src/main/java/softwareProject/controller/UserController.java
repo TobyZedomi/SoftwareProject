@@ -302,12 +302,14 @@ public class UserController {
             // loop through the movie db list and reduce the size by 2
             for (int i = 0; i < movies.size() - 2; i++) {
 
+                movies.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movies.get(i).getGenre_ids()[0])).getName());
+
 
                 // if any backdrop image is unavailable it will not add it to the new arraylist
                 if (movies.get(i).getBackdrop_path() != null) {
                     // add the movies from the movie db into the new arraylist
                     newMovie.add(movies.get(i));
-                    newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movies.get(i).getGenre_ids()[0])).getName());
+                   // newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movies.get(i).getGenre_ids()[0])).getName());
                     model.addAttribute("movies", newMovie);
                 }
 

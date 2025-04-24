@@ -189,6 +189,8 @@ public class ReccomendationsController {
 
         for (int i = 0; i < 15; i++) {
 
+            movieRecs.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieRecs.get(i).getGenre_ids()[0])).getName());
+
             if (movieRecs.get(i).getBackdrop_path() != null) {
                 newMovie.add(movieRecs.get(i));
                 //newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieRecs.get(i).getGenre_ids()[0])).getName());
@@ -258,9 +260,11 @@ public class ReccomendationsController {
 
         for (int i = 0; i < movieByGenres.size() - 2; i++) {
 
+            movieByGenres.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieByGenres.get(i).getGenre_ids()[0])).getName());
+
             if (movieByGenres.get(i).getBackdrop_path() != null) {
                 newMovie.add(movieByGenres.get(i));
-                newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieByGenres.get(i).getGenre_ids()[0])).getName());
+               // newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieByGenres.get(i).getGenre_ids()[0])).getName());
                 model.addAttribute("movieByGenres", newMovie);
             }
 

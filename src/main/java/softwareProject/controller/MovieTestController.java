@@ -270,9 +270,10 @@ public class MovieTestController {
 
             for (int i = 0; i < movieByGenres.size() - 2; i++) {
 
+                movieByGenres.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(genreId)).getName());
                 if (movieByGenres.get(i).getBackdrop_path() != null) {
                     newMovie.add(movieByGenres.get(i));
-                    newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(genreId)).getName());
+                  //  newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(genreId)).getName());
                     model.addAttribute("movieByGenres", newMovie);
                 }
 

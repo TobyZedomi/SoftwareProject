@@ -608,12 +608,13 @@ public class FavoriteListController {
 
             genreId = movies.get(i).getGenre_ids();
 
+            movies.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movies.get(i).getGenre_ids()[0])).getName());
 
             // if any backdrop image is unavailable it will not add it to the new arraylist
             if (movies.get(i).getBackdrop_path() != null) {
                 // add the movies from the movie db into the new arraylist
                 newMovie.add(movies.get(i));
-                newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movies.get(i).getGenre_ids()[0])).getName());
+                //newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movies.get(i).getGenre_ids()[0])).getName());
                 model.addAttribute("movies", newMovie);
             }
 
@@ -678,9 +679,11 @@ public class FavoriteListController {
 
                 genreId2 = movieByGenres.get(i).getGenre_ids();
 
+                movieByGenres.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(genreId)).getName());
+
                 if (movieByGenres.get(i).getBackdrop_path() != null) {
                     newMovie.add(movieByGenres.get(i));
-                    newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(genreId)).getName());
+                   // newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(genreId)).getName());
                     model.addAttribute("movieByGenres", newMovie);
                 }
 
@@ -915,6 +918,8 @@ public class FavoriteListController {
 
             genreId = movieRecs.get(i).getGenre_ids();
 
+            movieRecs.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieRecs.get(i).getGenre_ids()[0])).getName());
+
             if (movieRecs.get(i).getBackdrop_path() != null) {
                 newMovie.add(movieRecs.get(i));
                 //newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieRecs.get(i).getGenre_ids()[0])).getName());
@@ -973,9 +978,11 @@ public class FavoriteListController {
 
             genreId = movieByGenres.get(i).getGenre_ids();
 
+            movieByGenres.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieByGenres.get(i).getGenre_ids()[0])).getName());
+
             if (movieByGenres.get(i).getBackdrop_path() != null) {
                 newMovie.add(movieByGenres.get(i));
-                newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieByGenres.get(i).getGenre_ids()[0])).getName());
+               // newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieByGenres.get(i).getGenre_ids()[0])).getName());
 
                 model.addAttribute("movieByGenres", newMovie);
             }
