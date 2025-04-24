@@ -119,7 +119,7 @@ public class MovieProductController {
         String message;
         if (delete > 0){
             message = "Movie Product " +movieProduct.getMovie_name()+ " was deleted ";
-            model.addAttribute("message", message);
+            model.addAttribute("messageDelete", message);
             log.info(message);
 
             getAllMovieProducts(model, movieProductDao);
@@ -129,7 +129,7 @@ public class MovieProductController {
         }else{
 
             message = "Movie Product " +movieProduct.getMovie_name()+ " was not deleted";
-            model.addAttribute("message", message);
+            model.addAttribute("messageDelete", message);
             log.info(message);
 
             getAllMovieProducts(model, movieProductDao);
