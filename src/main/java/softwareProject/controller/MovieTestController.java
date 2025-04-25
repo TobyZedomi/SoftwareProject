@@ -270,9 +270,9 @@ public class MovieTestController {
 
             for (int i = 0; i < movieByGenres.size() - 2; i++) {
 
-                if (movieByGenres.get(i).getBackdrop_path() != null) {
+                if (movieByGenres.get(i).getBackdrop_path() != null && movieByGenres.get(i).getGenre_ids().length > 0) {
+                    movieByGenres.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(genreId)).getName());
                     newMovie.add(movieByGenres.get(i));
-                    newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(genreId)).getName());
                     model.addAttribute("movieByGenres", newMovie);
                 }
 
@@ -365,8 +365,13 @@ public class MovieTestController {
 
         List<MovieTest> newMovieBySearch = new ArrayList<>();
 
+        GenreDaoImpl genreDao = new GenreDaoImpl("database.properties");
+
         for (int i = 0; i < movieBySearch.size(); i++) {
-            if (movieBySearch.get(i).getBackdrop_path() != null) {
+
+
+            if (movieBySearch.get(i).getBackdrop_path() != null && movieBySearch.get(i).getGenre_ids().length > 0) {
+                movieBySearch.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieBySearch.get(i).getGenre_ids()[0])).getName());
                 newMovieBySearch.add(movieBySearch.get(i));
                 model.addAttribute("movieBySearchGenre", newMovieBySearch);
             }
@@ -398,9 +403,12 @@ public class MovieTestController {
 
         List<MovieTest> newMovieBySearch = new ArrayList<>();
 
+        GenreDaoImpl genreDao = new GenreDaoImpl("database.properties");
+
         for (int i = 0; i < movieBySearch.size() - 2; i++) {
 
-            if (movieBySearch.get(i).getBackdrop_path() != null) {
+            if (movieBySearch.get(i).getBackdrop_path() != null && movieBySearch.get(i).getGenre_ids().length > 0) {
+                movieBySearch.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieBySearch.get(i).getGenre_ids()[0])).getName());
                 newMovieBySearch.add(movieBySearch.get(i));
                 model.addAttribute("movieBySearch", newMovieBySearch);
             }

@@ -189,9 +189,10 @@ public class ReccomendationsController {
 
         for (int i = 0; i < 15; i++) {
 
-            if (movieRecs.get(i).getBackdrop_path() != null) {
+
+            if (movieRecs.get(i).getBackdrop_path() != null && movieRecs.get(i).getGenre_ids().length > 0) {
+                movieRecs.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieRecs.get(i).getGenre_ids()[0])).getName());
                 newMovie.add(movieRecs.get(i));
-                //newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieRecs.get(i).getGenre_ids()[0])).getName());
                 model.addAttribute("movieRecs",newMovie);
             }
 
@@ -258,9 +259,10 @@ public class ReccomendationsController {
 
         for (int i = 0; i < movieByGenres.size() - 2; i++) {
 
-            if (movieByGenres.get(i).getBackdrop_path() != null) {
+
+            if (movieByGenres.get(i).getBackdrop_path() != null && movieByGenres.get(i).getGenre_ids().length > 0) {
+                movieByGenres.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieByGenres.get(i).getGenre_ids()[0])).getName());
                 newMovie.add(movieByGenres.get(i));
-                newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieByGenres.get(i).getGenre_ids()[0])).getName());
                 model.addAttribute("movieByGenres", newMovie);
             }
 
