@@ -454,6 +454,36 @@
   margin-bottom: 20px;
 }
 
+
+
+
+  .container-sm {
+    width: 400px; height: 150px;  max-width:400px;
+    width:100%;  position: fixed; background: black;
+    top:60%;
+    left: 87.5%;
+    transform: translate(-50%, -50%);  border-radius: 10px;
+    border: 0.1px solid black;
+    outline-style: solid;
+    outline-color: darkred;
+  }
+
+  @media screen and (max-width: 1300px){
+
+    .container-sm{
+      width: 110px;
+      height: 10px;
+
+    }
+
+    .container-sm h5{
+      font-size: 10px;
+    }
+
+
+  }
+
+
 </style>
 
 
@@ -487,14 +517,7 @@
 
 
 <div id="username-page">
-  <div class="container-sm" style="width: 400px; height: 150px;  max-width:400px;
-  width:100%;  position: fixed; background: black;
-  top:60%;
-  left: 87.5%;
-  transform: translate(-50%, -50%);  border-radius: 10px;
-    border: 0.1px solid black;
-    outline-style: solid;
-    outline-color: darkred;">
+  <div class="container-sm" >
     <h5 class="title" style="color: white; display: flex; justify-content: center;align-items: center;font-weight: bold;font-family:'Poppins', sans-serif ;"  th:text="| The Live Chat Room for ${movieName} |">The Chatroom</h5>
     <form  id="usernameForm" name="usernameForm">
       <div class="form-group">
