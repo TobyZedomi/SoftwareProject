@@ -10,6 +10,7 @@ var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
 var disconnectButton = document.querySelector('#disconnect');
 var roomId = document.querySelector('#room');
+var hide = document.querySelector('#hide');
 
 var stompClient = null;
 var username = null;
@@ -25,6 +26,7 @@ function connect(event) {
     if(username) {
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
+        hide.classList.remove('hidden');
 
         var socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);

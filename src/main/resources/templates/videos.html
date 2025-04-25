@@ -377,6 +377,83 @@
     float: left;
     color: #999;
   }
+
+
+  .container {
+    background: black;
+    box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
+    display: inline-block;
+    margin-top: 42px;
+    vertical-align: middle;
+    padding: 35px 55px 35px;
+    min-height: 250px;
+    right: 0;
+    margin: 0 auto;
+    margin-top: -280px;
+    float: right;
+    margin-bottom: 30px;
+    position: fixed;
+    border-radius: 10px;
+    border: 0.1px solid black;
+    outline-style: solid;
+    outline-color: darkred;
+
+
+    width: 450px; height: 520px;  max-width:450px;
+    width:100%;  position: fixed;
+    top: 90%;
+    left: 85.5%;
+    transform: translate(-50%, -50%);
+  }
+
+
+
+  #messageArea{
+    height: 320px; width: 370px
+  }
+
+
+  @media screen and (max-width: 1300px){
+
+    .container{
+      width: 450px;
+      height: 400px;
+      left: 60%;
+    }
+
+    .container h5{
+      font-size: 10px;
+    }
+
+    #messageArea {
+      width: 350px;
+      height: 400px;
+      margin: auto;
+
+    }
+
+  }
+
+  .hidden {
+    display: none;
+  }
+
+#hide{
+  border: none;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 12px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  font-family: 'Poppins', sans-serif;
+
+  background-color: #C41E3A; color: white; font-weight: bold;  border-radius: 50px;
+  margin-bottom: 20px;
+}
+
 </style>
 
 
@@ -387,6 +464,9 @@
 
   <!-- Include the menu bar fragment -->
   <div th:replace="~{fragments/menu :: menu-bar}"></div>
+
+<button onclick="myFunction()" id="hide" class="hidden" style="position: fixed; left: 80%">Click here to Hide or UnHide Live Chat Room</button>
+
 
   <div>
   <h1 th:text="| Movie Videos for ${movieName} |">Movie Videos</h1>
@@ -429,21 +509,15 @@
 
 
 
-
-
 <div id="chat-page" class="hidden">
-  <div class="container" style="width: 400px; height: 500px;  max-width:400px;
-  width:100%;  position: fixed;
-  top: 90%;
-  left: 87.5%;
-  transform: translate(-50%, -50%);" >
+  <div class="container" id="container">
     <div class="chat-header">
       <h5 th:text="| Live Chat Room for ${movieName} |" style="color: white; font-weight: bold; font-family:'Poppins', sans-serif ">Live Chat </h5>
     </div>
     <div class="connecting">
 
     </div>
-    <ul id="messageArea" style="height: 300px;">
+    <ul id="messageArea">
 
       <div th:each="chat : ${chatRooms}">
 
@@ -478,7 +552,16 @@
 
 <script src="/css/js/chatIndex2.js"></script>
 
-
+<script>
+  function myFunction() {
+    var x = document.getElementById("container");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+</script>
 
 </body>
 </html>
