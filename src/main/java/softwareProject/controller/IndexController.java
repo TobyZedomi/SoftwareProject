@@ -82,13 +82,12 @@ public class IndexController {
             // loop through the movie db list and reduce the size by 2
             for (int i = 0; i < movies.size() - 2; i++) {
 
-                movies.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movies.get(i).getGenre_ids()[0])).getName());
 
                 // if any backdrop image is unavailable it will not add it to the new arraylist
-                    if (movies.get(i).getBackdrop_path() != null) {
+                    if (movies.get(i).getBackdrop_path() != null && movies.get(i).getGenre_ids().length > 0) {
+                        movies.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movies.get(i).getGenre_ids()[0])).getName());
                         // add the movies from the movie db into the new arraylist
                         newMovie.add(movies.get(i));
-                        //newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movies.get(i).getGenre_ids()[0])).getName());
                         model.addAttribute("movies", newMovie);
                     }
 
@@ -157,11 +156,10 @@ public class IndexController {
 
                 for (int i = 0; i < movieByGenres.size() - 2; i++) {
 
-                    movieByGenres.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(genreId)).getName());
 
-                    if (movieByGenres.get(i).getBackdrop_path() != null) {
+                    if (movieByGenres.get(i).getBackdrop_path() != null && movieByGenres.get(i).getGenre_ids().length > 0) {
+                        movieByGenres.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(genreId)).getName());
                         newMovie.add(movieByGenres.get(i));
-                        //newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(genreId)).getName());
                         model.addAttribute("movieByGenres", newMovie);
                     }
 
@@ -989,10 +987,9 @@ public class IndexController {
 
         for (int i = 0; i < movieByGenres.size() - 2; i++) {
 
-            movieByGenres.get(i).setGenreName("Science Fiction");
-            if (movieByGenres.get(i).getBackdrop_path() != null) {
+            if (movieByGenres.get(i).getBackdrop_path() != null && movieByGenres.get(i).getGenre_ids().length > 0) {
+                movieByGenres.get(i).setGenreName("Science Fiction");
                 newMovie.add(movieByGenres.get(i));
-               // newMovie.get(i).setGenreName("Science Fiction");
                 model.addAttribute("movieByGenres", newMovie);
             }
 
@@ -1039,11 +1036,11 @@ public class IndexController {
 
         for (int i = 0; i < 15; i++) {
 
-            movieRecs.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieRecs.get(i).getGenre_ids()[0])).getName());
 
-            if (movieRecs.get(i).getBackdrop_path() != null) {
+            if (movieRecs.get(i).getBackdrop_path() != null && movieRecs.get(i).getGenre_ids().length > 0) {
+                movieRecs.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieRecs.get(i).getGenre_ids()[0])).getName());
+
                 newMovie.add(movieRecs.get(i));
-                //newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieRecs.get(i).getGenre_ids()[0])).getName());
                 model.addAttribute("movieRecs",newMovie);
             }
 
