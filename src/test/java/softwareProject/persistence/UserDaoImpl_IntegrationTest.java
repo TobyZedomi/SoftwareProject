@@ -118,7 +118,7 @@ class UserDaoImpl_IntegrationTest {
     void login() throws SQLException {
         System.out.println("Test for login and if username and password is correct");
 
-        User expected = new User("admin", "adminUser123", "admin@gmail.com", "$2a$12$x4EwpUD5VU.vJW1.xICz1OnEJqEMfdYx/ttl/Gi/JxljZAsguzqbi", LocalDate.of(2003, 02, 16), true, LocalDateTime.of(2025,01,30,0,0,0), "DefaultUserImage.jpg");
+        User expected = new User("admin", "adminUser123", "tobyzedo7@gmail.com", "$2a$12$x4EwpUD5VU.vJW1.xICz1OnEJqEMfdYx/ttl/Gi/JxljZAsguzqbi", LocalDate.of(2003, 02, 16), true, LocalDateTime.of(2025,01,30,0,0,0), "DefaultUserImage.jpg");
 
         Connection conn = connectionSource.getConnection();
         conn.setAutoCommit(false);
