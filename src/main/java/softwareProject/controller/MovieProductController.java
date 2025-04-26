@@ -57,8 +57,7 @@ public class MovieProductController {
         //upload image
         String fileName = file.getOriginalFilename();
 
-        file.transferTo(new File("C:\\Users\\andre\\Documents\\Year3\\WebPatterns\\SoftwareProject\\src\\main\\resources\\static\\css\\images\\" + fileName));
-
+        file.transferTo(new File("C:\\Users\\tobyz\\IdeaProjects\\SoftwareProject\\src\\main\\resources\\static\\css\\images\\" + fileName));
         // add movie product
 
         MovieProduct newMovieProduct = new MovieProduct(0, movie_name, releaseDate, length, movie_info, fileName, listPrice2);

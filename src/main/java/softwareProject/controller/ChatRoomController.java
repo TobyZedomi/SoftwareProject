@@ -32,37 +32,49 @@ public class ChatRoomController {
     @GetMapping("/getAllChatMessage")
     public String viewChatMessage(@RequestParam(name = "id") String id, HttpSession session, Model model){
 
-        ChatRoomDaoImpl chatRoomDao = new ChatRoomDaoImpl("database.properties");
+        if (session.getAttribute("loggedInUser") != null) {
 
-        // delete chat messages that are more than 5 minutes
-        chatRoomDao.deleteChatRoomMessageByTimeMoreThan5Minutes();
+            User u = (User) session.getAttribute("loggedInUser");
 
 
-        int movieId = Integer.parseInt(id);
+            ChatRoomDaoImpl chatRoomDao = new ChatRoomDaoImpl("database.properties");
 
-        //session.setAttribute("chat_room_id", movieId);
-        model.addAttribute("chat_room_id", id);
+            // delete chat messages that are more than 5 minutes
+            chatRoomDao.deleteChatRoomMessageByTimeMoreThan5Minutes();
 
-        ArrayList<ChatRoom> chatRooms = chatRoomDao.getAllChatRoomByRoomId(movieId);
 
-        model.addAttribute("chatRooms", chatRooms);
+            int movieId = Integer.parseInt(id);
 
-        List<MovieTrailer> trailers = movieService.getTrailer(movieId);
+            //session.setAttribute("chat_room_id", movieId);
+            model.addAttribute("chat_room_id", id);
 
-        if (trailers.isEmpty()) {
+            ArrayList<ChatRoom> chatRooms = chatRoomDao.getAllChatRoomByRoomId(movieId);
 
-            return "noVideo";
+            model.addAttribute("chatRooms", chatRooms);
+
+            List<MovieTrailer> trailers = movieService.getTrailer(movieId);
+
+            if (trailers.isEmpty()) {
+
+                return "noVideo";
+            }
+            model.addAttribute("trailers", trailers);
+
+            MovieDbByMovieId movieDbByMovieId = movieService.getMoviesByMovieId(movieId);
+            model.addAttribute("movieName", movieDbByMovieId.getTitle());
+
+            System.out.println(chatRooms);
+
+            getTotalAmountOfItemsInCart(session, model);
+
+            log.info("User {} clicked to watch movie videos on {}and access ChatRoom", u.getUsername(), movieDbByMovieId.getTitle());
+
+
+            return "videos";
+
         }
-        model.addAttribute("trailers", trailers);
 
-        MovieDbByMovieId movieDbByMovieId = movieService.getMoviesByMovieId(movieId);
-        model.addAttribute("movieName", movieDbByMovieId.getTitle());
-
-        System.out.println(chatRooms);
-
-        getTotalAmountOfItemsInCart(session,model);
-
-        return "videos";
+        return "notValidUser";
     }
 
 /*
