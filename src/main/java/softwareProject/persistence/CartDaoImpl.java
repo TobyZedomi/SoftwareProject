@@ -96,9 +96,9 @@ public class CartDaoImpl extends MySQLDao implements CartDao{
 
             while(rs.next()){
 
-                    Cart c = mapRow(rs);
-                    carts.add(c);
-                }
+                Cart c = mapRow(rs);
+                carts.add(c);
+            }
 
         }catch(SQLException e){
             System.out.println("Exception occured in the getAllCarts() method: " + e.getMessage());
@@ -150,8 +150,8 @@ public class CartDaoImpl extends MySQLDao implements CartDao{
 
             if(rs.next()){
 
-                    cart = mapRow(rs);
-                }
+                cart = mapRow(rs);
+            }
 
 
         } catch (SQLException e) {
@@ -235,12 +235,12 @@ public class CartDaoImpl extends MySQLDao implements CartDao{
 
     private Cart mapRow(ResultSet rs)throws SQLException {
 
-        Cart c = new Cart(
-                rs.getInt("cart_id"),
-                rs.getString("username")
-        );
+        Cart c = new Cart();
+        c.setCart_id(rs.getInt("cart_id"));
+        c.setUsername(rs.getString("username"));
         return c;
+
+
+
     }
-
-
 }
