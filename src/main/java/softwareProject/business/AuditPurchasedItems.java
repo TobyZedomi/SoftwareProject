@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 public class AuditPurchasedItems {
     private int auditPurchasedItemsID;
 
+    private String movie_name;
+
     private String username;
 
     private int order_id;

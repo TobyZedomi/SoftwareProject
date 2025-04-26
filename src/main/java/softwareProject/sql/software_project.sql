@@ -250,6 +250,7 @@ CREATE TABLE auditsCartItems
 CREATE TABLE auditPurchasedItems
 (
     auditPurchasedItemsID INT AUTO_INCREMENT PRIMARY KEY,
+    movie_name VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL,
     order_id INT NOT NULL,
     price DOUBLE NOT NULL,
@@ -265,17 +266,20 @@ CREATE TRIGGER logPurchaseItemInsert
     FOR EACH ROW
 BEGIN
     DECLARE orderUser VARCHAR(255);
+    DECLARE movieName VARCHAR(255);
 
     SELECT username INTO orderUser
     FROM shop_order
     WHERE order_id = NEW.order_id;
 
-    INSERT INTO auditPurchasedItems (username, order_id, price)
-    VALUES (orderUser, NEW.order_id, NEW.price);
-END;
-//
+    SELECT movie_name INTO movieName
+    FROM movieproduct
+    WHERE movie_id = NEW.movie_id;
 
-DELIMITER ;
+    INSERT INTO auditPurchasedItems (username, order_id, price, movie_name)
+    VALUES (orderUser, NEW.order_id, NEW.price, movieName);
+END //
+DELIMITER //
 
 DELIMITER
 //

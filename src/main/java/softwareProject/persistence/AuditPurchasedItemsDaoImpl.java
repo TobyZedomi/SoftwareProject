@@ -87,7 +87,7 @@ public class AuditPurchasedItemsDaoImpl extends MySQLDao implements AuditPurchas
         // TRY to get a statement from the connection
         // When you are parameterizing the query, remember that you need
         // to use the ? notation (so you can fill in the blanks later)
-        try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM auditPurchasedItems WHERE  username = ? order by created_at")) {
+        try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM auditPurchasedItems WHERE  username = ? order by created_at ")) {
 
             // Fill in the blanks, i.e. parameterize the query
             ps.setString(1, username);
@@ -122,6 +122,7 @@ public class AuditPurchasedItemsDaoImpl extends MySQLDao implements AuditPurchas
 
         AuditPurchasedItems ap = new AuditPurchasedItems(
                 rs.getInt("auditPurchasedItemsID"),
+                rs.getString("movie_name"),
                 rs.getString("username"),
                 rs.getInt("order_id"),
                 rs.getDouble("price"),

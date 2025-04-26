@@ -86,15 +86,17 @@
             <thead>
             <tr>
                 <th>Order ID</th>
+                <th>Movie name</th>
                 <th>Order Date</th>
                 <th>Price</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="item : ${Orders}">
-                <td th:text="${item.order_id}">123</td>
-                <td th:text="${item.created_at}">2025-04-22</td>
-                <td th:text="${item.price + '€'}">12.99€</td>
+                <td th:text="${item.getOrder_id()}"></td>
+                <td th:text="${item.getMovie_name()}"></td>
+                <td th:text="${item.created_at}"></td>
+                <td th:text="${item.price + '€'}"></td>
             </tr>
             </tbody>
         </table>
