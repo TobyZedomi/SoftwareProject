@@ -804,6 +804,12 @@ public class IndexController {
         return "notValidUser";
     }
 
+    /**
+     * Show users favourite list of movies
+     * @param session holds the users information and favourite list information
+     * @param model holds the names from dropdown list
+     * @return favlist or notValidUser if user not logged in
+     */
     @GetMapping("/favList")
     public String favouriteList(HttpSession session, Model model) {
 
@@ -837,6 +843,7 @@ public class IndexController {
 
         return "notValidUser";
     }
+
 
 
     @GetMapping("/chatRoom")
@@ -889,6 +896,13 @@ public class IndexController {
         return "notValidUser";
     }
 
+
+    /**
+     * Random recommendations of movies for the user, hold array of ints that are movie ids and randomises to give the user recommendations of movies like it
+     * @param session holds the random movie id and session for favListRandomRecs method
+     * @param model holds the names for the dropdown list
+     * @return movie_recs or notValidUser if user doesnt exist
+     */
     @GetMapping("/movie_recs")
     public String movie_recs(HttpSession session, Model model) {
 
@@ -945,6 +959,12 @@ public class IndexController {
         return "notValidUser";
     }
 
+    /**
+     * Movie recs for most popular genre in users fav list
+     * @param session golds user information
+     * @param model holds name for movie recommendations
+     * @return movie rec genre page or notValidUser if user not logged in
+     */
     @GetMapping("/movie_recsGenre")
     public String movie_recsGenre(HttpSession session, Model model) {
 
