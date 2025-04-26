@@ -1,6 +1,7 @@
 package softwareProject.controller;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import softwareProject.persistence.FriendDaoImpl;
 import softwareProject.persistence.*;
 import softwareProject.service.MovieService;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,6 +23,7 @@ import java.util.*;
 import static org.apache.tomcat.util.http.FastHttpDateFormat.formatDate;
 
 @Controller
+@Slf4j
 public class IndexController {
 
     @Autowired
@@ -1112,5 +1115,28 @@ public class IndexController {
         }
         return "notValidUser";
     }
+
+    @GetMapping("/movieRevenueStats")
+    public String movieRevenueStats(HttpSession session, Model model){
+        if(session.getAttribute("loggedInUser") != null){
+
+            MovieRevenueDao movieRevenueDao = new MovieRevenueDaoImpl("database.properties");
+
+            ArrayList<MovieRevenue> movieRevenueStats = movieRevenueDao.getTotalMovieRevenue();
+            ArrayList<String> movieName= new ArrayList<>();
+            ArrayList<Double> totalRevenue = new ArrayList<>();
+            for(MovieRevenue movieRevenue : movieRevenueStats){
+                movieName.add(movieRevenue.getMovie_name());
+                log.info("Movie name: "+movieRevenue.getMovie_name());
+                totalRevenue.add(movieRevenue.getTotalRevenue());
+            }
+            model.addAttribute("movieName", movieName);
+            model.addAttribute("total", totalRevenue);
+            model.addAttribute("movieRevenueStats", movieRevenueStats);
+            return "movieRevenueStats";
+        }
+        return "notValidUser";
+    }
+
 
 }
