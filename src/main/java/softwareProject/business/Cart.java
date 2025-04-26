@@ -11,9 +11,7 @@ import lombok.*;
 @Builder
 public class Cart {
 
-    public int cart_id;
-
-    public String username;
-
-
+    private int cart_id;
+    private String username;
+    private int movieId;
 }
