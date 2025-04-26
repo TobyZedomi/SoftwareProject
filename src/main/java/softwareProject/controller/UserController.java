@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -32,7 +31,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -122,7 +120,7 @@ public class UserController {
             modelAttributeForRegister(username, displayName, email, password, password2, dateOfBirth, model);
 
             System.out.println("Display Name must be between 3-25 characters and only letters and numbers");
-           return "user_indexSignUp";
+            return "user_indexSignUp";
         }
 
         // email validation
@@ -152,7 +150,7 @@ public class UserController {
             modelAttributeForRegister(username, displayName, email, password, password2, dateOfBirth, model);
 
             System.out.println("Password must have at least 7 characters and maximum 70 characters, one uppercase letter, one lowercase letter and one number");
-           return "user_indexSignUp";
+            return "user_indexSignUp";
         }
 
         if (password2.isBlank()){
@@ -196,9 +194,12 @@ public class UserController {
         User u = new User(username, displayName, email, password, dob, false, LocalDateTime.now(),image );
         int added = userDao.registerUser(u);
         if(added == 1){
-
             CartDao cartDao = new CartDaoImpl("database.properties");
-            cartDao.addCart(new Cart(0,username));
+
+            Cart newCart = new Cart();
+            newCart.setUsername(username);
+
+            cartDao.addCart(newCart);
             view = "registerSuccess";
             model.addAttribute("registeredUser", u);
             session.setAttribute("loggedInUser", u);
@@ -238,7 +239,7 @@ public class UserController {
     public String loginUser(
             @RequestParam(name="username1")String username1,
             @RequestParam(name="password1") String password1,
-            Model model, HttpSession session) throws InvalidKeySpecException, NoSuchAlgorithmException, MessagingException {
+            Model model, HttpSession session) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
         if(username1.isBlank() || password1.isBlank()){
             System.out.println("Username or password was left blank");
@@ -256,18 +257,18 @@ public class UserController {
             return "loginFailed";
         }
 
-        OtpLoginDao otpLoginDao = new OtpLoginDao("database.properties");
-
         if (checkPassword(password1, user.getPassword()) == true && username1.equals(user.getUsername())) {
-            int number = randomNumber();
-            LocalDateTime expiry = LocalDateTime.now().plusMinutes(5);
-            otpLoginDao.insertOTP(user.getEmail(),number,expiry);
 
-            sendMailLoggin(user.getEmail(),number);
+            session.setAttribute("loggedInUser", user);
+            // between this line get list of movies from movie db
+            // model .add attribute here for list of movies form movie db
+            mostPopularMoviesMovieDbApi(model, session);
+            log.info("User {} log into system", user.getUsername());
 
-            session.setAttribute("pendingUser",user);
+            // totalAmountOItems in basket
+            getTotalAmountOfItemsInCart(session, model);
 
-            return "verifyLogin";
+            return "loginSuccessful";
         }
 
         String message = "No such username/password combination, try again....";
@@ -275,42 +276,6 @@ public class UserController {
         log.info("Login failed with username {}", username1);
         return "loginFailed";
     }
-
-    @PostMapping("/verifyLogin")
-    public String verifyLogin(@RequestParam("number") int number, HttpSession session, Model model){
-        User user = (User) session.getAttribute("pendingUser");
-
-        OtpLoginDao otpLoginDao = new OtpLoginDao("database.properties");
-        OtpLogin savedOtp = otpLoginDao.findOtp(user.getEmail());
-
-        if(savedOtp.getExpiry().isBefore(LocalDateTime.now())){
-            model.addAttribute("message", "Number has expired. Please login again.");
-            return "verifyLogin";
-        }
-
-        if(savedOtp == null || savedOtp.getOtp_number() != number){
-            model.addAttribute("message", "Incorrect number. Please try again.");
-            return "verifyLogin";
-        }
-
-        otpLoginDao.deleteByEmailOtp(user.getEmail());
-
-        session.removeAttribute("pendingUser");
-        session.setAttribute("loggedInUser", user);
-        // between this line get list of movies from movie db
-        // model .add attribute here for list of movies form movie db
-        mostPopularMoviesMovieDbApi(model, session);
-        log.info("User {} log into system", user.getUsername());
-
-        // totalAmountOItems in basket
-        getTotalAmountOfItemsInCart(session, model);
-
-        return "loginSuccessful";
-
-    }
-
-
-
 
     private void mostPopularMoviesMovieDbApi(Model model, HttpSession session) {
         if (session.getAttribute("loggedInUser") != null) {
@@ -340,12 +305,12 @@ public class UserController {
             // loop through the movie db list and reduce the size by 2
             for (int i = 0; i < movies.size() - 2; i++) {
 
+
                 // if any backdrop image is unavailable it will not add it to the new arraylist
-                if (movies.get(i).getBackdrop_path() != null && movies.get(i).getGenre_ids().length > 0) {
-                    movies.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movies.get(i).getGenre_ids()[0])).getName());
+                if (movies.get(i).getBackdrop_path() != null) {
                     // add the movies from the movie db into the new arraylist
                     newMovie.add(movies.get(i));
-                   // newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movies.get(i).getGenre_ids()[0])).getName());
+                    newMovie.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movies.get(i).getGenre_ids()[0])).getName());
                     model.addAttribute("movies", newMovie);
                 }
 
@@ -405,14 +370,14 @@ public class UserController {
 
         StompSession session1 = (StompSession) session.getAttribute("username");
 
-            log.info("User disconnected: {} ", u.getDisplayName());
-            var chatMessage = ChatMessage.builder()
-                    .type(MessageType.LEAVE)
-                    .sender(u.getDisplayName())
-                    .build();
-            messageTemplate.convertAndSend("/topic/public", chatMessage);
+        log.info("User disconnected: {} ", u.getDisplayName());
+        var chatMessage = ChatMessage.builder()
+                .type(MessageType.LEAVE)
+                .sender(u.getDisplayName())
+                .build();
+        messageTemplate.convertAndSend("/topic/public", chatMessage);
 
-            //session1.disconnect();
+        //session1.disconnect();
 
     }
 
@@ -500,17 +465,12 @@ public class UserController {
         senderService.sendSetPasswordEmail(userEmail,token);
     }
 
-    public void sendMailLoggin(String email, int number) throws MessagingException {
-
-        senderService.sendAuthentication(email, number);
-    }
-
     @PostMapping("/forgot-password")
     public String forgotPassword(@RequestParam String email, Model model, HttpSession session) throws MessagingException, IOException {
-         forgetPassword(email,model, session);
+        forgetPassword(email,model, session);
 
-         session.setAttribute("emailForUser", email);
-         return "forgot_password";
+        session.setAttribute("emailForUser", email);
+        return "forgot_password";
     }
 
 
@@ -623,12 +583,6 @@ public class UserController {
         password_verified = BCrypt.checkpw(password_plaintext, stored_hash);
 
         return(password_verified);
-    }
-
-    public int randomNumber(){
-        Random rand = new Random();
-        int max=100,min=1;
-        return rand.nextInt(max - min + 1)+min;
     }
 
 
