@@ -38,7 +38,7 @@
       color: black;
       font-weight: bold;
       -webkit-text-stroke: 1px darkred;
-      font-family: Poppins sans-serif;
+      font-family: poppins;
 
     }
 
@@ -120,7 +120,7 @@
       cursor: pointer;
       color:black;
       font-weight: bold;
-      font-family: Poppins sans-serif;
+      font-family: poppins;
     }
 
     p, .login{
@@ -180,7 +180,7 @@
   </style>
 
 
-<!--2nd CSS -->
+  <!--2nd CSS -->
   <style>
     .error-message {
       color: red;
@@ -200,7 +200,7 @@
       color: white;
       font-weight: bold;
       -webkit-text-stroke: 1px darkred;
-      font-family: Poppins sans-serif;
+      font-family: poppins;
     }
 
     p, label, input, span{
@@ -269,6 +269,15 @@
             Login
           </button>
         </div>
+
+
+        <div class="wrap">
+          <a href="/oauth2/authorization/google" style="text-decoration: none; width: 100%;">
+            <button type="button" style="background-color: #4285F4; color: white; font-weight: bold; font-family: poppins;">
+              Sign in with Google
+            </button>
+          </a>
+        </div>
       </form>
 
       <div id="message" class="message" th:text="${messageLogOut}"style="font-family: poppins; font-weight: bold; font-size:15px; color: green; "></div>
@@ -280,6 +289,8 @@
         </a>
       </p>
     </div>
+
+
 
   </div>
 
@@ -312,7 +323,7 @@
     }
 
     if (valid){
-     // alert("Login Attempt")
+      // alert("Login Attempt")
     }else{
       return false;
     }
