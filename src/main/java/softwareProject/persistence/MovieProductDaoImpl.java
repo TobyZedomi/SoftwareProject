@@ -461,6 +461,145 @@ public class MovieProductDaoImpl extends MySQLDao implements MovieProductDao {
         return movieProducts;
     }
 
+
+    @Override
+    public ArrayList<MovieProduct> filterMovieProductBetweenMinAndMax(double min, double max){
+
+        ArrayList<MovieProduct> movieProducts = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+
+        try{
+
+            con = getConnection();
+
+            String query = "SELECT * FROM movieProduct WHERE listPrice BETWEEN ? AND ?";
+            ps = con.prepareStatement(query);
+            // Fill in the blanks, i.e. parameterize the query
+            ps.setDouble(1, min);
+            ps.setDouble(2, max);
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                MovieProduct m = mapRow(rs);
+                movieProducts.add(m);
+
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception occurred when attempting to prepare SQL for execution" + e.getMessage());
+        }finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the getProductByCode() method: " + e.getMessage());
+            }
+        }
+        return movieProducts;
+    }
+
+    @Override
+    public ArrayList<MovieProduct> filterMovieProductAboveMin(double min){
+
+        ArrayList<MovieProduct> movieProducts = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+
+        try{
+
+            con = getConnection();
+
+            String query = "SELECT * FROM movieProduct WHERE listPrice >= ?";
+            ps = con.prepareStatement(query);
+            // Fill in the blanks, i.e. parameterize the query
+            ps.setDouble(1, min);
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                MovieProduct m = mapRow(rs);
+                movieProducts.add(m);
+
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception occurred when attempting to prepare SQL for execution" + e.getMessage());
+        }finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the getProductByCode() method: " + e.getMessage());
+            }
+        }
+        return movieProducts;
+    }
+    @Override
+    public ArrayList<MovieProduct> filterMovieProductBelowMax(double max){
+
+        ArrayList<MovieProduct> movieProducts = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+
+        try{
+
+            con = getConnection();
+
+            String query = "SELECT * FROM movieProduct WHERE listPrice <= ?";
+            ps = con.prepareStatement(query);
+            // Fill in the blanks, i.e. parameterize the query
+            ps.setDouble(1, max);
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                MovieProduct m = mapRow(rs);
+                movieProducts.add(m);
+
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception occurred when attempting to prepare SQL for execution" + e.getMessage());
+        }finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the getProductByCode() method: " + e.getMessage());
+            }
+        }
+        return movieProducts;
+    }
+
     /**
      * Search through each row in the movie
      *

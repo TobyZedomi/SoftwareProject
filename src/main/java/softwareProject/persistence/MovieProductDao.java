@@ -25,8 +25,9 @@ public interface MovieProductDao {
 
 
     public ArrayList<MovieProduct> searchForMovieProductBYMovieName(String movieName);
-
-
+    public ArrayList<MovieProduct> filterMovieProductBetweenMinAndMax(double min, double max);
+    public ArrayList<MovieProduct> filterMovieProductAboveMin(double min);
+    public ArrayList<MovieProduct> filterMovieProductBelowMax(double max);
 }
 
 
