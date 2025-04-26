@@ -10,10 +10,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 import softwareProject.business.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.fasterxml.jackson.databind.cfg.CoercionInputShape.Array;
 
@@ -147,6 +144,17 @@ public class MovieService {
 
         return response.getBody().getResults();
     }
+
+
+    public  List<MovieTest> getSimilarMovies(int movieId){
+
+        ResponseEntity<MovieResponse> response = restTemplate.getForEntity("https://api.themoviedb.org/3/movie/"+movieId+"/similar"+"?"+"&api_key="+API_KEY, MovieResponse.class);
+
+
+        return response.getBody().getResults();
+    }
+
+
 
     public List<MovieReview> getReviewsByMovieId(int movieId) {
         String url = "https://api.themoviedb.org/3/movie/" + movieId + "/reviews?api_key=" + API_KEY;
