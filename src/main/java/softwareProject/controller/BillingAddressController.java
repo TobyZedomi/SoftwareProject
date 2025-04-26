@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import softwareProject.business.*;
@@ -1106,5 +1107,43 @@ public class BillingAddressController {
 
         model.addAttribute("total", total);
     }
+
+    @GetMapping("/checkout")
+    public String showCheckoutPage(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) return "redirect:/login";
+
+        String username = user.getUsername();
+
+        // Get friends for the gift dropdown
+        FriendDao friendDao = new FriendDaoImpl("database.properties");
+        ArrayList<Friends> friends = friendDao.getAllFriends(username);
+
+        model.addAttribute("friends", friends);
+
+
+        CartDao cartDao = new CartDaoImpl("database.properties");
+        Cart cart = cartDao.getCartByUsername(username);
+
+        CartItemDao cartItemDao = new CartItemDaoImpl("database.properties");
+        ArrayList<CartItem> cartItems = cartItemDao.getAllCartItemsByCartId(cart.getCart_id());
+
+        ArrayList<MovieProduct> movies = new ArrayList<>();
+        MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+        double total = 0;
+        for (CartItem item : cartItems) {
+            MovieProduct movie = movieProductDao.getMovieById(item.getMovie_id());
+            movies.add(movie);
+            total += movie.getListPrice();
+        }
+
+        model.addAttribute("movies", movies);
+        model.addAttribute("total", total);
+        model.addAttribute("totalCartItems", cartItems.size());
+
+        return "checkout_index";
+    }
+
 
 }
