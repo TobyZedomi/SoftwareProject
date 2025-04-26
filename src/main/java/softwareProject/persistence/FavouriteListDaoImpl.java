@@ -83,6 +83,11 @@ public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
 
     /// get all in favourite list by username
 
+    /**
+     * Get all favourite list by username
+     * @param username is teh username being searched
+     * @return arraylist of favourite list
+     */
 
     @Override
     public ArrayList<FavoriteList> getAllFavouriteListByUsername(String username){
@@ -131,7 +136,10 @@ public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
     }
 
 
-
+    /**
+     * Get all favourite list in the system
+     * @return arraylist of favourite list
+     */
     @Override
     public ArrayList<FavoriteList> getAllFavouriteList(){
 
@@ -177,7 +185,14 @@ public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
     }
 
 
-    // delet favourite list
+    // delete favourite list
+
+    /**
+     * user can delete movies from favourite list
+     * @param username is teh username being searched
+     * @param movieId is the movie id being searched
+     * @return 1 if deleted and 0 if not deleted
+     */
 
     @Override
     public int deleteFroFavouriteList(String username, int movieId){
@@ -216,6 +231,13 @@ public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
 
     }
 
+
+    /**
+     * get favourite list by username and movie id
+     * @param username is the username bieng searched
+     * @param movieId is teh movie id being searched
+     * @return movie from favourite list
+     */
 
     @Override
     public FavoriteList getFavouriteListByUsernameAndMovieId(String username, int movieId) {

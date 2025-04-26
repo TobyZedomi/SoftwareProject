@@ -27,7 +27,7 @@ public class ChatRoomDaoImpl extends MySQLDao implements ChatRoomDao{
 
 
     /**
-     * Add cart item
+     * Add cart room
      * @param chatRoom is the chat room being added
      * @return 1 if added and 0 if not added
      */
@@ -78,8 +78,8 @@ public class ChatRoomDaoImpl extends MySQLDao implements ChatRoomDao{
 
 
     /**
-     * Get all billing addresses
-     * @return all billing addresses
+     * Get all chat room messages
+     * @return all chat rooms
      */
 
     @Override
@@ -127,6 +127,11 @@ public class ChatRoomDaoImpl extends MySQLDao implements ChatRoomDao{
     }
 
 
+    /**
+     * Delet chat room messages by room id
+     * @param room_id is the room being searched
+     * @return 1 if removed or 0 if not removed
+     */
     @Override
     public int deleteChatRoomMessageByTime(int room_id){
         int rowsAffected = 0;
@@ -165,7 +170,11 @@ public class ChatRoomDaoImpl extends MySQLDao implements ChatRoomDao{
     }
 
 
-
+    /**
+     * Get all chat room messages by room id
+     * @param roomId is teh room id being searched
+     * @return arraylist of chat room messages by room id
+     */
 
     @Override
     public ArrayList<ChatRoom> getAllChatRoomByRoomId(int roomId){
@@ -213,9 +222,11 @@ public class ChatRoomDaoImpl extends MySQLDao implements ChatRoomDao{
         return chatRooms;
     }
 
-// DELETE FROM chat_room WHERE message_date <= CURRENT_TIMESTAMP - INTERVAL 5 MINUTE;
 
-
+    /**
+     * Delete chat room messages by time more than 5 minutes
+     * @return 1 if deleted and 0 if not deleted
+     */
     @Override
     public int deleteChatRoomMessageByTimeMoreThan5Minutes(){
         int rowsAffected = 0;
