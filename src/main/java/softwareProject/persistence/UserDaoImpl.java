@@ -451,6 +451,10 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
     }
 
 
+    /**
+     * Get all users that are not admin in the system
+     * @return arraylist of users
+     */
 
     @Override
     public ArrayList<User> getAllUsersThatAreNotAdmin(){
@@ -496,6 +500,11 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         return users;
     }
 
+    /**
+     * Update general user to admin
+     * @param username is the user being searched
+     * @return 1 if updated and 0 if not updated
+     */
 
     @Override
     public int updateToAdmin(String username)
