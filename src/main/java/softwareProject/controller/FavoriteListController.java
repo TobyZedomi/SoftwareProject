@@ -770,7 +770,7 @@ public class FavoriteListController {
             genreId = movieByGenres.get(i).getGenre_ids();
 
             if (movieByGenres.get(i).getBackdrop_path() != null && movieByGenres.get(i).getGenre_ids().length > 0) {
-                newMovie.get(i).setGenreName("Science Fiction");
+                movieByGenres.get(i).setGenreName("Science Fiction");
                 newMovie.add(movieByGenres.get(i));
 
                 model.addAttribute("movieByGenres", newMovie);
