@@ -196,6 +196,19 @@
 
 </div>
 
+<div class="dropdown" style="margin-top: 50px; margin-left: 50px;">
+  <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Filter Movies
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="/highestRated">Highest Rated Movies</a></li>
+    <li><a class="dropdown-item" href="/lowestRated">Lowest Rated Movies</a></li>
+    <li><a class="dropdown-item" href="/userReviews">View My Reviews</a></li>
+    <li><a class="dropdown-item" href="/popularReviews">API Reviews</a></li>
+
+  </ul>
+</div>
+
 
 <div th:if="${#ctx.session.loggedInUser != null}">
   <p class="login" th:text="|Welcome ${#ctx.session.loggedInUser.getUsername()} you are logged in|">

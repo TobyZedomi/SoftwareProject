@@ -116,6 +116,11 @@ VALUES (28, 'Action'),
        (10752, 'War'),
        (37, 'Western');
 
+INSERT INTO `chat_room` (chat_room_id, username, message, message_date, user_image, room_id)
+VALUES (1, 'Kate', 'Hello', '2025-04-16 00:00:00', 'Default_Image',86331 ),
+       (2, 'James', 'Hello', '2025-04-16 00:00:00', 'Default_Image', 950387),
+       (3, 'James', 'Hello', '2025-12-16 00:00:00', 'Default_Image', 950387);
+
 INSERT INTO `auditsCartItems` (auditsCartItemsID, table_name , transaction_name, movie_id, transdate)
 VALUES (1, 'cart_items','DELETE' , 1, '2026-01-30 00:00:00'),
        (2, 'cart_items','DELETE' , 1, '2026-01-30 00:00:00'),
