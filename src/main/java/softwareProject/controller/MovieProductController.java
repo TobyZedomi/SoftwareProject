@@ -57,7 +57,7 @@ public class MovieProductController {
         //upload image
         String fileName = file.getOriginalFilename();
 
-        file.transferTo(new File("C:\\Users\\tobyz\\IdeaProjects\\SoftwareProject\\src\\main\\resources\\static\\css\\images\\" + fileName));
+        file.transferTo(new File("C:\\Users\\andre\\Documents\\Year3\\WebPatterns\\SoftwareProject\\src\\main\\resources\\static\\css\\images\\" + fileName));
 
         // add movie product
 
@@ -284,6 +284,27 @@ public class MovieProductController {
     private static void getAllMovieProducts(Model model, MovieProductDao movieProductDao) {
         List<MovieProduct> movieProducts = movieProductDao.getAllMovieProducts();
         model.addAttribute("movieProducts", movieProducts);
+    }
+
+    @GetMapping("/priceFilter")
+    public String priceFilter(@RequestParam(value = "minPrice", required = false) Double minPrice,
+                                @RequestParam(value = "maxPrice", required = false) Double maxPrice,
+                                Model model) {
+        MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+        List<MovieProduct> movieProducts;
+
+        if (minPrice != null && maxPrice != null) {
+            movieProducts = movieProductDao.filterMovieProductBetweenMinAndMax(minPrice, maxPrice);
+        } else if (minPrice != null) {
+            movieProducts = movieProductDao.filterMovieProductAboveMin(minPrice);
+        } else if (maxPrice != null) {
+            movieProducts = movieProductDao.filterMovieProductBelowMax(maxPrice);
+        } else {
+            movieProducts = movieProductDao.getAllMovieProducts();
+        }
+
+        model.addAttribute("movieProducts", movieProducts);
+        return "priceFilter";
     }
 
     /**
