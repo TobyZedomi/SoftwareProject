@@ -479,11 +479,18 @@
                             </div>
                         </div>
 
+
+
                     </div>
                     <input type="submit" value="Purchase Items" class="continueButton" onclick="clicked(event)">
                 </form>
+
+
+
             </div>
         </div>
+
+
 
         <div class="col-25">
             <div class="container">
@@ -504,6 +511,24 @@
 
 </div>
 
+<form method="post" action="/purchaseMovie">
+    <div class="col-50">
+        <h4>Gift Options</h4>
+
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity" name="quantity" min="1" value="1" class="form-control mb-3" />
+
+        <label for="recipient">Gift to Friend (optional)</label>
+        <select name="recipient" id="recipient" class="form-control mb-4">
+            <option value="">-- Select Friend --</option>
+            <option th:each="f : ${friends}" th:value="${f.friendUsername}" th:text="${f.friendUsername}"></option>
+        </select>
+
+        <input type="hidden" name="movieId" th:value="${movie.movie_id}" />
+
+        <input type="submit" value="Purchase Movie" class="btn btn-success mt-2" />
+    </div>
+</form>
 
 <!--JavScript Confirmation -->
 <script>
