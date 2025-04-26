@@ -287,8 +287,10 @@ public class MovieProductController {
 
     @GetMapping("/priceFilter")
     public String priceFilter(@RequestParam(value = "minPrice", required = false) Double minPrice,
-                                @RequestParam(value = "maxPrice", required = false) Double maxPrice,
+                                @RequestParam(value = "maxPrice", required = false) Double maxPrice, HttpSession session,
                                 Model model) {
+        getTotalAmountOfItemsInCart(session,model);
+
         MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
         List<MovieProduct> movieProducts;
 
@@ -301,6 +303,9 @@ public class MovieProductController {
         } else {
             movieProducts = movieProductDao.getAllMovieProducts();
         }
+
+        session.setAttribute("minPrice", minPrice);
+        session.setAttribute("maxPrice",maxPrice);
 
         model.addAttribute("movieProducts", movieProducts);
         return "priceFilter";

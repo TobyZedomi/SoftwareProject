@@ -397,6 +397,152 @@ public class CartItemController {
 
     }
 
+    @GetMapping("/addToCartFiltering")
+    public String addToCartFiltering(@RequestParam("movieId") String movieId, HttpSession session, Model model){
+        if(session.getAttribute("loggedInUser") != null) {
+
+            List<MovieProduct> movieProducts;
+
+            Double minPrice = (Double) session.getAttribute("minPrice");
+
+            log.info("Min price"+minPrice);
+
+            Double maxPrice = (Double) session.getAttribute("maxPrice");
+
+            log.info("max price"+maxPrice);
+
+            int movieID2 = Integer.parseInt(movieId);
+
+            User u = (User) session.getAttribute("loggedInUser");
+
+            // checking if user already purchased item
+            ShopOrderDao shopOrderDao = new ShopOrderDaoImpl("database.properties");
+
+            // get all shop Orders by username
+            ArrayList<ShopOrder> shopOrdersByUser = shopOrderDao.getAllShopOrdersByUsername(u.getUsername());
+
+            // loop through shop orders
+            for (int i = 0; i < shopOrdersByUser.size(); i++) {
+
+                OrderItemDao orderItemDao = new OrderItemDaoImpl("database.properties");
+
+                // get all orders in the system
+                ArrayList<OrderItem> orderItems = orderItemDao.getAllOrderItems();
+
+                for (int j = 0; j < orderItems.size(); j++) {
+
+                    if (shopOrdersByUser.get(i).getOrder_id() == orderItems.get(j).getOrder_id()) {
+
+                        MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+                        // get MovieProduct by movie id
+                        MovieProduct movieProduct = movieProductDao.getMovieById(orderItems.get(j).getMovie_id());
+
+
+                        if (movieProduct.getMovie_id() == movieID2) {
+
+                            MovieProduct movieProduct1 = movieProductDao.getMovieById(movieID2);
+                            String message = movieProduct1.getMovie_name() + " has already been purchased by you, check order history";
+                            model.addAttribute("message", message);
+                            log.info(" User {} tried to purchase {} movie again", u.getUsername(), movieProduct1.getMovie_name());
+
+
+
+                            if (minPrice != null && maxPrice != null) {
+                                movieProducts = movieProductDao.filterMovieProductBetweenMinAndMax(minPrice, maxPrice);
+                            } else if (minPrice != null) {
+                                movieProducts = movieProductDao.filterMovieProductAboveMin(minPrice);
+                            } else if (maxPrice != null) {
+                                movieProducts = movieProductDao.filterMovieProductBelowMax(maxPrice);
+                            } else {
+                                movieProducts = movieProductDao.getAllMovieProducts();
+                            }
+
+                            model.addAttribute("movieProducts", movieProducts);
+
+                            // totalAmountOItems in basket
+                            getTotalAmountOfItemsInCart(session, model);
+                            return "priceFilter";
+                        }
+                    }
+
+                }
+
+            }
+
+            // adding movie if not purchased
+
+            CartDao cartDao = new CartDaoImpl("database.properties");
+
+            Cart cart = cartDao.getCartByUsername(u.getUsername());
+
+            CartItemDao cartItemDao = new CartItemDaoImpl("database.properties");
+
+
+            int answer = cartItemDao.addCartItem(new CartItem(cart.getCart_id(), movieID2));
+
+            System.out.println("Cart Id" + cart.getCart_id());
+
+            if (answer == -1) {
+                // Get MovieProduct By movie id
+                MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+
+                MovieProduct movieProduct = movieProductDao.getMovieById(movieID2);
+
+                System.out.println(answer);
+                String message = movieProduct.getMovie_name() + " was not added to cart because you already have it in your cart";
+                model.addAttribute("message", message);
+                log.info(" User {} already has {} in cart ", u.getUsername(), movieProduct.getMovie_name());
+
+                if (minPrice != null && maxPrice != null) {
+                    movieProducts = movieProductDao.filterMovieProductBetweenMinAndMax(minPrice, maxPrice);
+                } else if (minPrice != null) {
+                    movieProducts = movieProductDao.filterMovieProductAboveMin(minPrice);
+                } else if (maxPrice != null) {
+                    movieProducts = movieProductDao.filterMovieProductBelowMax(maxPrice);
+                } else {
+                    movieProducts = movieProductDao.getAllMovieProducts();
+                }
+
+                model.addAttribute("movieProducts", movieProducts);
+
+                // totalAmountOItems in basket
+                getTotalAmountOfItemsInCart(session, model);
+                return "priceFilter";
+            } else {
+
+                MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+                MovieProduct movieProduct = movieProductDao.getMovieById(movieID2);
+                System.out.println(answer);
+
+                String message = movieProduct.getMovie_name() + " was added to cart";
+                model.addAttribute("messageAdded", message);
+                log.info(" User {} added movie {} to cart ", u.getUsername(), movieProduct.getMovie_name());
+
+                if (minPrice != null && maxPrice != null) {
+                    movieProducts = movieProductDao.filterMovieProductBetweenMinAndMax(minPrice, maxPrice);
+                } else if (minPrice != null) {
+                    movieProducts = movieProductDao.filterMovieProductAboveMin(minPrice);
+                } else if (maxPrice != null) {
+                    movieProducts = movieProductDao.filterMovieProductBelowMax(maxPrice);
+                } else {
+                    movieProducts = movieProductDao.getAllMovieProducts();
+                }
+
+                model.addAttribute("movieProducts", movieProducts);
+
+                // totalAmountOItems in basket
+                getTotalAmountOfItemsInCart(session, model);
+                return "priceFilter";
+
+            }
+
+        }
+
+        return "notValidUser";
+
+    }
+
 
 
     // cart count
