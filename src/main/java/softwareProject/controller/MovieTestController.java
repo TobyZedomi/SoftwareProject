@@ -215,6 +215,53 @@ public class MovieTestController {
     }
 
 
+
+    // view Similar
+
+    @GetMapping("/viewSimilar")
+    public String viewSimilar(HttpSession session, Model model, @RequestParam(name = "movieId") String movieId) {
+
+
+        if (session.getAttribute("loggedInUser") != null) {
+
+            User u = (User) session.getAttribute("loggedInUser");
+
+
+            // totalAmountOItems in basket
+            getTotalAmountOfItemsInCart(session, model);
+
+            int movieId2 = Integer.parseInt(movieId);
+
+            session.setAttribute("similar", movieId2);
+
+            List<MovieTest> movieBySearch = movieService.getSimilarMovies(movieId2);
+
+            List<MovieTest> newMovieBySearch = new ArrayList<>();
+
+            for (int i = 0; i < movieBySearch.size() - 2; i++) {
+
+                if (movieBySearch.get(i).getBackdrop_path() != null) {
+                    newMovieBySearch.add(movieBySearch.get(i));
+                    model.addAttribute("movieBySearch", newMovieBySearch);
+                }
+            }
+
+            MovieDbByMovieId movieDbByMovieId = movieService.getMoviesByMovieId(movieId2);
+            model.addAttribute("movieName", movieDbByMovieId.getTitle());
+
+
+            log.info("User {} viewed similar for movies on {}", u.getUsername(), movieDbByMovieId.getTitle());
+
+            similarMovies(model, session, u);
+
+            return "similar_index";
+
+        }
+
+        return "notValidUser";
+    }
+
+
     /**
      * Get the total amount of cart items in the cart for the user
      *
@@ -426,6 +473,46 @@ public class MovieTestController {
         model.addAttribute("query", query);
 
         log.info("User {} searched for movies on {}", user.getUsername(), query);
+    }
+
+
+    private void similarMovies(Model model, HttpSession session, User user){
+
+
+        FavoriteListDao favoriteListDao1 = new FavouriteListDaoImpl("database.properties");
+
+
+        ArrayList<FavoriteList> favoriteLists = favoriteListDao1.getAllFavouriteListByUsername(user.getUsername());
+
+        int movieId2 =  (int) session.getAttribute("similar");
+
+        List<MovieTest> movieBySearch = movieService.getSimilarMovies(movieId2);
+
+        List<MovieTest> newMovieBySearch = new ArrayList<>();
+
+        GenreDaoImpl genreDao = new GenreDaoImpl("database.properties");
+
+        for (int i = 0; i < movieBySearch.size() - 2; i++) {
+
+            if (movieBySearch.get(i).getBackdrop_path() != null && movieBySearch.get(i).getGenre_ids().length > 0) {
+                movieBySearch.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieBySearch.get(i).getGenre_ids()[0])).getName());
+                newMovieBySearch.add(movieBySearch.get(i));
+                model.addAttribute("movieBySearch", newMovieBySearch);
+            }
+
+            for (int j = 0; j < favoriteLists.size(); j++) {
+
+                if (favoriteLists.get(j).getMovieDb_id() == movieBySearch.get(i).getId()) {
+
+                    movieBySearch.get(i).setFavourite(true);
+                }
+            }
+        }
+
+        MovieDbByMovieId movieDbByMovieId = movieService.getMoviesByMovieId(movieId2);
+        model.addAttribute("movieName", movieDbByMovieId.getTitle());
+
+
     }
 
 }
