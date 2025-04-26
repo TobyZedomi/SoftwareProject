@@ -67,7 +67,7 @@ public class ChatRoomController {
 
             getTotalAmountOfItemsInCart(session, model);
 
-            log.info("User {} clicked to watch movie videos on {}and access ChatRoom", u.getUsername(), movieDbByMovieId.getTitle());
+            log.info("User {} clicked to watch movie videos on {} and access the Unique Live ChatRoom", u.getUsername(), movieDbByMovieId.getTitle());
 
 
             return "videos";

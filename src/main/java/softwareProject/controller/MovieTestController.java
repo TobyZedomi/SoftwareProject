@@ -86,6 +86,9 @@ public class MovieTestController {
 
         if (session.getAttribute("loggedInUser") != null) {
 
+            User u = (User) session.getAttribute("loggedInUser");
+
+
             String genre_id = Integer.toString(id);
 
             session.setAttribute("genreId2", genre_id);
@@ -112,8 +115,8 @@ public class MovieTestController {
             GenreDao genreDao = new GenreDaoImpl("database.properties");
 
             GenreTest genre = genreDao.getGenreById(id);
-
             model.addAttribute("genreName", genre.getName());
+            log.info("User {} viewed movies on genre {}", u.getUsername(), genre.getName());
 
             viewMoviesByGenre(session, model);
 
