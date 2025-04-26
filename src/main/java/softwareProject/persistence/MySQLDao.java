@@ -14,7 +14,7 @@ import java.util.Properties;
  */
 public class MySQLDao {
     private Properties properties;
-    private Connection conn;
+    protected Connection conn;
     private String databaseName = "software_project";
 
     public MySQLDao(){
