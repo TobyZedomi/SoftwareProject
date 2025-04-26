@@ -24,6 +24,12 @@ public class ReccomendationsController {
     @Autowired
     private MovieService movieService;
 
+    /**
+     * Recommend the user random movies
+     * @param session holds the session for the random number from the array of movies. Holds favlist information for users on this page
+     * @param model holds the random movie information and dropdown information
+     * @return movie_recs page
+     */
     @GetMapping("/movieRecs")
     public String movieRecs(HttpSession session, Model model) {
 
@@ -83,6 +89,12 @@ public class ReccomendationsController {
         return "notValidUser";
     }
 
+    /**
+     * Recommend the user random movies based on teh most common genre in their favourite list
+     * @param session holds the favouite list of movies users have from this method and session for mostCommonGenreId
+     * @param model holds random movie recommendations
+     * @return goToMoviepage or notValidUser if user doesnt exist
+     */
     @GetMapping("/movieRecsGenreCommon")
     public String movieRecsGenreCommon(HttpSession session, Model model) {
 

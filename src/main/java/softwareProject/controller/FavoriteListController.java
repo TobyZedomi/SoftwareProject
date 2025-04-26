@@ -28,6 +28,18 @@ public class FavoriteListController {
     private MovieService movieService;
 
 
+    /**
+     * Add or delete a movie to the favourite list
+     * @param movieId is the movie id being added
+     * @param backdrop_path is the image being added
+     * @param overview is teh movie information being added
+     * @param title is the movie title being added
+     * @param genreId is the genre id being added to get the particular genre name
+     * @param model holds the user information and information to see if movie was added or deleted
+     * @param session holds the index page so when it returns the information is the same and for the favourite list color change, holds to check if the user has a movie in their favorite list
+     * @return index page or notValidUser page if user doesnt exist
+     */
+
     @GetMapping("/addMovieFavList")
     public String addMovieFavList(@RequestParam(name = "movieId") String movieId,
                                   @RequestParam(name = "backdrop_path") String backdrop_path,
@@ -111,6 +123,17 @@ public class FavoriteListController {
 
     // addMovieFavList for movies by genre
 
+    /**
+     * Add or delete a movie to the favourite list
+     * @param movieId is the movie id being added
+     * @param backdrop_path is the image being added
+     * @param overview is teh movie information being added
+     * @param title is the movie title being added
+     * @param genreId is the genre id being added to get the particular genre name
+     * @param model holds the user information and information to see if movie was added or deleted
+     * @param session holds the view by genre page so when it returns the information is the same and for the favourite list color change, holds to check if the user has a movie in their favorite list
+     * @return view by genre page or notValidUser page if user doesn't exist
+     */
     @GetMapping("/addMovieFavList2")
     public String addMovieFavList2(@RequestParam(name = "movieId") String movieId,
                                   @RequestParam(name = "backdrop_path") String backdrop_path,
@@ -187,6 +210,17 @@ public class FavoriteListController {
 
     // favourite list for search in movies
 
+    /**
+     * Add or delete a movie to the favourite list
+     * @param movieId is the movie id being added
+     * @param backdrop_path is the image being added
+     * @param overview is teh movie information being added
+     * @param title is the movie title being added
+     * @param genreId is the genre id being added to get the particular genre name
+     * @param model holds the user information and information to see if movie was added or deleted
+     * @param session holds the search movie index page so when it returns the information is the same and for the favourite list color change, holds to check if the user has a movie in their favorite list
+     * @return search movie index page or notValidUser page if user doesn't exist
+     */
     @GetMapping("/addMovieFavList3")
     public String addMovieFavList3(@RequestParam(name = "movieId") String movieId,
                                    @RequestParam(name = "backdrop_path") String backdrop_path,
@@ -263,6 +297,18 @@ public class FavoriteListController {
 
     // favourite list for general search
 
+    /**
+     * Add or delete a movie to the favourite list
+     * @param movieId is the movie id being added
+     * @param backdrop_path is the image being added
+     * @param overview is teh movie information being added
+     * @param title is the movie title being added
+     * @param genreId is the genre id being added to get the particular genre name
+     * @param model holds the user information and information to see if movie was added or deleted
+     * @param session holds the search index page so when it returns the information is the same and for the favourite list color change, holds to check if the user has a movie in their favorite list
+     * @return view by search index or notValidUser page if user doesn't exist
+     */
+
     @GetMapping("/addMovieFavList4")
     public String addMovieFavList4(@RequestParam(name = "movieId") String movieId,
                                    @RequestParam(name = "backdrop_path") String backdrop_path,
@@ -334,6 +380,18 @@ public class FavoriteListController {
 
 
     // favourite list for random recommendations
+
+    /**
+     * Add or delete a movie to the favourite list
+     * @param movieId is the movie id being added
+     * @param backdrop_path is the image being added
+     * @param overview is teh movie information being added
+     * @param title is the movie title being added
+     * @param genreId is the genre id being added to get the particular genre name
+     * @param model holds the user information and information to see if movie was added or deleted
+     * @param session holds the view by movie recs page so when it returns the information is the same and for the favourite list color change, holds to check if the user has a movie in their favorite list
+     * @return view by movie recs page or notValidUser page if user doesn't exist
+     */
 
     @GetMapping("/addMovieFavList5")
     public String addMovieFavList5(@RequestParam(name = "movieId") String movieId,
@@ -429,6 +487,18 @@ public class FavoriteListController {
 
     // add fav list for recs of movies based on most common genre in users fav list
 
+    /**
+     * Add or delete a movie to the favourite list
+     * @param movieId is the movie id being added
+     * @param backdrop_path is the image being added
+     * @param overview is teh movie information being added
+     * @param title is the movie title being added
+     * @param genreId is the genre id being added to get the particular genre name
+     * @param model holds the user information and information to see if movie was added or deleted
+     * @param session holds the view by movie_recsgenre page so when it returns the information is the same and for the favourite list color change, holds to check if the user has a movie in their favorite list
+     * @return view by movie_recsgenre page or notValidUser page if user doesn't exist
+     */
+
     @GetMapping("/addMovieFavList6")
     public String addMovieFavList6(@RequestParam(name = "movieId") String movieId,
                                    @RequestParam(name = "backdrop_path") String backdrop_path,
@@ -519,7 +589,17 @@ public class FavoriteListController {
     }
 
 
-
+    /**
+     * Add or delete a movie to the favourite list
+     * @param movieId is the movie id being added
+     * @param backdrop_path is the image being added
+     * @param overview is teh movie information being added
+     * @param title is the movie title being added
+     * @param genreId is the genre id being added to get the particular genre name
+     * @param model holds the user information and information to see if movie was added or deleted
+     * @param session holds the similar index information so when it returns the information is the same and for the favourite list color change, holds to check if the user has a movie in their favorite list
+     * @return view by similar index page or notValidUser page if user doesn't exist
+     */
 
 
     @GetMapping("/addMovieFavList7")
@@ -593,6 +673,14 @@ public class FavoriteListController {
 
 
     // delete fav list
+
+    /**
+     * User can delete a particular movie from the system
+     * @param session holds the uses information
+     * @param movieId is the movie being deleted
+     * @param model holds titles for dropdown list and movies in users favourite list
+     * @return favList page
+     */
 
     @GetMapping("/deleteFavList")
     public String deleteFavList(HttpSession session,

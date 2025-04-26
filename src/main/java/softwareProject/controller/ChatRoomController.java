@@ -29,6 +29,14 @@ public class ChatRoomController {
 
     @Autowired
     private MovieService movieService;
+
+    /**
+     * View videos of a particular movie and view the chat room, auto deletes messages after 5 minutes
+     * @param id is the movie id being searched and the unique chat room created
+     * @param session holds the users information
+     * @param model holds the chat room information
+     * @return the videos page or the not valid User page if user not logged in
+     */
     @GetMapping("/getAllChatMessage")
     public String viewChatMessage(@RequestParam(name = "id") String id, HttpSession session, Model model){
 
