@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Write a Review</title>
+</head>
+<body>
+
+<h2>Write a Review for <span th:text="${movie.title}"></span></h2>  <!-- Fetch movie name dynamically -->
+
+<form action="/submitReview" method="post">
+  <!-- Hidden input for movie ID -->
+  <input type="hidden" name="movieId" th:value="${movieId}">
+
+  <label>Rating:</label>
+  <input type="number" name="rating" min="1" max="5" step="0.5" required>
+
+  <label>Comment:</label>
+  <textarea name="comment" required></textarea>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+</body>
+</html>

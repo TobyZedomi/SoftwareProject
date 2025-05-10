@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/chatIndex.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
@@ -79,7 +80,7 @@
       color: white;
       font-weight: bold;
       -webkit-text-stroke: 1px darkred;
-      font-family: poppins;
+      font-family: Poppins sans-serif;
     }
 
 
@@ -110,7 +111,7 @@
 
   </style>
 
-
+<!--
   <style>
 
     .hidden {
@@ -330,9 +331,160 @@
       }
     }
 
-  </style>
+  </style>-->
+
+<style>
+  .container2 {
+    border: 2px solid #dedede;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+  }
+
+  .darker {
+    border-color: #ccc;
+    background-color: #ddd;
+  }
+
+  .container2::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
+  .container img {
+    float: left;
+    max-width: 60px;
+    width: 100%;
+    margin-right: 20px;
+    border-radius: 50%;
+  }
+
+  .container img.right {
+    float: right;
+    margin-left: 20px;
+    margin-right:0;
+  }
+
+  .time-right {
+    float: right;
+    color: black;
+    font-weight: bold;
+  }
+
+  .time-left {
+    float: left;
+    color: #999;
+  }
 
 
+  .container {
+    background: black;
+    box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
+    display: inline-block;
+    margin-top: 42px;
+    vertical-align: middle;
+    padding: 35px 55px 35px;
+    min-height: 250px;
+    right: 0;
+    margin: 0 auto;
+    margin-top: -280px;
+    float: right;
+    margin-bottom: 30px;
+    position: fixed;
+    border-radius: 10px;
+    border: 0.1px solid black;
+    outline-style: solid;
+    outline-color: darkred;
+
+
+    width: 450px; height: 520px;  max-width:450px;
+    width:100%;  position: fixed;
+    top: 90%;
+    left: 85.5%;
+    transform: translate(-50%, -50%);
+  }
+
+
+
+  #messageArea{
+    height: 320px; width: 370px
+  }
+
+
+  @media screen and (max-width: 1300px){
+
+    .container{
+      width: 450px;
+      height: 400px;
+      left: 60%;
+    }
+
+    .container h5{
+      font-size: 10px;
+    }
+
+    #messageArea {
+      width: 350px;
+      height: 400px;
+      margin: auto;
+
+    }
+
+  }
+
+  .hidden {
+    display: none;
+  }
+
+#hide{
+  border: none;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 12px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  font-family: 'Poppins', sans-serif;
+
+  background-color: #C41E3A; color: white; font-weight: bold;  border-radius: 50px;
+  margin-bottom: 20px;
+}
+
+
+
+
+  .container-sm {
+    width: 400px; height: 150px;  max-width:400px;
+    width:100%;  position: fixed; background: black;
+    top:60%;
+    left: 87.5%;
+    transform: translate(-50%, -50%);  border-radius: 10px;
+    border: 0.1px solid black;
+    outline-style: solid;
+    outline-color: darkred;
+  }
+
+  @media screen and (max-width: 1300px){
+
+    .container-sm{
+      width: 110px;
+      height: 10px;
+
+    }
+
+    .container-sm h5{
+      font-size: 10px;
+    }
+
+
+  }
+
+
+</style>
 
 
 </head>
@@ -342,6 +494,9 @@
 
   <!-- Include the menu bar fragment -->
   <div th:replace="~{fragments/menu :: menu-bar}"></div>
+
+<button onclick="myFunction()" id="hide" class="hidden" style="position: fixed; left: 80%">Click here to Hide or UnHide Live Chat Room</button>
+
 
   <div>
   <h1 th:text="| Movie Videos for ${movieName} |">Movie Videos</h1>
@@ -361,45 +516,55 @@
 
 
 
-  <div id="username-page">
-    <div class="username-page-container">
-      <h1 class="title" style="color: black">The Chatroom</h1>
-      <form id="usernameForm" name="usernameForm">
-        <div class="form-group">
-          <input type="hidden" id="name" th:value="${#ctx.session.loggedInUser.getDisplayName()}" placeholder="Username" autocomplete="off" class="form-control" />
-        </div>
-        <div class="form-group">
-          <button type="submit" class="btn btn-danger" >Enter Live Chat</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-
-
-
-
-  <div id="chat-page" class="hidden">
-    <div class="chat-container">
-      <div class="chat-header">
-        <h1 style="color: black">Live Chat </h1>
+<div id="username-page">
+  <div class="container-sm" >
+    <h5 class="title" style="color: white; display: flex; justify-content: center;align-items: center;font-weight: bold;font-family:'Poppins', sans-serif ;"  th:text="| The Live Chat Room for ${movieName} |">The Chatroom</h5>
+    <form  id="usernameForm" name="usernameForm">
+      <div class="form-group">
+        <input type="hidden" id="name" th:value="${#ctx.session.loggedInUser.getUsername()}" placeholder="Username" autocomplete="off" class="form-control" />
       </div>
-      <div class="connecting">
-        Connecting...
+      <div class="form-group">
+        <button type="submit" class="btn btn-danger">Enter Live Chat</button>
       </div>
-      <ul id="messageArea">
-
-      </ul>
-      <form id="messageForm" name="messageForm">
-        <div class="form-group">
-          <div class="input-group clearfix">
-            <input style="margin-top:10px; " type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
-            <button style="margin-top:10px; " type="submit" class="btn btn-danger">Send</button>
-          </div>
-        </div>
-      </form>
-    </div>
+    </form>
   </div>
+</div>
+
+
+
+<div id="chat-page" class="hidden">
+  <div class="container" id="container">
+    <div class="chat-header">
+      <h5 th:text="| Live Chat Room for ${movieName} |" style="color: white; font-weight: bold; font-family:'Poppins', sans-serif ">Live Chat </h5>
+    </div>
+    <div class="connecting">
+
+    </div>
+    <ul id="messageArea">
+
+      <div th:each="chat : ${chatRooms}">
+
+        <div class="container2">
+          <img th:src="@{'/css/images/' + ${chat.getUser_image()}}" alt="Avatar" style="width:100%;">
+          <p th:text=" |${chat.getUsername()}: ${chat.getMessage()} | "></p>
+          <span class="time-right" th:text="${chat.getMessage_date().toLocalTime()} "></span>
+        </div>
+
+      <!--<p th:text=" |${chat.getUsername()}: ${chat.getMessage()} | "></p>-->
+      </div>
+    </ul>
+    <form id="messageForm" name="messageForm">
+      <div class="form-group">
+        <div class="input-group clearfix">
+          <input style="margin-top:0px; " type="text" id="message" name="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
+          <input style="margin-top:0px; " type="text" th:value="${chat_room_id}" id="room" name="room" placeholder="Type a message..." autocomplete="off" class="hidden"/>
+          <button style="margin-top:0px; " type="submit" class="btn btn-danger">Send</button>
+          <button id="disconnect" class="hidden" type="submit">Disconnect</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
 
 
 </div>
@@ -408,129 +573,18 @@
 
 
 
-
+<script src="/css/js/chatIndex2.js"></script>
 
 <script>
-  'use strict';
-
-  var usernamePage = document.querySelector('#username-page');
-  var chatPage = document.querySelector('#chat-page');
-  var usernameForm = document.querySelector('#usernameForm');
-  var messageForm = document.querySelector('#messageForm');
-  var messageInput = document.querySelector('#message');
-  var messageArea = document.querySelector('#messageArea');
-  var connectingElement = document.querySelector('.connecting');
-
-  var stompClient = null;
-  var username = null;
-
-  var colors = [
-    '#2196F3', '#32c787', '#00BCD4', '#ff5652',
-    '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
-  ];
-
-  function connect(event) {
-    username = document.querySelector('#name').value.trim();
-
-    if(username) {
-      usernamePage.classList.add('hidden');
-      chatPage.classList.remove('hidden');
-
-      var socket = new SockJS('/ws');
-      stompClient = Stomp.over(socket);
-
-      stompClient.connect({}, onConnected, onError);
-    }
-    event.preventDefault();
-  }
-
-
-  function onConnected() {
-    // Subscribe to the Public Topic
-    stompClient.subscribe('/topic/public', onMessageReceived);
-
-    // Tell your username to the server
-    stompClient.send("/app/chat.addUser",
-            {},
-            JSON.stringify({sender: username, type: 'JOIN'})
-    )
-
-    connectingElement.classList.add('hidden');
-  }
-
-
-  function onError(error) {
-    connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
-    connectingElement.style.color = 'red';
-  }
-
-
-  function sendMessage(event) {
-    var messageContent = messageInput.value.trim();
-    if(messageContent && stompClient) {
-      var chatMessage = {
-        sender: username,
-        content: messageInput.value,
-        type: 'CHAT'
-      };
-      stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
-      messageInput.value = '';
-    }
-    event.preventDefault();
-  }
-
-
-  function onMessageReceived(payload) {
-    var message = JSON.parse(payload.body);
-
-    var messageElement = document.createElement('li');
-
-    if(message.type === 'JOIN') {
-      messageElement.classList.add('event-message');
-      message.content = message.sender + ' joined!';
-    } else if (message.type === 'LEAVE') {
-      messageElement.classList.add('event-message');
-      message.content = message.sender + ' left!';
+  function myFunction() {
+    var x = document.getElementById("container");
+    if (x.style.display === "none") {
+      x.style.display = "block";
     } else {
-      messageElement.classList.add('chat-message');
-
-      var avatarElement = document.createElement('i');
-      var avatarText = document.createTextNode(message.sender[0]);
-      avatarElement.appendChild(avatarText);
-      avatarElement.style['background-color'] = getAvatarColor(message.sender);
-
-      messageElement.appendChild(avatarElement);
-
-      var usernameElement = document.createElement('span');
-      var usernameText = document.createTextNode(message.sender);
-      usernameElement.appendChild(usernameText);
-      messageElement.appendChild(usernameElement);
+      x.style.display = "none";
     }
-
-    var textElement = document.createElement('p');
-    var messageText = document.createTextNode(message.content);
-    textElement.appendChild(messageText);
-
-    messageElement.appendChild(textElement);
-
-    messageArea.appendChild(messageElement);
-    messageArea.scrollTop = messageArea.scrollHeight;
   }
-
-
-  function getAvatarColor(messageSender) {
-    var hash = 0;
-    for (var i = 0; i < messageSender.length; i++) {
-      hash = 31 * hash + messageSender.charCodeAt(i);
-    }
-    var index = Math.abs(hash % colors.length);
-    return colors[index];
-  }
-
-  usernameForm.addEventListener('submit', connect, true)
-  messageForm.addEventListener('submit', sendMessage, true)
 </script>
-
 
 </body>
 </html>

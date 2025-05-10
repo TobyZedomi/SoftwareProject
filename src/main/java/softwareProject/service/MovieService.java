@@ -10,8 +10,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 import softwareProject.business.*;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static com.fasterxml.jackson.databind.cfg.CoercionInputShape.Array;
 
@@ -144,6 +143,37 @@ public class MovieService {
         ResponseEntity<MovieSearchByGenreResponse> response = restTemplate.getForEntity("https://api.themoviedb.org/3/discover/movie?certification="+query+"&include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres="+genreId+"&api_key="+API_KEY, MovieSearchByGenreResponse.class);
 
         return response.getBody().getResults();
+    }
+
+
+    public  List<MovieTest> getSimilarMovies(int movieId){
+
+        ResponseEntity<MovieResponse> response = restTemplate.getForEntity("https://api.themoviedb.org/3/movie/"+movieId+"/similar"+"?"+"&api_key="+API_KEY, MovieResponse.class);
+
+
+        return response.getBody().getResults();
+    }
+
+
+
+    public List<MovieReview> getReviewsByMovieId(int movieId) {
+        String url = "https://api.themoviedb.org/3/movie/" + movieId + "/reviews?api_key=" + API_KEY;
+        ResponseEntity<MovieReviewResponse> response = restTemplate.getForEntity(url, MovieReviewResponse.class);
+        return response.getBody().getResults();
+    }
+
+    public Map<String, List<MovieReview>> getReviewsForPopularMovies() {
+        List<MovieTest> popularMovies = getMovies();
+        Map<String, List<MovieReview>> reviewsByMovie = new HashMap<>();
+
+        for (MovieTest movie : popularMovies) {
+            List<MovieReview> reviews = getReviewsByMovieId(movie.getId());
+            if (!reviews.isEmpty()) {
+                reviewsByMovie.put(movie.getTitle(), reviews);
+            }
+        }
+
+        return reviewsByMovie;
     }
 
 }

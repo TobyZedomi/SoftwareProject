@@ -10,11 +10,21 @@
     <title>Title</title>
 
     <style>
-        .message{
+        #message {
             display: flex;
             justify-content: center;
             align-items: center;
             color: red;
+            font-weight: bold;
+            margin-bottom: 50px;
+            font-family: poppins;
+        }
+
+        #messageAdded {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: green;
             font-weight: bold;
             margin-bottom: 50px;
             font-family: poppins;
@@ -194,7 +204,16 @@
     <h1>Movie Store</h1>
 </div>
 
-<div id="message" class="message" th:text="${message}"></div>
+<div th:if="${message != null}">
+    <div class="alert alert-danger" style="width: 800px; margin: auto;" id="message" th:text="${message}" role="alert">
+    </div>
+</div>
+
+<div th:if="${messageAdded != null}">
+
+    <div id="messageAdded" class="alert alert-success"  style="width: 800px; margin: auto;" th:text="${messageAdded}"></div>
+
+</div>
 
 
 
@@ -203,7 +222,11 @@
     <button class="btn btn-danger" type="submit">Search</button>
 </form>
 
-
+<form class="d-flex" role="filter" method="get" action="/priceFilter">
+    <input class="form-control me-2" type="number" step="1" placeholder="Min Price" name="minPrice" style="width:150px; margin-right:1350px">
+    <input class="form-control me-2" type="number" step="1" placeholder="Max Price" name="maxPrice" style="width:150px; margin-right:1350px">
+    <button class="btn btn-danger" type="submit">Filter</button>
+</form>
 
 <div class="wrapper">
     <div th:each="movieProduct : ${movieBySearch}">
@@ -216,7 +239,7 @@
             </div>
             <h4 th:text="${movieProduct.movie_name}"></h4>
             <div>
-                <span th:text="|£${movieProduct.listPrice} |" style="font-weight: bold; color: white"></span>
+                <span th:text="|€${movieProduct.listPrice} |" style="font-weight: bold; color: white"></span>
                 <button title="Add To Cart"><a th:href="@{/addCartItemMovieProductSearch(movieId=${movieProduct.getMovie_id()})}"><i class="fa fa-shopping-cart"></i></a></button>
             </div>
         </div>

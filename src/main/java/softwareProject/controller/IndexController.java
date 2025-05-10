@@ -1,7 +1,9 @@
 package softwareProject.controller;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,14 +13,17 @@ import softwareProject.persistence.FriendDaoImpl;
 import softwareProject.persistence.*;
 import softwareProject.service.MovieService;
 
+import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+import static org.apache.tomcat.util.http.FastHttpDateFormat.formatDate;
 
 @Controller
+@Slf4j
 public class IndexController {
 
     @Autowired
@@ -75,12 +80,15 @@ public class IndexController {
 
             ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(u.getUsername());
 
+            GenreDao genreDao = new GenreDaoImpl("database.properties");
+
             // loop through the movie db list and reduce the size by 2
             for (int i = 0; i < movies.size() - 2; i++) {
 
 
-                    // if any backdrop image is unavailable it will not add it to the new arraylist
-                    if (movies.get(i).getBackdrop_path() != null) {
+                // if any backdrop image is unavailable it will not add it to the new arraylist
+                    if (movies.get(i).getBackdrop_path() != null && movies.get(i).getGenre_ids().length > 0) {
+                        movies.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movies.get(i).getGenre_ids()[0])).getName());
                         // add the movies from the movie db into the new arraylist
                         newMovie.add(movies.get(i));
                         model.addAttribute("movies", newMovie);
@@ -132,6 +140,9 @@ public class IndexController {
 
             FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
 
+            GenreDao genreDao = new GenreDaoImpl("database.properties");
+
+
 
             ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(u.getUsername());
 
@@ -148,7 +159,9 @@ public class IndexController {
 
                 for (int i = 0; i < movieByGenres.size() - 2; i++) {
 
-                    if (movieByGenres.get(i).getBackdrop_path() != null) {
+
+                    if (movieByGenres.get(i).getBackdrop_path() != null && movieByGenres.get(i).getGenre_ids().length > 0) {
+                        movieByGenres.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(genreId)).getName());
                         newMovie.add(movieByGenres.get(i));
                         model.addAttribute("movieByGenres", newMovie);
                     }
@@ -165,8 +178,6 @@ public class IndexController {
                 // genre by id and get the name
 
                 // use a session for this based on the controller method view movie by genre, testing branch
-
-                GenreDao genreDao = new GenreDaoImpl("database.properties");
 
                 GenreTest genre = genreDao.getGenreById(Integer.parseInt(genreId));
 
@@ -796,6 +807,12 @@ public class IndexController {
         return "notValidUser";
     }
 
+    /**
+     * Show users favourite list of movies
+     * @param session holds the users information and favourite list information
+     * @param model holds the names from dropdown list
+     * @return favlist or notValidUser if user not logged in
+     */
     @GetMapping("/favList")
     public String favouriteList(HttpSession session, Model model) {
 
@@ -829,6 +846,7 @@ public class IndexController {
 
         return "notValidUser";
     }
+
 
 
     @GetMapping("/chatRoom")
@@ -881,22 +899,75 @@ public class IndexController {
         return "notValidUser";
     }
 
+
+    /**
+     * Random recommendations of movies for the user, hold array of ints that are movie ids and randomises to give the user recommendations of movies like it
+     * @param session holds the random movie id and session for favListRandomRecs method
+     * @param model holds the names for the dropdown list
+     * @return movie_recs or notValidUser if user doesnt exist
+     */
     @GetMapping("/movie_recs")
     public String movie_recs(HttpSession session, Model model) {
 
-        if(session.getAttribute("loggedInUser") != null) {
+        if (session.getAttribute("loggedInUser") != null) {
 
+            User u = (User) session.getAttribute("loggedInUser");
+
+
+            //  int id = Integer.parseInt(movieId);
+
+            // totalAmountOItems in basket
             getTotalAmountOfItemsInCart(session, model);
+
+            int[] arr = new int[]{822119, 429617, 939243, 661539, 539972, 1084199, 1412113, 51482, 1357633, 1020414, 210577, 146233};
+            System.out.print("Random number from the array = " + arr[new Random().nextInt(arr.length)]);
+
+            // creating a session to hold random number
+
+            session.setAttribute("randomNumber", arr[new Random().nextInt(arr.length)]);
+
+            List<MovieRecommendations> movieRecs = movieService.getRecommendations(arr[new Random().nextInt(arr.length)]);
+
+            List<MovieRecommendations> newMovie = new ArrayList<>();
+
+            FavoriteListDao favoriteListDao = new FavouriteListDaoImpl("database.properties");
+
+
+            for (int i = 0; i < 15; i++) {
+
+                if (movieRecs.get(i).getBackdrop_path() != null) {
+                    newMovie.add(movieRecs.get(i));
+                    model.addAttribute("movieRecs", newMovie);
+                }
+
+            }
 
             String recs = "Random Movie Recommendations";
             model.addAttribute("recs1", recs);
 
+            String favList = "Favourite List";
+            model.addAttribute("favList", favList);
+
+            String recs2 = "Most Common Genre In FavouriteList";
+            model.addAttribute("recs2", recs2);
+
+
+            favListForRandomRecs(model, session, favoriteListDao, u);
+
+
             return "movie_recs";
+
         }
 
         return "notValidUser";
     }
 
+    /**
+     * Movie recs for most popular genre in users fav list
+     * @param session golds user information
+     * @param model holds name for movie recommendations
+     * @return movie rec genre page or notValidUser if user not logged in
+     */
     @GetMapping("/movie_recsGenre")
     public String movie_recsGenre(HttpSession session, Model model) {
 
@@ -939,7 +1010,8 @@ public class IndexController {
 
         for (int i = 0; i < movieByGenres.size() - 2; i++) {
 
-            if (movieByGenres.get(i).getBackdrop_path() != null) {
+            if (movieByGenres.get(i).getBackdrop_path() != null && movieByGenres.get(i).getGenre_ids().length > 0) {
+                movieByGenres.get(i).setGenreName("Science Fiction");
                 newMovie.add(movieByGenres.get(i));
                 model.addAttribute("movieByGenres", newMovie);
             }
@@ -961,4 +1033,110 @@ public class IndexController {
 
         model.addAttribute("genreName", genre.getName());
     }
+
+
+
+    @GetMapping("/popularReviews")
+    public String getPopularMovieReviews(Model model) {
+        Map<String, List<MovieReview>> reviewsByMovie = movieService.getReviewsForPopularMovies();
+        model.addAttribute("reviewsByMovie", reviewsByMovie);
+        return "movie_db_reviews";
+    }
+
+
+
+    private void favListForRandomRecs(Model model, HttpSession session, FavoriteListDao favoriteListDao, User user) {
+        int randomNumber = (Integer) session.getAttribute("randomNumber");
+
+        List<MovieRecommendations> movieRecs = movieService.getRecommendations(randomNumber);
+
+        List<MovieRecommendations> newMovie = new ArrayList<>();
+
+
+        ArrayList<FavoriteList> favoriteLists = favoriteListDao.getAllFavouriteListByUsername(user.getUsername());
+
+        GenreDao genreDao = new GenreDaoImpl("database.properties");
+
+        for (int i = 0; i < 15; i++) {
+
+
+            if (movieRecs.get(i).getBackdrop_path() != null && movieRecs.get(i).getGenre_ids().length > 0) {
+                movieRecs.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieRecs.get(i).getGenre_ids()[0])).getName());
+
+                newMovie.add(movieRecs.get(i));
+                model.addAttribute("movieRecs",newMovie);
+            }
+
+            for (int j = 0; j < favoriteLists.size(); j++) {
+
+                if (favoriteLists.get(j).getMovieDb_id() == movieRecs.get(i).getId()) {
+
+                    movieRecs.get(i).setFavourite(true);
+                }
+            }
+
+        }
+    }
+
+    @GetMapping("/orderHistory")
+    public String userPurchasedItems(HttpSession session,Model model){
+        if(session.getAttribute("loggedInUser") != null){
+            User user = (User) session.getAttribute("loggedInUser");
+
+            AuditPurchasedItemsDao auditPurchasedItemsDao = new AuditPurchasedItemsDaoImpl("database.properties");
+
+            ArrayList<AuditPurchasedItems> userOrders = auditPurchasedItemsDao.purchasedItemsUser(user.getUsername());
+           // for(AuditPurchasedItems item : userOrders){
+           ///     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH:mm:ss");
+           //     LocalDateTime localDateTime = sdf.parse(item.getCreated_at());
+           // }
+            model.addAttribute("Orders", userOrders);
+
+            return "orderHistory";
+        }
+        return "notValidUser";
+    }
+
+
+    @GetMapping("/updateToAdmin")
+    public String updateToAdmin(HttpSession session,Model model){
+        if(session.getAttribute("loggedInUser") != null){
+            User user = (User) session.getAttribute("loggedInUser");
+
+            UserDaoImpl userDao = new UserDaoImpl("database.properties");
+
+            ArrayList<User> users = userDao.getAllUsersThatAreNotAdmin();
+
+            model.addAttribute("users", users);
+
+            getTotalAmountOfItemsInCart(session, model);
+
+            return "updateToAdmin";
+        }
+        return "notValidUser";
+    }
+
+    @GetMapping("/movieRevenueStats")
+    public String movieRevenueStats(HttpSession session, Model model){
+        if(session.getAttribute("loggedInUser") != null){
+
+            MovieRevenueDao movieRevenueDao = new MovieRevenueDaoImpl("database.properties");
+
+            ArrayList<MovieRevenue> movieRevenueStats = movieRevenueDao.getTotalMovieRevenue();
+            ArrayList<String> movieName= new ArrayList<>();
+            ArrayList<Double> totalRevenue = new ArrayList<>();
+            for(MovieRevenue movieRevenue : movieRevenueStats){
+                movieName.add(movieRevenue.getMovie_name());
+                log.info("Movie name: "+movieRevenue.getMovie_name());
+                totalRevenue.add(movieRevenue.getTotalRevenue());
+            }
+            model.addAttribute("movieName", movieName);
+            model.addAttribute("total", totalRevenue);
+            model.addAttribute("movieRevenueStats", movieRevenueStats);
+            return "movieRevenueStats";
+        }
+        return "notValidUser";
+    }
+
+
 }

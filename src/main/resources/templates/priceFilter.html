@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/storeIndex.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <title>Title</title>
+
+    <style>
+        #message {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: red;
+            font-weight: bold;
+            margin-bottom: 50px;
+            font-family: poppins;
+        }
+
+        #messageAdded {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: green;
+            font-weight: bold;
+            margin-bottom: 50px;
+            font-family: poppins;
+        }
+
+        h1{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            color: white;
+            font-weight: bold;
+            -webkit-text-stroke: 1px darkred;
+            font-family: poppins;
+        }
+
+        .wrapper{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 6% auto 0;
+            margin-bottom: 40px;
+        }
+
+        img{
+            height: 300px;
+            width: 300px;
+            opacity: 1;
+            display: block;
+            transition: .5s ease;
+            backface-visibility: hidden;
+            border-radius: 25px;
+        }
+
+        .product-card {
+            max-width: 300px;
+            height: 420px;
+            margin: auto;
+            background-color: black;
+            padding: 1em;
+            /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
+            font-family: Arial, Helvetica, sans-serif;
+            transition: transform .5s;
+            border-radius: 25px;
+
+            border: 0.1px solid black;
+            outline-style: solid;
+            outline-color: darkred;
+        }
+
+        .product-card:hover{
+            transform: scale(1.05);
+        }
+        .product-card img {
+            max-width: 100%;
+        }
+        .product-card h4 {
+            font-size: 1.3em;
+            margin: 0.5em 0;
+            font-weight: bold;
+            color: white;
+        }
+        .product-card div {
+            font-size: 1.2em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        .product-card button {
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 1em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .product-card:hover {
+            background-color: black;
+            color: #fff;
+        }
+        .product-card:hover button {
+            color: #000;
+            background-color: #fff;
+        }
+
+
+
+
+        @media screen and (max-width: 576px) {
+            .product-card {
+                font-size: 0.9em;
+            }
+        }
+
+        .middle {
+            transition: .5s ease;
+            opacity: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .container:hover .image {
+            opacity: 0.3;
+        }
+
+        .container:hover .middle {
+            opacity: 1;
+        }
+
+        .text {
+            color: white;
+            font-size: 12px;
+            font-family: poppins;
+
+        }
+
+
+    </style>
+
+    <style>
+        body{
+            margin: 0;
+        }
+
+        #background{
+            background-image: url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D.avif");
+            height: 100vh;
+            width: 100%;
+            background-size: cover;
+            background-position: center center;
+            position: fixed;
+            top: 0;
+            z-index: -1;
+        }
+
+        p, lable, input, span, h4{
+
+            font-family: poppins;
+        }
+
+        .center {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            margin-top: 150px;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/menu :: menu-bar}"></div>
+
+<div id="background"></div>
+
+<div>
+    <h1>Movie Store</h1>
+</div>
+
+<div th:if="${message != null}">
+    <div class="alert alert-danger" style="width: 800px; margin: auto;" id="message" th:text="${message}" role="alert">
+    </div>
+</div>
+
+<div th:if="${messageAdded != null}">
+
+    <div id="messageAdded" class="alert alert-success"  style="width: 800px; margin: auto;" th:text="${messageAdded}"></div>
+
+</div>
+
+
+
+<form class="d-flex" role="search" method="get" action="/viewMovieProductBySearch">
+    <input class="form-control me-2" type="search" placeholder="Enter movie name here" aria-label="Search" id="query" name="query" style="width:250px; margin-left: 1350px">
+    <button class="btn btn-danger" type="submit">Search</button>
+</form>
+
+<form class="d-flex" role="filter" method="get" action="/priceFilter">
+    <input class="form-control me-2" type="number" step="1" placeholder="Min Price" name="minPrice" style="width:150px; margin-right:1350px">
+    <input class="form-control me-2" type="number" step="1" placeholder="Max Price" name="maxPrice" style="width:150px; margin-right:1350px">
+    <button class="btn btn-danger" type="submit">Filter</button>
+</form>
+
+
+
+<div class="wrapper">
+    <div th:each="movieProduct : ${movieProducts}">
+        <div class="product-card">
+            <div class="container">
+                <img th:src="@{'/css/images/'+${movieProduct.movie_image}}" alt="" class="image">
+                <div class="middle">
+                    <p th:text="${movieProduct.getMovie_info()}" class="text"></p>
+                </div>
+            </div>
+            <h4 th:text="${movieProduct.movie_name}"></h4>
+            <div>
+                <span th:text="|€${movieProduct.listPrice} |" style="font-weight: bold; color: white"></span>
+                <button title="Add To Cart"><a th:href="@{/addToCartFiltering(movieId=${movieProduct.getMovie_id()})}"><i class="fa fa-shopping-cart"></i></a></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a th:href="@{/store_index}"><button type="button" class="btn btn-danger" title="Store" style="margin-left: 1500px; margin-bottom: 70px">All Store Products</button></a>
+
+
+<div class="center">
+    <p th:text="${messageSearch}" style="color: white; font-family: poppins; font-weight: bold;"></p>
+
+</div>
+
+
+
+
+
+</body>
+</html>

@@ -59,6 +59,8 @@ CREATE TABLE favouriteList
     backdrop_path VARCHAR(255),
     overview VARCHAR(8000),
     title VARCHAR(255),
+    genreName VARCHAR(255),
+    genreId int(255),
     PRIMARY KEY (username, movieDb_id),
     FOREIGN KEY (username) REFERENCES users (username)
 );
@@ -186,6 +188,30 @@ CREATE TABLE `reviews`
 
 
 
+
+CREATE TABLE chat_room
+(
+    chat_room_id          INT AUTO_INCREMENT,
+    username            varchar(255) NOT NULL,
+    message             varchar(8000)  NOT NULL,
+    message_date         datetime     NOT NULL,
+    user_image     varchar(255) NOT NULL,
+    room_id INT(255),
+    PRIMARY KEY (chat_room_id),
+    FOREIGN KEY (username) REFERENCES users (username)
+);
+
+CREATE TABLE otp_login
+(
+    id          INT AUTO_INCREMENT,
+    email    varchar(255) NOT NULL,
+    otp_number  INT(255),
+    expiry  TIMESTAMP NOT NULL,
+    PRIMARY KEY (id)
+);
+
+
+
 /* TRIGGERS AND TABLES FOR TRIGGERS  */
 
 CREATE TABLE auditsMovieProduct
@@ -224,6 +250,7 @@ CREATE TABLE auditsCartItems
 CREATE TABLE auditPurchasedItems
 (
     auditPurchasedItemsID INT AUTO_INCREMENT PRIMARY KEY,
+    movie_name VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL,
     order_id INT NOT NULL,
     price DOUBLE NOT NULL,
@@ -239,17 +266,20 @@ CREATE TRIGGER logPurchaseItemInsert
     FOR EACH ROW
 BEGIN
     DECLARE orderUser VARCHAR(255);
+    DECLARE movieName VARCHAR(255);
 
     SELECT username INTO orderUser
     FROM shop_order
     WHERE order_id = NEW.order_id;
 
-    INSERT INTO auditPurchasedItems (username, order_id, price)
-    VALUES (orderUser, NEW.order_id, NEW.price);
-END;
-//
+    SELECT movie_name INTO movieName
+    FROM movieproduct
+    WHERE movie_id = NEW.movie_id;
 
-DELIMITER ;
+    INSERT INTO auditPurchasedItems (username, order_id, price, movie_name)
+    VALUES (orderUser, NEW.order_id, NEW.price, movieName);
+END //
+DELIMITER //
 
 DELIMITER
 //
@@ -325,6 +355,18 @@ CREATE PROCEDURE addIntoCartItem(param_cart_id INT, param_movie_id INT)
 BEGIN
 INSERT INTO cart_items(cart_id, movie_id)
 VALUES (param_cart_id, param_movie_id);
+END
+//
+DELIMITER //
+
+DELIMITER //
+CREATE PROCEDURE getMovieRevenueStats()
+BEGIN
+SELECT mp.movie_name, SUM(oi.price) AS totalRevenue
+FROM movieproduct mp
+         JOIN orderitem oi ON mp.movie_id = oi.movie_id
+GROUP BY mp.movie_name
+ORDER BY totalRevenue DESC;
 END
 //
 DELIMITER //

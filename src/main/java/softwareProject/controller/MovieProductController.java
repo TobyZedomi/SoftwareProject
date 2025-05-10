@@ -58,7 +58,6 @@ public class MovieProductController {
         String fileName = file.getOriginalFilename();
 
         file.transferTo(new File("C:\\Users\\tobyz\\IdeaProjects\\SoftwareProject\\src\\main\\resources\\static\\css\\images\\" + fileName));
-
         // add movie product
 
         MovieProduct newMovieProduct = new MovieProduct(0, movie_name, releaseDate, length, movie_info, fileName, listPrice2);
@@ -119,7 +118,7 @@ public class MovieProductController {
         String message;
         if (delete > 0){
             message = "Movie Product " +movieProduct.getMovie_name()+ " was deleted ";
-            model.addAttribute("message", message);
+            model.addAttribute("messageDelete", message);
             log.info(message);
 
             getAllMovieProducts(model, movieProductDao);
@@ -129,7 +128,7 @@ public class MovieProductController {
         }else{
 
             message = "Movie Product " +movieProduct.getMovie_name()+ " was not deleted";
-            model.addAttribute("message", message);
+            model.addAttribute("messageDelete", message);
             log.info(message);
 
             getAllMovieProducts(model, movieProductDao);
@@ -284,6 +283,32 @@ public class MovieProductController {
     private static void getAllMovieProducts(Model model, MovieProductDao movieProductDao) {
         List<MovieProduct> movieProducts = movieProductDao.getAllMovieProducts();
         model.addAttribute("movieProducts", movieProducts);
+    }
+
+    @GetMapping("/priceFilter")
+    public String priceFilter(@RequestParam(value = "minPrice", required = false) Double minPrice,
+                                @RequestParam(value = "maxPrice", required = false) Double maxPrice, HttpSession session,
+                                Model model) {
+        getTotalAmountOfItemsInCart(session,model);
+
+        MovieProductDao movieProductDao = new MovieProductDaoImpl("database.properties");
+        List<MovieProduct> movieProducts;
+
+        if (minPrice != null && maxPrice != null) {
+            movieProducts = movieProductDao.filterMovieProductBetweenMinAndMax(minPrice, maxPrice);
+        } else if (minPrice != null) {
+            movieProducts = movieProductDao.filterMovieProductAboveMin(minPrice);
+        } else if (maxPrice != null) {
+            movieProducts = movieProductDao.filterMovieProductBelowMax(maxPrice);
+        } else {
+            movieProducts = movieProductDao.getAllMovieProducts();
+        }
+
+        session.setAttribute("minPrice", minPrice);
+        session.setAttribute("maxPrice",maxPrice);
+
+        model.addAttribute("movieProducts", movieProducts);
+        return "priceFilter";
     }
 
     /**

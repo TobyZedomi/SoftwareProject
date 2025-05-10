@@ -184,7 +184,7 @@
       box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
     }
 
-    .message {
+    #message {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -194,7 +194,7 @@
       font-family: poppins;
     }
 
-    .messageDelete {
+    #messageDelete {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -229,11 +229,13 @@
     <h1 th:text=" | Random Movie Reccomendations for ${#ctx.session.loggedInUser.getUsername()} |"></h1>
   </div>
 
-  <div class="action_btn" style="margin: 0 auto; display: inline;">
-    <div id="message" class="message" th:text="${message}"></div>
+  <div th:if="${message != null}">
+    <div class="alert alert-success" style="width: 800px; margin: auto;" id="message" th:text="${message}" role="alert">
+    </div>
+  </div>
 
-    <div id="messageDelete" class="messageDelete" th:text="${messageDelete}"></div>
-
+  <div th:if="${messageDelete != null}">
+    <div id="messageDelete" class="alert alert-danger"  style="width: 800px; margin: auto;" th:text="${messageDelete}"></div>
   </div>
 
   <div id="card-area">
@@ -246,11 +248,19 @@
               <h3 th:text="${movie.getTitle()}"> Mountain</h3>
               <p th:text="${movie.getOverview()}" style="overflow: auto; scrollbar-width: none;"></p>
               <div class="action_btn" style="margin: 0 auto; display: inline;">
-                <a th:href="@{/movieTrailer(id=${movie.getId()})}">View Videos</a>
+                <a th:href="@{/getAllChatMessage(id=${movie.getId()})}">View Videos & Live Chat Room</a>
 
-                <a th:href="@{/addMovieFavList5(movieId=${movie.getId()}, backdrop_path=${movie.getBackdrop_path()}, overview=${movie.getOverview()}, title=${movie.getTitle()})}"
+                <a th:href="@{/addMovieFavList5(movieId=${movie.getId()}, backdrop_path=${movie.getBackdrop_path()}, overview=${movie.getOverview()}, title=${movie.getTitle()}, genreId=${movie.getGenre_ids()[0]})}"
                    class="remove_cart" rel="2">
                   <i class="fa fa-heart" th:style="${movie.isFavourite() == true} ? 'color: red' : 'color: black'"></i>
+                </a>
+              </div>
+
+              <div class="action_btn" style="margin: 0 auto; display: inline; margin-top: 0.5px;">
+                <a th:href="@{/viewMovieByGenre(id=${movie.getGenre_ids()[0]})}" th:text="${movie.getGenreName()}" class="badge badge-danger" style="background-color: #C41E3A; color: white; font-weight: bold;  border-radius: 50px; margin-left: 20px"  title="View More Movies on This Genre">Danger</a>
+
+                <a th:href="@{/viewSimilar(movieId=${movie.id})}" class="badge badge-danger" style="background-color: black; color: white; font-weight: bold;  border-radius: 50px; margin-left: 5px" title="View More Movies Like This">
+                  Similar
                 </a>
               </div>
             </div>

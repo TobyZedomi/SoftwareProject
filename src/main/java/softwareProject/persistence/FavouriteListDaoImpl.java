@@ -50,7 +50,7 @@ public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
         // TRY to prepare a statement from the connection
         // When you are parameterizing the update, remember that you need
         // to use the ? notation (so you can fill in the blanks later)
-        try(PreparedStatement ps = conn.prepareStatement("insert into favouriteList values(?, ?, ?, ?, " +
+        try(PreparedStatement ps = conn.prepareStatement("insert into favouriteList values(?, ?, ?, ?,?,?, " +
                 "?)")) {
             // Fill in the blanks, i.e. parameterize the update
             ps.setString(1, favoriteList.getUsername());
@@ -58,6 +58,8 @@ public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
             ps.setString(3, favoriteList.getBackdrop_path());
             ps.setString(4, favoriteList.getOverview());
             ps.setString(5, favoriteList.getTitle());
+            ps.setString(6, favoriteList.getGenreName());
+            ps.setInt(7, favoriteList.getGenreId());
 
             // Execute the update and store how many rows were affected/changed
             // when inserting, this number indicates if the row was
@@ -81,6 +83,11 @@ public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
 
     /// get all in favourite list by username
 
+    /**
+     * Get all favourite list by username
+     * @param username is teh username being searched
+     * @return arraylist of favourite list
+     */
 
     @Override
     public ArrayList<FavoriteList> getAllFavouriteListByUsername(String username){
@@ -129,7 +136,10 @@ public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
     }
 
 
-
+    /**
+     * Get all favourite list in the system
+     * @return arraylist of favourite list
+     */
     @Override
     public ArrayList<FavoriteList> getAllFavouriteList(){
 
@@ -175,7 +185,14 @@ public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
     }
 
 
-    // delet favourite list
+    // delete favourite list
+
+    /**
+     * user can delete movies from favourite list
+     * @param username is teh username being searched
+     * @param movieId is the movie id being searched
+     * @return 1 if deleted and 0 if not deleted
+     */
 
     @Override
     public int deleteFroFavouriteList(String username, int movieId){
@@ -214,6 +231,13 @@ public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
 
     }
 
+
+    /**
+     * get favourite list by username and movie id
+     * @param username is the username bieng searched
+     * @param movieId is teh movie id being searched
+     * @return movie from favourite list
+     */
 
     @Override
     public FavoriteList getFavouriteListByUsernameAndMovieId(String username, int movieId) {
@@ -277,7 +301,9 @@ public class FavouriteListDaoImpl extends MySQLDao implements FavoriteListDao {
                 rs.getInt("movieDb_id"),
                 rs.getString("backdrop_path"),
                 rs.getString("overview"),
-                rs.getString("title")
+                rs.getString("title"),
+                rs.getString("genreName"),
+                rs.getInt("genreId")
 
         );
         return f;

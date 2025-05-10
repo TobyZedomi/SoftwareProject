@@ -11,6 +11,7 @@ import softwareProject.business.*;
 import softwareProject.persistence.*;
 import softwareProject.service.MovieService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class MovieTestController {
     private MovieService movieService;
 
 
+
     /**
      * Getting movie videos based on the movie id entered
      *
@@ -30,6 +32,8 @@ public class MovieTestController {
      * @param session holds the logged in users details
      * @return videos page if te videos exist and noVideo page if there are no videos for that movie
      */
+
+
     @GetMapping("/movieTrailer")
     public String getMovieTrailer(Model model, @RequestParam(name = "id") String id, HttpSession session) {
 
@@ -43,6 +47,7 @@ public class MovieTestController {
             // totalAmountOItems in basket
             getTotalAmountOfItemsInCart(session, model);
 
+            session.setAttribute("chat_room_id",id);
 
             List<MovieTrailer> trailers = movieService.getTrailer(movieId);
 
@@ -65,6 +70,8 @@ public class MovieTestController {
     }
 
 
+
+
     /**
      * View movies by the genre id
      *
@@ -78,6 +85,9 @@ public class MovieTestController {
     public String viewMovieGenre(HttpSession session, Model model, @RequestParam(name = "id") int id) {
 
         if (session.getAttribute("loggedInUser") != null) {
+
+            User u = (User) session.getAttribute("loggedInUser");
+
 
             String genre_id = Integer.toString(id);
 
@@ -105,8 +115,8 @@ public class MovieTestController {
             GenreDao genreDao = new GenreDaoImpl("database.properties");
 
             GenreTest genre = genreDao.getGenreById(id);
-
             model.addAttribute("genreName", genre.getName());
+            log.info("User {} viewed movies on genre {}", u.getUsername(), genre.getName());
 
             viewMoviesByGenre(session, model);
 
@@ -149,7 +159,8 @@ public class MovieTestController {
 
         log.info("User {} searched for movies on {}", u.getUsername(), query);
 
-        favouriteListForMovieBySearch(model, session, u);
+            viewMoviesByGenre(session, model);
+            favouriteListForMovieBySearch(model, session, u);
 
         return "searchMovie_index";
 
@@ -207,6 +218,53 @@ public class MovieTestController {
     }
 
 
+
+    // view Similar
+
+    @GetMapping("/viewSimilar")
+    public String viewSimilar(HttpSession session, Model model, @RequestParam(name = "movieId") String movieId) {
+
+
+        if (session.getAttribute("loggedInUser") != null) {
+
+            User u = (User) session.getAttribute("loggedInUser");
+
+
+            // totalAmountOItems in basket
+            getTotalAmountOfItemsInCart(session, model);
+
+            int movieId2 = Integer.parseInt(movieId);
+
+            session.setAttribute("similar", movieId2);
+
+            List<MovieTest> movieBySearch = movieService.getSimilarMovies(movieId2);
+
+            List<MovieTest> newMovieBySearch = new ArrayList<>();
+
+            for (int i = 0; i < movieBySearch.size() - 2; i++) {
+
+                if (movieBySearch.get(i).getBackdrop_path() != null) {
+                    newMovieBySearch.add(movieBySearch.get(i));
+                    model.addAttribute("movieBySearch", newMovieBySearch);
+                }
+            }
+
+            MovieDbByMovieId movieDbByMovieId = movieService.getMoviesByMovieId(movieId2);
+            model.addAttribute("movieName", movieDbByMovieId.getTitle());
+
+
+            log.info("User {} viewed similar for movies on {}", u.getUsername(), movieDbByMovieId.getTitle());
+
+            similarMovies(model, session, u);
+
+            return "similar_index";
+
+        }
+
+        return "notValidUser";
+    }
+
+
     /**
      * Get the total amount of cart items in the cart for the user
      *
@@ -250,6 +308,8 @@ public class MovieTestController {
         List<GenreTest> genres = movieService.getGenres();
         model.addAttribute("genres", genres);
 
+        GenreDao genreDao = new GenreDaoImpl("database.properties");
+
         String genreId = (String) session.getAttribute("genreId2");
 
         if (genreId != null) {
@@ -260,7 +320,8 @@ public class MovieTestController {
 
             for (int i = 0; i < movieByGenres.size() - 2; i++) {
 
-                if (movieByGenres.get(i).getBackdrop_path() != null) {
+                if (movieByGenres.get(i).getBackdrop_path() != null && movieByGenres.get(i).getGenre_ids().length > 0) {
+                    movieByGenres.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(genreId)).getName());
                     newMovie.add(movieByGenres.get(i));
                     model.addAttribute("movieByGenres", newMovie);
                 }
@@ -278,7 +339,6 @@ public class MovieTestController {
 
             // use a session for this based on the controller method view movie by genre, testing branch
 
-            GenreDao genreDao = new GenreDaoImpl("database.properties");
 
             GenreTest genre = genreDao.getGenreById(Integer.parseInt(genreId));
 
@@ -355,8 +415,13 @@ public class MovieTestController {
 
         List<MovieTest> newMovieBySearch = new ArrayList<>();
 
+        GenreDaoImpl genreDao = new GenreDaoImpl("database.properties");
+
         for (int i = 0; i < movieBySearch.size(); i++) {
-            if (movieBySearch.get(i).getBackdrop_path() != null) {
+
+
+            if (movieBySearch.get(i).getBackdrop_path() != null && movieBySearch.get(i).getGenre_ids().length > 0) {
+                movieBySearch.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieBySearch.get(i).getGenre_ids()[0])).getName());
                 newMovieBySearch.add(movieBySearch.get(i));
                 model.addAttribute("movieBySearchGenre", newMovieBySearch);
             }
@@ -388,9 +453,12 @@ public class MovieTestController {
 
         List<MovieTest> newMovieBySearch = new ArrayList<>();
 
+        GenreDaoImpl genreDao = new GenreDaoImpl("database.properties");
+
         for (int i = 0; i < movieBySearch.size() - 2; i++) {
 
-            if (movieBySearch.get(i).getBackdrop_path() != null) {
+            if (movieBySearch.get(i).getBackdrop_path() != null && movieBySearch.get(i).getGenre_ids().length > 0) {
+                movieBySearch.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieBySearch.get(i).getGenre_ids()[0])).getName());
                 newMovieBySearch.add(movieBySearch.get(i));
                 model.addAttribute("movieBySearch", newMovieBySearch);
             }
@@ -408,6 +476,46 @@ public class MovieTestController {
         model.addAttribute("query", query);
 
         log.info("User {} searched for movies on {}", user.getUsername(), query);
+    }
+
+
+    private void similarMovies(Model model, HttpSession session, User user){
+
+
+        FavoriteListDao favoriteListDao1 = new FavouriteListDaoImpl("database.properties");
+
+
+        ArrayList<FavoriteList> favoriteLists = favoriteListDao1.getAllFavouriteListByUsername(user.getUsername());
+
+        int movieId2 =  (int) session.getAttribute("similar");
+
+        List<MovieTest> movieBySearch = movieService.getSimilarMovies(movieId2);
+
+        List<MovieTest> newMovieBySearch = new ArrayList<>();
+
+        GenreDaoImpl genreDao = new GenreDaoImpl("database.properties");
+
+        for (int i = 0; i < movieBySearch.size() - 2; i++) {
+
+            if (movieBySearch.get(i).getBackdrop_path() != null && movieBySearch.get(i).getGenre_ids().length > 0) {
+                movieBySearch.get(i).setGenreName(genreDao.getGenreById(Integer.parseInt(movieBySearch.get(i).getGenre_ids()[0])).getName());
+                newMovieBySearch.add(movieBySearch.get(i));
+                model.addAttribute("movieBySearch", newMovieBySearch);
+            }
+
+            for (int j = 0; j < favoriteLists.size(); j++) {
+
+                if (favoriteLists.get(j).getMovieDb_id() == movieBySearch.get(i).getId()) {
+
+                    movieBySearch.get(i).setFavourite(true);
+                }
+            }
+        }
+
+        MovieDbByMovieId movieDbByMovieId = movieService.getMoviesByMovieId(movieId2);
+        model.addAttribute("movieName", movieDbByMovieId.getTitle());
+
+
     }
 
 }

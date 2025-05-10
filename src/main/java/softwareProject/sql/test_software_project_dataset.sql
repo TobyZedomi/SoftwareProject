@@ -1,5 +1,5 @@
 INSERT INTO `users` (`username`, `displayName`, `email`, `password`, `dateOfBirth`, `isAdmin`, `createdAt`, `user_image`)
-VALUES ('admin', 'adminUser123', 'admin@gmail.com', '$2a$12$x4EwpUD5VU.vJW1.xICz1OnEJqEMfdYx/ttl/Gi/JxljZAsguzqbi', '2003-02-16', true, '2025-01-30 00:00:00','DefaultUserImage.jpg'),
+VALUES ('admin', 'adminUser123', 'tobyzedo7@gmail.com', '$2a$12$x4EwpUD5VU.vJW1.xICz1OnEJqEMfdYx/ttl/Gi/JxljZAsguzqbi', '2003-02-16', true, '2025-01-30 00:00:00','DefaultUserImage.jpg'),
        ('Andrew', 'andrewGamer123', 'andrew@gmail.com', '$2a$12$x4EwpUD5VU.vJW1.xICz1OnEJqEMfdYx/ttl/Gi/JxljZAsguzqbi', '2000-12-10', false, '2025-01-30 00:00:00','DefaultUserImage.jpg'),
        ('Toby', 'toby123', 'toby@gmail.com', '$2a$12$x4EwpUD5VU.vJW1.xICz1OnEJqEMfdYx/ttl/Gi/JxljZAsguzqbi',  '2001-12-08', false, '2025-01-30 00:00:00','DefaultUserImage.jpg'),
        ('Kate', 'kate123', 'kate@gmail.com', '$2a$12$x4EwpUD5VU.vJW1.xICz1OnEJqEMfdYx/ttl/Gi/JxljZAsguzqbi',  '2001-12-08', false, '2025-01-30 00:00:00','DefaultUserImage.jpg'),
@@ -28,6 +28,17 @@ VALUES ('Toby', 12, 5, 'One of the greatest movies ive watched in my life'),
        ('Andrew', 15, 4.5, 'The story of naruto is honestly amazing, glad ive made in this far '),
        ('James', 7, 3.5, 'Amazing movie'),
        ('James', 15, 3, 'Good movie, i like it a lot');
+
+INSERT INTO `favouriteList` (`username`, `movieDb_id`, `backdrop_path`, `overview`, `title`, `genreName`, `genreId`)
+VALUES ('admin', 86331, '/zbTaYrQzZaaEf1SZlv3RTZiUvZw.jpg', 'In a social context deteriorated by a countrywide economic crisis, the life of several people will be turned upside down after they meet Cécile, a character who symbolizes desire.', 'Desire', 'Drama', 18),
+       ('admin', 950387, '/2Nti3gYAX513wvhp8IiLL6ZDyOm.jpg', 'Four misfits find themselves struggling with ordinary problems when they are suddenly pulled through a mysterious portal into the Overworld: a bizarre, cubic wonderland that thrives on imagination. To get back home, they''ll have to master this world while embarking on a magical quest with an unexpected, expert crafter, Steve.', 'A Minecraft Movie', 'Family', 10751 ),
+       ('Toby', 1373723, '/ibF5XVxTzf1ayzZrmiJqgeQ39Qk.jpg', 'War stories about family, ethics and honor include the true story of two U.S. Marines who in a span of six seconds, must stand their ground to stop a suicide truck bomb, a Navy Corpsman who attempts to hold on to his humanity, and a WW2 soldier who gets separated from his squad and is forced to re-evaluate his code.', 'The Codes of War', 'Action', 28);
+
+
+INSERT INTO `genreForMovie` (`genreForMovie_id`, `username`, `movieDb_id`, `genre_id`)
+VALUES (1, 'admin', 86331, 18 ),
+       (2, 'admin', 950387, 12),
+       (3, 'Toby', 1373723, 28);
 
 
 
@@ -104,6 +115,11 @@ VALUES (28, 'Action'),
        (53, 'Thriller'),
        (10752, 'War'),
        (37, 'Western');
+
+INSERT INTO `chat_room` (chat_room_id, username, message, message_date, user_image, room_id)
+VALUES (1, 'Kate', 'Hello', '2025-04-16 00:00:00', 'Default_Image',86331 ),
+       (2, 'James', 'Hello', '2025-04-16 00:00:00', 'Default_Image', 950387),
+       (3, 'James', 'Hello', '2025-12-16 00:00:00', 'Default_Image', 950387);
 
 INSERT INTO `auditsCartItems` (auditsCartItemsID, table_name , transaction_name, movie_id, transdate)
 VALUES (1, 'cart_items','DELETE' , 1, '2026-01-30 00:00:00'),

@@ -22,5 +22,9 @@ public interface UserDao {
 
     public int updateDisplayName(String username,String displayName);
 
+    public ArrayList<User> getAllUsersThatAreNotAdmin();
+
+    public int updateToAdmin(String username);
+
 
 }

@@ -196,6 +196,19 @@
 
 </div>
 
+<div class="dropdown" style="margin-top: 50px; margin-left: 50px;">
+  <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Filter Movies
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="/highestRated">Highest Rated Movies</a></li>
+    <li><a class="dropdown-item" href="/lowestRated">Lowest Rated Movies</a></li>
+    <li><a class="dropdown-item" href="/userReviews">View My Reviews</a></li>
+    <li><a class="dropdown-item" href="/popularReviews">API Reviews</a></li>
+
+  </ul>
+</div>
+
 
 <div th:if="${#ctx.session.loggedInUser != null}">
   <p class="login" th:text="|Welcome ${#ctx.session.loggedInUser.getUsername()} you are logged in|">
@@ -215,12 +228,23 @@
             <h3 th:text="${movie.getTitle()}"> Mountain</h3>
             <p th:text="${movie.getOverview()}" style="overflow: auto; scrollbar-width: none;"></p>
             <div class="action_btn" style="margin: 0 auto; display: inline;">
-              <a th:href="@{/movieTrailer(id=${movie.getId()})}">View Videos</a>
-              <a th:href="@{/addMovieFavList(movieId=${movie.getId()}, backdrop_path=${movie.getBackdrop_path()}, overview=${movie.getOverview()}, title=${movie.getTitle()}, release_date=${movie.getRelease_date()})}"
+              <a th:href="@{/getAllChatMessage(id=${movie.getId()})}">View Videos & Live Chat Room</a>
+              <a th:href="@{/addMovieFavList(movieId=${movie.getId()}, backdrop_path=${movie.getBackdrop_path()}, overview=${movie.getOverview()}, title=${movie.getTitle()}, release_date=${movie.getRelease_date()}, genreId=${movie.getGenre_ids()[0]})}"
                  class="remove_cart" rel="2">
                 <i class="fa fa-heart" th:style="${movie.isFavourite() == true} ? 'color: red' : 'color: black'"></i>
               </a>
             </div>
+
+            <div class="action_btn" style="margin: 0 auto; display: inline; margin-top: 0.5px;">
+
+              <a th:href="@{/viewMovieByGenre(id=${movie.getGenre_ids()[0]})}" th:text="${movie.getGenreName()}" class="badge badge-danger" style="background-color: #C41E3A; color: white; font-weight: bold;  border-radius: 50px; margin-left: 20px"  title="View More Movies on This Genre">Danger</a>
+
+              <a th:href="@{/viewSimilar(movieId=${movie.id})}" class="badge badge-danger" style="background-color: black; color: white; font-weight: bold;  border-radius: 50px; margin-left: 5px" title="View More Movies Like This">
+                Similar
+              </a>
+
+            </div>
+
           </div>
         </div>
       </div>

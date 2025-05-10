@@ -119,6 +119,57 @@ public class GenreDaoImpl extends MySQLDao implements GenreDao{
     }
 
 
+    // get genre by name
+
+    /**
+     * Get genre based on the name
+     * @param name is the name being searched
+     * @return the genre based on the genre id
+     */
+    @Override
+    public GenreTest getGenreByName(String name) {
+
+        GenreTest genreTest = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+
+        try {
+
+            con = getConnection();
+
+            String query = "SELECT * FROM genre where name = ?";
+            ps = con.prepareStatement(query);
+            ps.setString(1, name);
+            rs = ps.executeQuery();
+
+
+            if (rs.next()) {
+
+                genreTest = mapRow(rs);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Exception occured in the getMovieById() method: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the getProductByCode() method: " + e.getMessage());
+            }
+        }
+        return genreTest;
+    }
+
 
 
     private GenreTest mapRow(ResultSet rs)throws SQLException {

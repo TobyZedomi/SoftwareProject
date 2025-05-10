@@ -197,18 +197,18 @@
               <h3>Billing Address</h3>
               <p>
               <label for="fullName" ><i class="fa fa-user"></i> Full Name</label>
-              <input type="text"  th:value="${fullName}" id="fullName" name="fullName" placeholder="Toby Zedomi">
+              <input type="text"  th:value="${fullName}" id="fullName" name="fullName" placeholder="Toby Zedomi" required>
               <div class="message" th:text="${message1}"></div>
               <span id="fullName-error" class="error-message"></span>
               </p>
               <label for="email"><i class="fa fa-envelope"></i> Email</label>
-              <input type="text" th:value="${#ctx.session.loggedInUser.getEmail()}" id="email" name="email" placeholder="john@example.com">
+              <input type="text" th:value="${#ctx.session.loggedInUser.getEmail()}" id="email" name="email" placeholder="john@example.com" required>
               <div class="message" th:text="${messageEmail}"></div>
               <label for="address"><i class="fa fa-address-card-o"></i> Address</label>
-              <input type="text" th:value="${address}" id="address" name="address" placeholder="542 W. 15th Street">
+              <input type="text" th:value="${address}" id="address" name="address" placeholder="542 W. 15th Street" required>
               <div class="message" th:text="${message2}"></div>
               <label for="city"><i class="fa fa-institution"></i> City</label>
-              <input type="text" th:value="${city}" id="city" name="city" placeholder="Dublin">
+              <input type="text" th:value="${city}" id="city" name="city" placeholder="Dublin" required>
               <div class="message" th:text="${message3}"></div>
 
               <div class="row">
@@ -252,7 +252,7 @@
                 </div>
                 <div class="col-50">
                   <label for="postcode">PostCode</label>
-                  <input type="text" th:value="${postcode}" id="postcode" name="postcode" placeholder="10001">
+                  <input type="text" th:value="${postcode}" id="postcode" name="postcode" placeholder="10001" required>
                   <div class="message" th:text="${message5}"></div>
                 </div>
               </div>
@@ -268,10 +268,10 @@
                 <i class="fa fa-cc-discover" style="color:orange;"></i>
               </div>
               <label for="cardName">Name on Card</label>
-              <input type="text" th:value="${cardName}" id="cardName" name="cardName" placeholder="John More Doe">
+              <input type="text" th:value="${cardName}" id="cardName" name="cardName" placeholder="John More Doe" required>
               <div class="message" th:text="${message6}"></div>
               <label for="cardNumber">Credit card number</label>
-              <input type="text" th:value="${cardNumber}" id="cardNumber" name="cardNumber" placeholder="1111-2222-3333-4444">
+              <input type="text" th:value="${cardNumber}" id="cardNumber" name="cardNumber" placeholder="1111-2222-3333-4444" required>
               <div class="message" th:text="${message7}"></div>
               <label for="expmonth">Exp Month:</label>
               <div class="date-field">
@@ -316,7 +316,7 @@
                 <!--</div>-->
                 <div class="col-50">
                   <label for="cvv">CVV</label>
-                  <input type="text" th:value="${cvv}" id="cvv" name="cvv" placeholder="352">
+                  <input type="text" th:value="${cvv}" id="cvv" name="cvv" placeholder="352" required>
                   <div class="message" th:text="${message10}"></div>
                 </div>
               </div>
@@ -346,16 +346,16 @@
             <div class="col-50">
               <h3>Billing Address</h3>
               <label for="fullName"><i class="fa fa-user"></i> Full Name</label>
-              <input type="text" th:value="${fullName}" id="fullName" name="fullName" placeholder="John M. Doe">
+              <input type="text" th:value="${fullName}" id="fullName" name="fullName" placeholder="John M. Doe" required>
               <div class="message" th:text="${message1}"></div>
               <label for="email" ><i class="fa fa-envelope"></i> Email</label>
-              <input type="text" th:value="${#ctx.session.billingAddressUser.getEmail()}"  id="email" name="email" placeholder="john@example.com">
+              <input type="text" th:value="${#ctx.session.billingAddressUser.getEmail()}"  id="email" name="email" placeholder="john@example.com" required>
               <div class="message" th:text="${messageEmail}"></div>
               <label for="address"><i class="fa fa-address-card-o"></i> Address</label>
-              <input type="text" th:value="${address}"  id="address" name="address" placeholder="542 W. 15th Street">
+              <input type="text" th:value="${address}"  id="address" name="address" placeholder="542 W. 15th Street" required>
               <div class="message" th:text="${message2}"></div>
               <label for="city"><i class="fa fa-institution"></i> City</label>
-              <input type="text" th:value="${city}" id="city" name="city" placeholder="New York">
+              <input type="text" th:value="${city}" id="city" name="city" placeholder="New York" required>
               <div class="message" th:text="${message3}"></div>
 
               <div class="row">
@@ -399,7 +399,7 @@
                 </div>
                 <div class="col-50">
                   <label for="postcode">PostCode</label>
-                  <input type="text" th:value="${postcode}" id="postcode" name="postcode" placeholder="10001">
+                  <input type="text" th:value="${postcode}" id="postcode" name="postcode" placeholder="10001" required>
                   <div class="message" th:text="${message5}"></div>
                 </div>
               </div>
@@ -415,10 +415,10 @@
                 <i class="fa fa-cc-discover" style="color:orange;"></i>
               </div>
               <label for="cardName">Name on Card</label>
-              <input type="text" th:value="${cardName}" id="cardName" name="cardName" placeholder="John More Doe">
+              <input type="text" th:value="${cardName}" id="cardName" name="cardName" placeholder="John More Doe" required>
               <div class="message" th:text="${message6}"></div>
               <label for="cardNumber">Credit card number</label>
-              <input type="text" th:value="${cardNumber}" id="cardNumber" name="cardNumber" placeholder="1111-2222-3333-4444">
+              <input type="text" th:value="${cardNumber}" id="cardNumber" name="cardNumber" placeholder="1111-2222-3333-4444" required>
               <div class="message" th:text="${message7}"></div>
               <label for="expmonth">Exp Month:</label>
               <div class="date-field">
@@ -468,7 +468,7 @@
 
                 <div class="col-50">
                   <label for="cvv">CVV</label>
-                  <input type="text" th:value="${cvv}" id="cvv" name="cvv" placeholder="352">
+                  <input type="text" th:value="${cvv}" id="cvv" name="cvv" placeholder="352" required>
                   <div class="message" th:text="${message10}"></div>
                 </div>
               </div>

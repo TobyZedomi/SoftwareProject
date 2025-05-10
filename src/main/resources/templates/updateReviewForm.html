@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Update Review</title>
+</head>
+<body>
+
+<h2>Update Review for <span th:text="${movie.title}"></span></h2>  <!-- Fetch movie name dynamically -->
+
+<form action="/updateReview" method="post">
+  <input type="hidden" name="movieId" th:value="${review.movieId}">
+
+  <label>Rating:</label>
+  <input type="number" name="rating" th:value="${review.rating}" min="1" max="5" required>
+
+  <label>Comment:</label>
+  <textarea name="comment" required th:text="${review.comment}"></textarea>
+
+  <button type="submit">Update Review</button>
+</form>
+
+</body>
+</html>

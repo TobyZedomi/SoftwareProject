@@ -193,12 +193,24 @@
       height: 100px;
     }
 
-    .message{
+    #message {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: green;
+      font-weight: bold;
+      margin-bottom: 50px;
+      font-family: poppins;
+    }
+
+    #messageDelete {
       display: flex;
       justify-content: center;
       align-items: center;
       color: red;
       font-weight: bold;
+      margin-bottom: 50px;
+      font-family: poppins;
     }
     .adminUser{
       display: flex;
@@ -261,9 +273,22 @@
 
 
 
-  <div id="message" class="message" th:text="${message}"></div>
 
-  <div class="message" th:text="${messageUpdate}"></div>
+  <div th:if="${message != null}">
+    <div class="alert alert-success" style="width: 800px; margin: auto;" id="message" th:text="${message}" role="alert">
+    </div>
+  </div>
+
+  <div th:if="${messageUpdate != null}">
+    <div class="alert alert-success" style="width: 800px; margin: auto;" id="message" th:text="${messageUpdate}" role="alert">
+    </div>
+  </div>
+
+  <div th:if="${messageDelete != null}">
+    <div  class="alert alert-danger" style="width: 800px; margin: auto;" id="messageDelete" th:text="${messageDelete}" role="alert">
+    </div>
+  </div>
+
 
 
   <div class="container-xl">

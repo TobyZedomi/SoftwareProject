@@ -15,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -449,6 +450,97 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         return rowsAffected;
     }
 
+
+    /**
+     * Get all users that are not admin in the system
+     * @return arraylist of users
+     */
+
+    @Override
+    public ArrayList<User> getAllUsersThatAreNotAdmin(){
+
+        ArrayList<User> users = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
+            con = getConnection();
+
+            String query = "Select * from users WHERE isAdmin = FALSE";
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery();
+
+            while(rs.next())
+            {
+                User u = mapRow(rs);
+                users.add(u);
+            }
+        }catch(SQLException e){
+            System.out.println(LocalDateTime.now() + ": An SQLException  occurred while preparing the SQL " +
+                    "statement.");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the  method: " + e.getMessage());
+            }
+        }
+
+        return users;
+    }
+
+    /**
+     * Update general user to admin
+     * @param username is the user being searched
+     * @return 1 if updated and 0 if not updated
+     */
+
+    @Override
+    public int updateToAdmin(String username)
+    {
+        Connection con = null;
+        PreparedStatement ps = null;
+        int rowsAffected = 0;
+
+        try{
+            con = getConnection();
+
+            String query = "UPDATE users SET isAdmin = TRUE WHERE username = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setString(1, username);
+
+            rowsAffected = ps.executeUpdate();
+
+        }catch (SQLException e) {
+            System.out.println("Exception occured in the updateProductName() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("Exception occured in the finally section of the updateProductName() method");
+                e.getMessage();
+            }
+        }
+
+        return rowsAffected;
+    }
 
     /**
      * Search through each row in the user
